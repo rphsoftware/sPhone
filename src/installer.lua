@@ -125,7 +125,7 @@ for k, v in pairs(files) do
 	term.setBackgroundColor(colors.white)
 	clear()
 	term.setCursorPos(2, 2)
-	center("sPhone")
+	print("sPhone")
 	print("")
 	print(" Getting files")
 	term.setCursorPos(2, h - 1)
@@ -144,7 +144,7 @@ for k, v in pairs(files) do
 end
 clear()
 term.setCursorPos(2, 2)
-center("sPhone")
+print("sPhone")
 print("")
 print(" sPhone installed!")
 print("")
