@@ -17,9 +17,9 @@ local githubBranch  = "master"
 
 local function clear()
   term.setBackgroundColor(colors.white)
-	term.clear()
-	term.setCursorPos(1, 1)
-	term.setTextColor(colors.white)
+  term.clear()
+  term.setCursorPos(1, 1)
+  term.setTextColor(colors.black)
 end
 
 local function center(text)
