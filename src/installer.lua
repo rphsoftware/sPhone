@@ -8,6 +8,8 @@ local files = {
   ["src/apis/sha256.lua"] = "/.sPhone/apis/sha256",
   ["src/apis/sertextext.lua"] = "/.sPhone/apis/sertextext",
   ["src/apis/graphics.lua"] = "/.sPhone/apis/graphics",
+  
+  ["src/startup"] = "/startup",
 }
 
 local githubUser    = "Sertex-Team"
