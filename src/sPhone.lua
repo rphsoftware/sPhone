@@ -61,6 +61,19 @@ local function kernel()
     sleep(1)
     os.forceReboot()
   end
+  
+  function home()
+    while true do
+      clear()
+      local reboot = gui.pulseButton({2, 3}, {colors.lime, colors.green}, "Reboot", os.reboot())
+      gui.render({reboot})
+    end
+  end
+  
+  function login()
+    
+  end
+  
 end
 
 local ok, err = pcall(kernel)
