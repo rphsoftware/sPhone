@@ -1,6 +1,6 @@
 sPhone = {}
 
-local function sPhone.crash(err)
+local function crash(err)
   os.pullEvent = os.pullEventRaw
   if not err then
     err = "Unknown"
