@@ -9,13 +9,11 @@ local function crash(err)
   term.clear()
   term.setCursorPos(1,2)
   term.setTextColor(colors.white)
-  print( 
-    " ###",
-    " #  ",
-    " ###",
-    "   #",
-    " ###",
-  )
+  print(" ###")
+  print(" #  ")
+  print(" ###")
+  print("   #")
+  print(" ###")
   print("")
   print("sPhone crash: ")
   print(err)
