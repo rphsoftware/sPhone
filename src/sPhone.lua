@@ -1,4 +1,4 @@
-sPhone = {}
+_G.sPhone = {}
 
 local function crash(err)
   os.pullEvent = os.pullEventRaw
