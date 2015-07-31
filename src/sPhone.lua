@@ -74,6 +74,8 @@ local function kernel()
     
   end
   
+  home()
+  
 end
 
 local ok, err = pcall(kernel)
