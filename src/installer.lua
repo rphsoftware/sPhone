@@ -9,6 +9,7 @@ local files = {
   ["src/apis/sertextext.lua"] = "/.sPhone/apis/sertextext",
   ["src/apis/graphics.lua"] = "/.sPhone/apis/graphics",
   ["src/apis/rmenu.lua"] = "/.sPhone/apis/rmenu",
+  ["src/apis/gui.lua"] = "/.sPhone/apis/gui",
   
   ["src/startup"] = "/startup",
 }
