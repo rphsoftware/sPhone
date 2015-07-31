@@ -25,8 +25,44 @@ end
 local function center(text)
   local w, h = term.getSize()
   local x, y = term.getCursorPos()
-  term.setCursorPos(math.ceil(w/2) - #text, y)
+  term.setCursorPos(math.ceil(w/2), y)
   write(text)
+end
+
+function spiral(y,time) -- made by BadCoder_
+time = tonumber(time) * 2
+
+frames = {
+  "/",
+  "-",
+  "\\",
+  "|"
+}
+
+cursor = 1
+timer = nil
+
+for i = 1 , tonumber(time) do
+  
+  center(y, frames[cursor])
+  
+  timer = os.startTimer(.5)
+  
+  while true do
+    local e = {os.pullEvent()}
+    
+    if e[1] == "timer" and e[2] == timer then
+      break
+    end
+  end
+  
+  cursor = cursor + 1
+  
+  if cursor > #frames then
+    cursor = 1
+  end
+
+end
 end
 
 local function httpGet(url, save)
@@ -91,7 +127,7 @@ for k, v in pairs(files) do
 	term.setCursorPos(2, 2)
 	center("sPhone")
 	print("")
-	center("Getting files")
+	print(" Getting files")
 	term.setCursorPos(2, h - 1)
 	local ok = k:sub(1, 4) == "ext:" and httpGet(k:sub(5), v) or getFile(k, v)
 	if not ok then
@@ -110,9 +146,7 @@ clear()
 term.setCursorPos(2, 2)
 center("sPhone")
 print("")
-center("sPhone installed!")
-for i = 1, 5 do
-  write(".")
-  sleep(1)
-end
+print(" sPhone installed!")
+print("")
+spiral(9, 2)
 os.reboot()
