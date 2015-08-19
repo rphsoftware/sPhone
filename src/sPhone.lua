@@ -406,6 +406,7 @@ local function kernel()
 			f.close()
 			sertextext.center(13,"  All Set!")
 			sertextext.center(14,"Have fun with sPhone")
+			sPhone.user = name
 			sleep(2)
 			home()
 		end
