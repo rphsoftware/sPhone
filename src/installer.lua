@@ -5,12 +5,22 @@ end
 
 local files = {
   ["src/sPhone.lua"] = "/.sPhone/sPhone",
+	
   ["src/apis/sha256.lua"] = "/.sPhone/apis/sha256",
   ["src/apis/sertextext.lua"] = "/.sPhone/apis/sertextext",
   ["src/apis/graphics.lua"] = "/.sPhone/apis/graphics",
-  ["src/apis/rmenu.lua"] = "/.sPhone/apis/rmenu",
-  ["src/apis/gui.lua"] = "/.sPhone/apis/gui",
-  
+	["src/apis/ui.lua"] = "/.sPhone/apis/ui",
+	
+	["src/apps/system/settings.lua"] = "/.sPhone/apps/system/settings",
+  ["src/apps/cstwallet.lua"] = "/.sPhone/apps/cstwallet",
+	["src/apps/cst/api.lua"] = "/.sPhone/apps/cst/api",
+	
+	["src/apps/sms.lua"] = "/.sPhone/apps/sms",
+	["src/apps/gps.lua"] = "/.sPhone/apps/gps",
+	
+	["src/interfaces/login"] = "/.sPhone/interfaces/login",
+	
+	
   ["src/startup"] = "/startup",
 }
 
