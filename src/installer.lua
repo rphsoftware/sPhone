@@ -4,14 +4,15 @@ if not pocket or not term.isColor() then
 end
 
 local files = {
-  ["src/sPhone.lua"] = "/.sPhone/sPhone",
+	["src/sPhone.lua"] = "/.sPhone/sPhone",
 	
-  ["src/apis/sha256.lua"] = "/.sPhone/apis/sha256",
+	["src/apis/sha256.lua"] = "/.sPhone/apis/sha256",
   ["src/apis/sertextext.lua"] = "/.sPhone/apis/sertextext",
   ["src/apis/graphics.lua"] = "/.sPhone/apis/graphics",
 	["src/apis/ui.lua"] = "/.sPhone/apis/ui",
 	
 	["src/apps/system/settings.lua"] = "/.sPhone/apps/system/settings",
+	["src/apps/system/info.lua"] = "/.sPhone/apps/system/info",
   ["src/apps/cstwallet.lua"] = "/.sPhone/apps/cstwallet",
 	["src/apps/cst/api.lua"] = "/.sPhone/apps/cst/api",
 	
