@@ -174,7 +174,6 @@ local function redraw()
 			term.setTextColor(colors.black)
 		end
 		redraw()
-		sPhone.winOk("Work In","Progress")
 		
 		while true do
 			redraw()
