@@ -32,7 +32,7 @@ print(" Thanks to Luca_S for SMS system and Sertex ID")
 
 while true do
   local w, h = term.getSize()
-  local _, _, x, y = os.pulLEvent("mouse_click")
+  local _, _, x, y = os.pullEvent("mouse_click")
   if y == 1 and x == w then
     return
   end
