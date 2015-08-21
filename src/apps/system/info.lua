@@ -18,6 +18,7 @@ local function header()
 	term.setBackgroundColor(colors.white)
 	term.setTextColor(colors.black)
 end
+header()
 
 term.setCursorPos(1,3)
 sertextext.center(3, "  Info")
