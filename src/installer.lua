@@ -36,9 +36,11 @@ local function clear()
   term.setTextColor(colors.black)
 end
 
-local function center(text)
+local function center(text, y)
   local w, h = term.getSize()
-  local x, y = term.getCursorPos()
+  if not y then
+  	local x, y = term.getCursorPos()
+  end
   term.setCursorPos(math.ceil(w/2), y)
   write(text)
 end
@@ -58,7 +60,7 @@ timer = nil
 
 for i = 1 , tonumber(time) do
   
-  center(y, frames[cursor])
+  center(frames[cursor], y)
   
   timer = os.startTimer(.5)
   
