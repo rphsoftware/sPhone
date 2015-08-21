@@ -212,6 +212,7 @@ local function kernel()
 			box(19,7,"SMS",colors.green,colors.white)
 			box(3, 11, "CST", colors.lightBlue, colors.blue)
 			box(10, 11, "GPS", colors.red, colors.black)
+			box(18, 11, "Info", colors.lightGray, colors.black)
 		end
 		local function footerMenu()
 			sPhone.isFooterMenuOpen = true
@@ -279,6 +280,8 @@ local function kernel()
 					shell.run("/.sPhone/apps/cstwallet")
 				elseif (y > 10 and x > 9) and (y < 14 and x < 15) then
 					shell.run("/.sPhone/apps/gps")
+				elseif (y > 10 and x > 8) and (y < 14 and x < 24) then
+					shell.run("/.sPhone/apps/system/info")
 				end
 			end
 		end
