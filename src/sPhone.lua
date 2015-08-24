@@ -120,6 +120,55 @@ local function kernel()
 		sPhone.forceReboot()
 	end
 	
+	function byte(string)
+		local newString = ""
+		for i = 1, #string do
+			addString = string.byte(string.sub(string, i))
+			newString = newString .. addString
+		end
+		return newString
+	end
+	
+	function sPhone.yesNo(title, desc)
+		term.setBackgroundColor(colors.white)
+		term.clear()
+		term.setCursorPos(1,1)
+		term.setTextColor(colors.black)
+		local w, h = term.getSize()
+		paintutils.drawLine(1,1,w,1, colors.gray)
+		term.setTextColor(colors.white)
+		term.setCursorPos(1,1)
+		if not sPhone.user then
+			write(" sPhone")
+		else
+			write(" "..sPhone.user)
+		end
+		term.setCursorPos(1,3)
+		term.setBackgroundColor(colors.white)
+		term.setTextColor(colors.black)
+		sertextext.center(3, "  "..title)
+		if desc then
+			sertextext.center(6, "  "..desc)
+		end
+		paintutils.drawFilledBox(3, 16, 9, 18, colors.green)
+		paintutils.drawFilledBox(18, 16, 24, 18, colors.red)
+		term.setTextColor(colors.white)
+		term.setCursorPos(5,17)
+		term.setBackgroundColor(colors.green)
+		write("Yes")
+		term.setCursorPos(20,17)
+		term.setBackgroundColor(colors.red)
+		write("No")
+		while true do
+			local _,_,x,y = os.pullEvent("mouse_click")
+			if (x > 2 and y > 15) and (x < 10 and y < 19) then
+				return true
+			elseif (x > 17 and y > 15) and (x < 25 and y < 19) then
+				return false
+			end
+		end
+	end
+	
 	function sPhone.winOk(fmessage, smessage, bg, side, text, button)
 		if not fmessage then
 			fmessage = ""
@@ -393,25 +442,53 @@ local function kernel()
 					sPhone.wrongPassword = true
 				end
 			end
-			
-			term.clear()
-			term.setCursorPos(1,1)
-			local w, h = term.getSize()
-			paintutils.drawLine(1,1,w,1,colors.gray)
-			term.setTextColor(colors.black)
-			term.setBackgroundColor(colors.white)
-			sertextext.center(3,"  Setup")
-			sertextext.center(7,"  Your Username")
-			term.setCursorPos(3,10)
-			local name = read()
-			local f = fs.open("/.sPhone/config/username","w")
-			f.write(name)
-			f.close()
-			sertextext.center(13,"  All Set!")
-			sertextext.center(14,"Have fun with sPhone")
-			sPhone.user = name
-			sleep(2)
-			home()
+		
+			local choose = sPhone.yesNo("Setup Sertex ID", "Do you a Sertex ID?")
+			if not choose then
+				term.clear()
+				term.setCursorPos(1,1)
+				local w, h = term.getSize()
+				paintutils.drawLine(1,1,w,1,colors.gray)
+				term.setTextColor(colors.black)
+				term.setBackgroundColor(colors.white)
+				sertextext.center(3,"  Setup Sertex ID")
+				sertextext.center(7,"  Your Username")
+				term.setCursorPos(3,8)
+				local name = read()
+				while true do
+					sertextext.center(9, "  Your Password")
+					term.setCursorPos(3,10)
+					term.clearLine()
+					local pw = read("*")
+					sertextext.center(11, "  Repeat")
+					term.setCursorPos(3,12)
+					term.clearLine()
+					local pwr = read("*")
+					if pw == pwr then
+						break
+					else
+						print("   Wrong Password")
+						sleep(1)
+					end
+				end
+				local rServer = http.post("http://sertex.esy.es/register.php", "user="..name.."&password="..pw).readAll()
+				if rServer ~= "Success!" then
+					print("The server is down")
+					print("Retry later")
+					sleep(1)
+				end
+				local f = fs.open("/.sPhone/config/username","w")
+				f.write(name)
+				f.close()
+				local pwf = fs.open("/.sPhone/config/.sIDPw", "w")
+				pwf.write(pw)
+				pwf.close()
+				sertextext.center(13,"  All Set!")
+				sertextext.center(14,"Have fun with sPhone")
+				sPhone.user = name
+				sleep(2)
+				home()
+			end
 		end
 	end
 	
