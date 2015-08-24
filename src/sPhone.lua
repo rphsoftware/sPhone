@@ -443,7 +443,7 @@ local function kernel()
 				end
 			end
 		
-			local choose = sPhone.yesNo("Setup Sertex ID", "Do you a Sertex ID?")
+			local choose = sPhone.yesNo("Setup Sertex ID", "Do you have a Sertex ID?")
 			if not choose then
 				term.clear()
 				term.setCursorPos(1,1)
