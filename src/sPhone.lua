@@ -206,7 +206,7 @@ local function kernel()
 			write(" "..sPhone.user)
 			box(2,3,"Shell",colors.black,colors.yellow)
 			box(19,3,"Lock",colors.lightGray,colors.black)
-			box(11,3,"sP",colors.red,colors.white)
+			box(11,3,"sID",colors.red,colors.white)
 			box(2,7,"Games",colors.pink,colors.blue)
 			box(10,7,"Chat", colors.black,colors.white)
 			box(19,7,"SMS",colors.green,colors.white)
@@ -266,8 +266,8 @@ local function kernel()
 					term.setTextColor(colors.white)
 					print("Type \"exit\" to close the shell")
 					shell.run("/rom/programs/shell")
-				elseif (y > 2 and x > 10) and (y < 6 and x < 16) then
-					sPhone.winOk("Work In", "Progress")
+				elseif (y > 2 and x > 10) and (y < 7 and x < 16) then
+					shell.run("/.sPhone/apps/system/sID")
 				elseif (y > 2 and x > 18) and (y < 6 and x < 25) then
 					login()
 				elseif (y > 6 and x > 1) and (y < 10 and x < 9) then
