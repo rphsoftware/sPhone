@@ -14,6 +14,10 @@ term.clear()
 term.setCursorPos(1,1)
 term.setTextColor(colors.black)
 print("sPhone SMS")
+if not fs.exists("/.sPhone/config/.sIDpw") then
+	sPhone.winOk("Sertex ID not set!","Run sID!", colors.lime, colors.green, colors.white, colors.lime)
+	return
+end
 f = fs.open("/.sPhone/config/username", "r")
 local user = f.readLine()
 f.close()
