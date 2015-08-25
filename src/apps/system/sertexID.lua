@@ -20,3 +20,18 @@ local function header()
 end
 
 header()
+
+if fs.exists("/.sPhone/config/.sIDpw") then
+	sPhone.winOk("Sertex ID", "Already Set!")
+	return
+end
+while true do
+	header()
+
+	term.setCursorPos(1,4)
+	print(" Set Sertex ID")
+	write(" Username: ")
+	local name = read()
+	local nExists = http.post("http://sertex.esy.es/exists.php", "user="..name).readAll()
+	--later
+end
