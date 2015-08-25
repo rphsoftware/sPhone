@@ -379,6 +379,9 @@ local function kernel()
 				end
 			end
 		else
+			local name
+			local pw
+			local pwr
 			while true do
 				term.clear()
 				term.setCursorPos(1,1)
@@ -454,16 +457,16 @@ local function kernel()
 				sertextext.center(3,"  Setup Sertex ID")
 				sertextext.center(7,"  Your Username")
 				term.setCursorPos(3,8)
-				local name = read()
+				name = read()
 				while true do
 					sertextext.center(9, "  Your Password")
 					term.setCursorPos(3,10)
 					term.clearLine()
-					local pw = read("*")
+					pw = read("*")
 					sertextext.center(11, "  Repeat")
 					term.setCursorPos(3,12)
 					term.clearLine()
-					local pwr = read("*")
+					pwr = read("*")
 					if pw == pwr then
 						break
 					else
