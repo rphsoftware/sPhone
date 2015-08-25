@@ -382,6 +382,7 @@ local function kernel()
 			local name
 			local pw
 			local pwr
+			local rServer
 			while true do
 				term.clear()
 				term.setCursorPos(1,1)
@@ -448,6 +449,7 @@ local function kernel()
 		
 			local choose = sPhone.yesNo("Setup Sertex ID", "Do you have a Sertex ID?")
 			if not choose then
+				term.setBackgroundColor(colors.white)
 				term.clear()
 				term.setCursorPos(1,1)
 				local w, h = term.getSize()
@@ -486,12 +488,45 @@ local function kernel()
 				local pwf = fs.open("/.sPhone/config/.sIDPw", "w")
 				pwf.write(pw)
 				pwf.close()
-				sertextext.center(13,"  All Set!")
-				sertextext.center(14,"Have fun with sPhone")
-				sPhone.user = name
-				sleep(2)
-				home()
+			else
+				while true do
+					term.setBackgroundColor(colors.white)
+					term.clear()
+					term.setCursorPos(1,1)
+					local w, h = term.getSize()
+					paintutils.drawLine(1,1,w,1,colors.gray)
+					term.setTextColor(colors.black)
+					term.setBackgroundColor(colors.white)
+					sertextext.center(3,"  Setup Sertex ID")
+					sertextext.center(7,"  Your Username")
+					term.setCursorPos(3,8)
+					name = read()
+					sertextext.center(9, "  Your Password")
+					term.setCursorPos(3,10)
+					term.clearLine()
+					pw = read("*")
+					sertextext.center(11, "  Checking...")
+					rServer = http.post("http://sertex.esy.es/login.php", "user="..name.."&password="..pw).readAll()
+					if rServer ~= "true" then
+						print("   Wrong Username/Password")
+						sleep(2)
+					else
+						f = fs.open("/.sPhone/config/username", "w")
+						f.write(name)
+						f.close()
+						f = fs.open("/.sPhone/config/.sIDpw", "w")
+						f.write(pw)
+						f.close()
+						break
+					end
+				end
 			end
+			
+			sertextext.center(13,"  All Set!")
+			sertextext.center(14,"Have fun with sPhone")
+			sPhone.user = name
+			sleep(2)
+			home()
 		end
 	end
 	
