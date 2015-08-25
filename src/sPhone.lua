@@ -479,7 +479,8 @@ local function kernel()
 				local rServer = http.post("http://sertex.esy.es/register.php", "user="..name.."&password="..pw).readAll()
 				if rServer ~= "Success!" then
 					print("The server is down")
-					print("Retry later")
+					print("Or Username already exists")
+					print("Retry later in the app sID")
 					sleep(1)
 				end
 				local f = fs.open("/.sPhone/config/username","w")
