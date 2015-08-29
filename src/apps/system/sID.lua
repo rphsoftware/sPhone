@@ -36,17 +36,35 @@ if isDown ~= "true" then
 	return
 end
 
-if fs.exists("/.sPhone/config/.sIDpw") then
-	menu = {
-		"Logout",
-	}
-	 _, id = ui.menu("Sertex ID")
-else
-	menu = {
-		"Login",
-		"New Account",
-	}
-	_, id = ui.menu("Sertex ID")
+local function login()
+	
+end
+
+local function register()
+	
+end
+
+while true do
+	if fs.exists("/.sPhone/config/.sIDpw") then
+		menu = {
+			"Logout",
+		}
+		 _, id = ui.menu("Sertex ID")
+		 if id == 1 then
+		 	fs.delete("/.sPhone/config/.sIDpw")
+		 end
+	else
+		menu = {
+			"Login",
+			"Register",
+		}
+		_, id = ui.menu("Sertex ID")
+		if id == 1 then
+			login()
+		elseif id == 2 then
+			register()
+		end
+	end
 end
 
 header()
