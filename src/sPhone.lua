@@ -496,14 +496,15 @@ local function kernel()
 					if rServer ~= "Success!" then
 						print("Username already exists")
 						print("Retry later in the app sID")
-						sleep(1)
+						sleep(2)
+					else
+						local f = fs.open("/.sPhone/config/username","w")
+						f.write(name)
+						f.close()
+						local pwf = fs.open("/.sPhone/config/.sIDPw", "w")
+						pwf.write(base64.encode(pw))
+						pwf.close()
 					end
-					local f = fs.open("/.sPhone/config/username","w")
-					f.write(name)
-					f.close()
-					local pwf = fs.open("/.sPhone/config/.sIDPw", "w")
-					pwf.write(base64.encode(pw))
-					pwf.close()
 				else
 					term.setBackgroundColor(colors.white)
 					term.clear()
@@ -536,8 +537,11 @@ local function kernel()
 					end
 				end
 			end
-			
+			term.setCursorPos(1,13)
+			term.clearLine()
 			sertextext.center(13,"  All Set!")
+			term.setCursorPos(1,14)
+			term.clearLine()
 			sertextext.center(14,"  Have fun with sPhone")
 			sPhone.user = name
 			sleep(2)
