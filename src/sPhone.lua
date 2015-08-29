@@ -531,7 +531,7 @@ local function kernel()
 						f.write(name)
 						f.close()
 						f = fs.open("/.sPhone/config/.sIDpw", "w")
-						f.write(pw)
+						f.write(base64.encode(pw))
 						f.close()
 					end
 				end
