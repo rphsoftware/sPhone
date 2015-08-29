@@ -1,6 +1,9 @@
 local isDown
 local menu
 local id
+local user
+local pw
+local pwr
 
 if not sPhone then
 	print("This app is for sPhone")
@@ -37,11 +40,76 @@ if isDown ~= "true" then
 end
 
 local function login()
-	
+	term.setBackgroundColor(colors.white)
+	term.clear()
+	term.setCursorPos(1,1)
+	local w, h = term.getSize()
+	paintutils.drawLine(1,1,w,1,colors.gray)
+	term.setTextColor(colors.black)
+	term.setBackgroundColor(colors.white)
+	sertextext.center(3,"  Setup Sertex ID")
+	sertextext.center(7,"  Your Username")
+	term.setCursorPos(3,8)
+	name = read()
+	sertextext.center(9, "  Your Password")
+	term.setCursorPos(3,10)
+	term.clearLine()
+	pw = read("*")
+	sertextext.center(11, "  Checking...")
+	rServer = http.post("http://sertex.esy.es/login.php", "user="..name.."&password="..pw).readAll()
+	if rServer ~= "true" then
+		print("   Wrong Username/Password")
+		sleep(2)
+	else
+		f = fs.open("/.sPhone/config/username", "w")
+		f.write(name)
+		f.close()
+		f = fs.open("/.sPhone/config/.sIDpw", "w")
+		f.write(base64.encode(pw))
+		f.close()
+	end
 end
 
 local function register()
-	
+	term.setBackgroundColor(colors.white)
+	term.clear()
+	term.setCursorPos(1,1)
+	local w, h = term.getSize()
+	paintutils.drawLine(1,1,w,1,colors.gray)
+	term.setTextColor(colors.black)
+	term.setBackgroundColor(colors.white)
+	sertextext.center(3,"  Setup Sertex ID")
+	sertextext.center(7,"  Your Username")
+	term.setCursorPos(3,8)
+	name = read()
+	while true do
+		sertextext.center(9, "  Your Password")
+		term.setCursorPos(3,10)
+		term.clearLine()
+		pw = read("*")
+		sertextext.center(11, "  Repeat")
+		term.setCursorPos(3,12)
+		term.clearLine()
+		pwr = read("*")
+		if pw == pwr then
+			break
+		else
+			print("   Wrong Password")
+			sleep(1)
+		end
+	end
+	local rServer = http.post("http://sertex.esy.es/register.php", "user="..name.."&password="..pw).readAll()
+	if rServer ~= "Success!" then
+		print("Username already exists")
+		sleep(2)	
+	else
+		local f = fs.open("/.sPhone/config/username","w")
+		f.write(name)
+		f.close()
+		local pwf = fs.open("/.sPhone/config/.sIDPw", "w")
+		pwf.write(base64.encode(pw))
+		pwf.close()
+	end
 end
 
 while true do
