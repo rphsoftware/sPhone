@@ -117,7 +117,7 @@ while true do
 		menu = {
 			"Logout",
 		}
-		 _, id = ui.menu("Sertex ID")
+		 _, id = ui.menu(menu, "Sertex ID", true)
 		 if id == 1 then
 		 	fs.delete("/.sPhone/config/.sIDpw")
 		 end
@@ -126,7 +126,7 @@ while true do
 			"Login",
 			"Register",
 		}
-		_, id = ui.menu("Sertex ID")
+		_, id = ui.menu(menu, "Sertex ID", true)
 		if id == 1 then
 			login()
 		elseif id == 2 then
