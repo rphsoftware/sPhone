@@ -43,7 +43,7 @@ local function kernel()
 	_G.sPhone = {
 		version = "Alpha 1",
 		user = "Unknown",
-		devMode = true,
+		devMode = false,
 	}
 	
 	if fs.exists("/.sPhone/config/username") then
@@ -556,6 +556,8 @@ if sPhone then
 	printError("sPhone already started")
 	return
 end
+os.oldPullEvent = os.pullEvent
+os.pullEvent = os.pullEventRaw
 
 local ok, error = pcall(kernel)
 
