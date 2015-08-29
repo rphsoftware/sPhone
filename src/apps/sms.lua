@@ -3,6 +3,11 @@ local loading = {"|","/","-","\\","|","/","-","\\"}
 local server = "http://sertex.esy.es/"
 local sendTo
 
+if not sPhone then
+	printError("This app is for sPhone")
+	return
+end
+
 --check if the server is down
 local isServerUp = http.get(server.."/status.php").readAll()
 if isServerUp ~= "true" then
@@ -22,7 +27,7 @@ f = fs.open("/.sPhone/config/username", "r")
 local user = f.readLine()
 f.close()
 f = fs.open("/.sPhone/config/.sIDpw", "r")
-local pass = f.readLine()
+local pass = base64.decode(f.readLine())
 f.close()
 local head = "user="..user.."&password="..pass
 http.request(server.."login.php",head)
