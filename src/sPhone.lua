@@ -446,51 +446,65 @@ local function kernel()
 					sPhone.wrongPassword = true
 				end
 			end
-		
-			local choose = sPhone.yesNo("Setup Sertex ID", "Do you have a Sertex ID?")
-			if not choose then
-				term.setBackgroundColor(colors.white)
-				term.clear()
-				term.setCursorPos(1,1)
-				local w, h = term.getSize()
-				paintutils.drawLine(1,1,w,1,colors.gray)
-				term.setTextColor(colors.black)
-				term.setBackgroundColor(colors.white)
-				sertextext.center(3,"  Setup Sertex ID")
-				sertextext.center(7,"  Your Username")
-				term.setCursorPos(3,8)
-				name = read()
-				while true do
-					sertextext.center(9, "  Your Password")
-					term.setCursorPos(3,10)
-					term.clearLine()
-					pw = read("*")
-					sertextext.center(11, "  Repeat")
-					term.setCursorPos(3,12)
-					term.clearLine()
-					pwr = read("*")
-					if pw == pwr then
-						break
-					else
-						print("   Wrong Password")
+			
+			term.setBackgroundColor(colors.white)
+			term.clear()
+			term.setCursorPos(1,1)
+			local w, h = term.getSize()
+			paintutils.drawLine(1,1,w,1,colors.gray)
+			term.setTextColor(colors.black)
+			term.setBackgroundColor(colors.white)
+			sertextext.center(3,"  Setup Sertex ID")
+			local isDown = http.get("http://sertex.esy.es/status.php").readAll()
+			if isDown ~= "true" then
+				sertextext.center(5, "  The server is down")
+				sertextext.center(6, "  Run sID on the home")
+				name = "Run sID"
+				sleep(2)
+			else
+
+				local choose = sPhone.yesNo("Setup Sertex ID", "Do you have a Sertex ID?")
+				if not choose then
+					term.setBackgroundColor(colors.white)
+					term.clear()
+					term.setCursorPos(1,1)
+					local w, h = term.getSize()
+					paintutils.drawLine(1,1,w,1,colors.gray)
+					term.setTextColor(colors.black)
+					term.setBackgroundColor(colors.white)
+					sertextext.center(3,"  Setup Sertex ID")
+					sertextext.center(7,"  Your Username")
+					term.setCursorPos(3,8)
+					name = read()
+					while true do
+						sertextext.center(9, "  Your Password")
+						term.setCursorPos(3,10)
+						term.clearLine()
+						pw = read("*")
+						sertextext.center(11, "  Repeat")
+						term.setCursorPos(3,12)
+						term.clearLine()
+						pwr = read("*")
+						if pw == pwr then
+							break
+						else
+							print("   Wrong Password")
+							sleep(1)
+						end
+					end
+					local rServer = http.post("http://sertex.esy.es/register.php", "user="..name.."&password="..pw).readAll()
+					if rServer ~= "Success!" then
+						print("Username already exists")
+						print("Retry later in the app sID")
 						sleep(1)
 					end
-				end
-				local rServer = http.post("http://sertex.esy.es/register.php", "user="..name.."&password="..pw).readAll()
-				if rServer ~= "Success!" then
-					print("The server is down")
-					print("Or Username already exists")
-					print("Retry later in the app sID")
-					sleep(1)
-				end
-				local f = fs.open("/.sPhone/config/username","w")
-				f.write(name)
-				f.close()
-				local pwf = fs.open("/.sPhone/config/.sIDPw", "w")
-				pwf.write(pw)
-				pwf.close()
-			else
-				while true do
+					local f = fs.open("/.sPhone/config/username","w")
+					f.write(name)
+					f.close()
+					local pwf = fs.open("/.sPhone/config/.sIDPw", "w")
+					pwf.write(base64.encode(pw))
+					pwf.close()
+				else
 					term.setBackgroundColor(colors.white)
 					term.clear()
 					term.setCursorPos(1,1)
@@ -508,8 +522,9 @@ local function kernel()
 					pw = read("*")
 					sertextext.center(11, "  Checking...")
 					rServer = http.post("http://sertex.esy.es/login.php", "user="..name.."&password="..pw).readAll()
-					if rServer ~= "true" then
+						if rServer ~= "true" then
 						print("   Wrong Username/Password")
+						print("   Run sID")
 						sleep(2)
 					else
 						f = fs.open("/.sPhone/config/username", "w")
@@ -524,7 +539,7 @@ local function kernel()
 			end
 			
 			sertextext.center(13,"  All Set!")
-			sertextext.center(14,"Have fun with sPhone")
+			sertextext.center(14,"  Have fun with sPhone")
 			sPhone.user = name
 			sleep(2)
 			home()
