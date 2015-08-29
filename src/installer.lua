@@ -7,13 +7,14 @@ local files = {
 	["src/sPhone.lua"] = "/.sPhone/sPhone",
 	
 	["src/apis/sha256.lua"] = "/.sPhone/apis/sha256",
-  ["src/apis/sertextext.lua"] = "/.sPhone/apis/sertextext",
-  ["src/apis/graphics.lua"] = "/.sPhone/apis/graphics",
+	["src/apis/sertextext.lua"] = "/.sPhone/apis/sertextext",
+	["src/apis/graphics.lua"] = "/.sPhone/apis/graphics",
 	["src/apis/ui.lua"] = "/.sPhone/apis/ui",
+	["src/apis/base64.lua"] = "/.sPhone/apis/base64",
 	
 	["src/apps/system/settings.lua"] = "/.sPhone/apps/system/settings",
 	["src/apps/system/info.lua"] = "/.sPhone/apps/system/info",
-  ["src/apps/cstwallet.lua"] = "/.sPhone/apps/cstwallet",
+	["src/apps/cstwallet.lua"] = "/.sPhone/apps/cstwallet",
 	["src/apps/cst/api.lua"] = "/.sPhone/apps/cst/api",
 	
 	["src/apps/sms.lua"] = "/.sPhone/apps/sms",
@@ -21,8 +22,7 @@ local files = {
 	
 	["src/interfaces/login"] = "/.sPhone/interfaces/login",
 	
-	
-  ["src/startup"] = "/startup",
+	["src/startup"] = "/startup",
 }
 
 local githubUser    = "Sertex-Team"
