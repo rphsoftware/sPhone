@@ -316,7 +316,7 @@ local function kernel()
 					print("Type \"exit\" to close the shell")
 					shell.run("/rom/programs/shell")
 				elseif (y > 2 and x > 10) and (y < 7 and x < 16) then
-					shell.run("/.sPhone/apps/system/SertexID")
+					shell.run("/.sPhone/apps/system/sID")
 				elseif (y > 2 and x > 18) and (y < 6 and x < 25) then
 					login()
 				elseif (y > 6 and x > 1) and (y < 10 and x < 9) then
