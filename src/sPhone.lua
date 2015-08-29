@@ -111,7 +111,7 @@ local function kernel()
 		sPhone.doneShutdown = true
 		clear()
 		w, h = term.getSize()
-    term.setCursorPos( (w / 2) - 1, h / 2)
+		term.setCursorPos( (w / 2) - 1, h / 2)
 		for i = 1,3 do
 			sleep(0.3)
 			write(".")
@@ -316,7 +316,7 @@ local function kernel()
 					print("Type \"exit\" to close the shell")
 					shell.run("/rom/programs/shell")
 				elseif (y > 2 and x > 10) and (y < 7 and x < 16) then
-					shell.run("/.sPhone/apps/system/sID")
+					shell.run("/.sPhone/apps/system/SertexID")
 				elseif (y > 2 and x > 18) and (y < 6 and x < 25) then
 					login()
 				elseif (y > 6 and x > 1) and (y < 10 and x < 9) then
