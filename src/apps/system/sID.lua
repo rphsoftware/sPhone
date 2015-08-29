@@ -67,6 +67,7 @@ local function login()
 		f = fs.open("/.sPhone/config/.sIDpw", "w")
 		f.write(base64.encode(pw))
 		f.close()
+		sPhone.name = name
 	end
 end
 
@@ -96,6 +97,7 @@ local function register()
 		else
 			print("   Wrong Password")
 			sleep(1)
+			term.clearLine()
 		end
 	end
 	local rServer = http.post("http://sertex.esy.es/register.php", "user="..name.."&password="..pw).readAll()
@@ -109,6 +111,7 @@ local function register()
 		local pwf = fs.open("/.sPhone/config/.sIDPw", "w")
 		pwf.write(base64.encode(pw))
 		pwf.close()
+		sPhone.name = name
 	end
 end
 
