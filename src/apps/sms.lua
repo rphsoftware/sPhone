@@ -1,6 +1,6 @@
 local tArgs = {...}
 local loading = {"|","/","-","\\","|","/","-","\\"}
-local server = "http://sertex.esy.es/"
+local server = "http://sertex.webege.com/"
 local sendTo
 
 if not sPhone then
