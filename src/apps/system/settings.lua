@@ -1,7 +1,6 @@
 local menu = {
 	"Update",
-	"Change username",
-	"Change password",
+	"Change PIN",
 }
 
 local function clear()
@@ -21,18 +20,6 @@ local function header()
 	term.setCursorPos(1,2)
 	term.setBackgroundColor(colors.white)
 	term.setTextColor(colors.black)
-end
-
-local function changeUsername()
-	 header()
-	 term.setCursorPos(2,3)
-	 write("New Username: ")
-	 local newUsername = read()
-	 local f = fs.open("/.sPhone/config/username","w")
-	 f.write(newUsername)
-	 f.close()
-	 sPhone.user = newUsername
-	 print(" All Set!")
 end
 
 local function changePassword()
@@ -183,8 +170,6 @@ local function redraw()
 			elseif id == 1 then
 				setfenv(loadstring(http.get("https://raw.githubusercontent.com/Sertex-Team/sPhone/master/src/installer.lua").readAll()),getfenv())()
 			elseif id == 2 then
-				changeUsername()
-			elseif id == 3 then
 				changePassword()
 			end
 		end
