@@ -1,3 +1,8 @@
+if not sPhone then
+	print("This app is for sPhone")
+	return
+end
+
 local function clear()
   term.setBackgroundColor(colors.white)
   term.setTextColor(colors.black)
@@ -19,19 +24,12 @@ local function header()
 	term.setTextColor(colors.black)
 end
 
-header()
-
-if fs.exists("/.sPhone/config/.sIDpw") then
-	sPhone.winOk("Sertex ID", "Already Set!")
+clear()
+print("Checking Server...")
+isDown = http.get("http://sertex.esy.es/status.php").readAll()
+if isDown ~= "true" then
+	sPhone.winOk("The server is down", "Retry later")
 	return
 end
-while true do
-	header()
 
-	term.setCursorPos(1,4)
-	print(" Set Sertex ID")
-	write(" Username: ")
-	local name = read()
-	local nExists = http.post("http://sertex.esy.es/exists.php", "user="..name).readAll()
-	--later
-end
+header()
