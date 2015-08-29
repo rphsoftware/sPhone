@@ -1,3 +1,7 @@
+local isDown
+local menu
+local id
+
 if not sPhone then
 	print("This app is for sPhone")
 	return
@@ -30,6 +34,19 @@ isDown = http.get("http://sertex.esy.es/status.php").readAll()
 if isDown ~= "true" then
 	sPhone.winOk("The server is down", "Retry later")
 	return
+end
+
+if fs.exists("/.sPhone/config/.sIDpw") then
+	menu = {
+		"Logout",
+	}
+	 _, id = ui.menu("Sertex ID")
+else
+	menu = {
+		"Login",
+		"New Account",
+	}
+	_, id = ui.menu("Sertex ID")
 end
 
 header()
