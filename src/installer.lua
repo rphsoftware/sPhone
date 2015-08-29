@@ -14,6 +14,7 @@ local files = {
 	
 	["src/apps/system/settings.lua"] = "/.sPhone/apps/system/settings",
 	["src/apps/system/info.lua"] = "/.sPhone/apps/system/info",
+	["src/apps/system/SertexID.lua"] = "/.sPhone/apps/system/SertexID",
 	["src/apps/cstwallet.lua"] = "/.sPhone/apps/cstwallet",
 	["src/apps/cst/api.lua"] = "/.sPhone/apps/cst/api",
 	
