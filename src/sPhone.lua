@@ -533,7 +533,6 @@ local function kernel()
 						f = fs.open("/.sPhone/config/.sIDpw", "w")
 						f.write(pw)
 						f.close()
-						break
 					end
 				end
 			end
