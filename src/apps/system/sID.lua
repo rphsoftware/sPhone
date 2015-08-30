@@ -33,7 +33,7 @@ end
 
 clear()
 print("Checking Server...")
-isDown = http.get("http://sertex.webege.com/status.php").readAll()
+isDown = http.get("http://sertex.esy.es/status.php").readAll()
 if isDown ~= "true" then
 	sPhone.winOk("The server is down", "Retry later")
 	return
@@ -56,7 +56,7 @@ local function login()
 	term.clearLine()
 	pw = read("*")
 	sertextext.center(11, "  Checking...")
-	rServer = http.post("http://sertex.webege.com/login.php", "user="..name.."&password="..pw).readAll()
+	rServer = http.post("http://sertex.esy.es/login.php", "user="..name.."&password="..pw).readAll()
 	if rServer ~= "true" then
 		print("   Wrong Username/Password")
 		sleep(2)
@@ -100,7 +100,7 @@ local function register()
 			term.clearLine()
 		end
 	end
-	local rServer = http.post("http://sertex.webege.com/register.php", "user="..name.."&password="..pw).readAll()
+	local rServer = http.post("http://sertex.esy.es/register.php", "user="..name.."&password="..pw).readAll()
 	if rServer ~= "Success!" then
 		print("Username already exists")
 		sleep(2)	
