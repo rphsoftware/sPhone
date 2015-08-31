@@ -125,12 +125,15 @@ end
 local function recMsg()
 	displayWin.setBackgroundColor(colors.white)
 	displayWin.setTextColor(colors.black)
-  displayWin.clear()
+	displayWin.clear()
   local function printMsg(msg)
-		displayWin.setCursorBlink(false)
-    displayWin.setCursorPos(1,y)
-    displayWin.write(msg)
-    if y == my then displayWin.scroll(1) else y = y + 1 end
+	displayWin.setCursorBlink(false)
+	displayWin.setCursorPos(1,y)
+	local nTerm = term.current()
+	term.redirect(displayWin)
+	print(msg)
+	term.redirect(nTerm)
+	if y == my then displayWin.scroll(1) else y = y + 1 end
   end
 	printMsg("Type /logout to exit")
   while true do
