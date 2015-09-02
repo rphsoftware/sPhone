@@ -41,7 +41,7 @@ end
 
 local function kernel()
 	_G.sPhone = {
-		version = "Alpha 1",
+		version = "Alpha 2",
 		user = "Run sID",
 		devMode = false,
 	}
@@ -88,7 +88,7 @@ local function kernel()
 		sPhone.doneShutdown = true
 		clear()
 		w, h = term.getSize()
-    term.setCursorPos( (w / 2) - 1, h / 2)
+		term.setCursorPos( (w / 2) - 1, h / 2)
 		for i = 1,3 do
 			sleep(0.3)
 			write(".")
@@ -120,16 +120,7 @@ local function kernel()
 		sPhone.forceReboot()
 	end
 	
-	function byte(string)
-		local newString = ""
-		for i = 1, #string do
-			addString = string.byte(string.sub(string, i))
-			newString = newString .. addString
-		end
-		return newString
-	end
-	
-	function sPhone.yesNo(title, desc)
+	function sPhone.yesNo(title, desc, hideUser)
 		term.setBackgroundColor(colors.white)
 		term.clear()
 		term.setCursorPos(1,1)
@@ -138,10 +129,12 @@ local function kernel()
 		paintutils.drawLine(1,1,w,1, colors.gray)
 		term.setTextColor(colors.white)
 		term.setCursorPos(1,1)
-		if not sPhone.user then
-			write(" sPhone")
-		else
-			write(" "..sPhone.user)
+		if not hideUser
+			if not sPhone.user then
+				write(" sPhone")
+			else
+				write(" "..sPhone.user)
+			end
 		end
 		term.setCursorPos(1,3)
 		term.setBackgroundColor(colors.white)
@@ -467,7 +460,7 @@ local function kernel()
 				sleep(2)
 			else
 
-				local choose = sPhone.yesNo("Setup Sertex ID", "Do you have a Sertex ID?")
+				local choose = sPhone.yesNo("Setup Sertex ID", "Do you have a Sertex ID?", true)
 				if not choose then
 					term.setBackgroundColor(colors.white)
 					term.clear()
