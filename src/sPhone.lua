@@ -42,7 +42,7 @@ end
 local function kernel()
 	_G.sPhone = {
 		version = "Alpha 1",
-		user = "Unknown",
+		user = "Run sID",
 		devMode = false,
 	}
 	
@@ -216,7 +216,7 @@ local function kernel()
 		end
 	end
 	
-	function lChat()
+	local function lChat()
 		clear()
 		local w, h = term.getSize()
 		paintutils.drawLine(1,1,w,1,colors.gray)
@@ -252,7 +252,11 @@ local function kernel()
 			term.setTextColor(colors.white)
 			sertextext.right(1,"vvv")
 			term.setCursorPos(1,1)
-			write(" "..sPhone.user)
+			if not sPhone.newUpdate then
+				write(" "..sPhone.user)
+			else
+				write(" New Update!")
+			end
 			box(2,3,"Shell",colors.black,colors.yellow)
 			box(19,3,"Lock",colors.lightGray,colors.black)
 			box(11,3,"sID",colors.red,colors.white)
@@ -550,6 +554,14 @@ local function kernel()
 	end
 	
 	login()
+	
+	local newVersion = http.get("https://raw.githubusercontent.com/Sertex-Team/sPhone/master/src/version").readAll()
+	if newVersion ~= sPhone.version then
+		sPhone.newUpdate = true
+	else
+		sPhone.newUpdate = false
+	end
+
 end
 
 if sPhone then
