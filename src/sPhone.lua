@@ -129,7 +129,7 @@ local function kernel()
 		paintutils.drawLine(1,1,w,1, colors.gray)
 		term.setTextColor(colors.white)
 		term.setCursorPos(1,1)
-		if not hideUser
+		if not hideUser then
 			if not sPhone.user then
 				write(" sPhone")
 			else
