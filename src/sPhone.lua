@@ -553,14 +553,14 @@ local function kernel()
 		end
 	end
 	
-	login()
-	
 	local newVersion = http.get("https://raw.githubusercontent.com/Sertex-Team/sPhone/master/src/version").readAll()
 	if newVersion ~= sPhone.version then
 		sPhone.newUpdate = true
 	else
 		sPhone.newUpdate = false
 	end
+	
+	login()
 
 end
 
