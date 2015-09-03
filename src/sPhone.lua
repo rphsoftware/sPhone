@@ -34,11 +34,6 @@ local function crash(err)
 	shell.run("/rom/programs/shell")
 end
 
-if not pocket or not term.isColor() then
-	crash("Computer not supported: use an Advanced Pocket Computer or an Advanced Wireless Pocket Computer")
-end
-
-
 local function kernel()
 	_G.sPhone = {
 		version = "Alpha 2",
@@ -557,10 +552,21 @@ local function kernel()
 
 end
 
+term.setBackgroundColor(colors.black)
+term.clear()
+term.setCursorPos(1,1)
+term.setTextColor(colors.white)
+
 if sPhone then
 	printError("sPhone already started")
 	return
 end
+
+if not pocket or not term.isColor() then
+	printError("Computer not supported: use an Advanced Pocket Computer or an Advanced Wireless Pocket Computer")
+	return
+end
+
 os.oldPullEvent = os.pullEvent
 os.pullEvent = os.pullEventRaw
 
