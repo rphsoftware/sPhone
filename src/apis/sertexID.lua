@@ -22,3 +22,29 @@ function login(username, password)
     return false
   end
 end
+
+function register(username, password)
+  local register = http.post(SERVER.."register.php", "user="..username.."&password="..password).readAll()
+  if register == "Success!" then
+    return true
+  else
+    return false, register
+  end
+end
+
+function checkUser(username)
+  local check = http.post(SERVER.."check.php", "user="..username).readAll()
+  if check == "true" then
+    return true
+  else
+    return false
+  end
+end
+
+function sendSMS(username, password, to, msg)
+
+end
+
+function updateSMS(username, password, all, from)
+  
+end
