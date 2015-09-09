@@ -41,6 +41,10 @@ local function kernel()
 		devMode = false,
 	}
 	
+	if runningOnStartup then
+		fs.open("/startup","r")
+	end
+	
 	if fs.exists("/.sPhone/config/username") then
 		local u = fs.open("/.sPhone/config/username","r")
 		sPhone.user = u.readLine()
@@ -552,6 +556,8 @@ local function kernel()
 
 end
 
+local runningOnStartup
+
 term.setBackgroundColor(colors.black)
 term.clear()
 term.setCursorPos(1,1)
@@ -567,8 +573,33 @@ if not pocket or not term.isColor() then
 	return
 end
 
+local tArgs = {...}
+
 os.oldPullEvent = os.pullEvent
 os.pullEvent = os.pullEventRaw
+
+local argData = {
+	["-u"] = false,
+	["-s"] = false,
+}
+
+if #tArgs > 0 then
+  while #tArgs > 0 do
+    local tArgs = table.remove(tArgs, 1)
+    if argData[tArgs] ~= nil then
+      argData[tArgs] = true
+    end
+  end
+end
+
+if argData["-u"] then
+	print("Getting installer...")
+	setfenv(loadstring(http.get("https://raw.githubusercontent.com/Sertex-Team/sPhone/master/src/installer.lua").readAll()),getfenv())()
+end
+
+if argData["-s"] then
+	runningOnStartup = true
+end
 
 local ok, error = pcall(kernel)
 
