@@ -36,7 +36,7 @@ end
 
 local function kernel()
 	_G.sPhone = {
-		version = "Alpha 2.1",
+		version = "Alpha 2.1.1",
 		user = "Run sID",
 		devMode = false,
 	}
@@ -262,6 +262,7 @@ local function kernel()
 				write(" "..sPhone.user)
 			else
 				write(" New Update!")
+				sPhone.winOk("New Update!", "Go to Settings")
 			end
 			box(2,3,"Shell",colors.black,colors.yellow)
 			box(19,3,"Lock",colors.lightGray,colors.black)
