@@ -165,6 +165,9 @@ local function kernel()
 		if not fmessage then
 			fmessage = ""
 		end
+		if not smessage then
+			smessage = ""
+		end
 		if not bg then
 			bg = colors.gray
 		end
@@ -177,15 +180,26 @@ local function kernel()
 		if not side then
 			side = colors.lightGray
 		end
-		local w, h = term.getSize
-		term.setBackgroundColor(side)
-		paintutils.drawBox(11 - math.ceil(#fmessage / 2), 5, 16 + math.ceil(#fmessage / 2), 10, side)
-		term.setBackgroundColor(bg)
-		paintutils.drawFilledBox(12 - math.ceil(#fmessage / 2), 6, 15 + math.ceil(#fmessage / 2), 9, bg)
-		term.setCursorPos(14 - math.ceil(#fmessage / 2), 7)
-		term.setTextColor(text)
-		write(fmessage)
-		if smessage then
+		if #fmessage >= #smessage then
+			local w, h = term.getSize
+			term.setBackgroundColor(side)
+			paintutils.drawBox(11 - math.ceil(#fmessage / 2), 5, 16 + math.ceil(#fmessage / 2), 10, side)
+			term.setBackgroundColor(bg)
+			paintutils.drawFilledBox(12 - math.ceil(#fmessage / 2), 6, 15 + math.ceil(#fmessage / 2), 9, bg)
+			term.setCursorPos(14 - math.ceil(#fmessage / 2), 7)
+			term.setTextColor(text)
+			write(fmessage)
+			term.setCursorPos(14 - math.ceil(#smessage / 2), 8)
+			write(smessage)
+		else
+			local w, h = term.getSize
+			term.setBackgroundColor(side)
+			paintutils.drawBox(11 - math.ceil(#smessage / 2), 5, 16 + math.ceil(#smessage / 2), 10, side)
+			term.setBackgroundColor(bg)
+			paintutils.drawFilledBox(12 - math.ceil(#smessage / 2), 6, 15 + math.ceil(#smessage / 2), 9, bg)
+			term.setCursorPos(14 - math.ceil(#fmessage / 2), 7)
+			term.setTextColor(text)
+			write(fmessage)
 			term.setCursorPos(14 - math.ceil(#smessage / 2), 8)
 			write(smessage)
 		end
