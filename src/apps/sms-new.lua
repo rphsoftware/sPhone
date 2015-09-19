@@ -138,14 +138,16 @@ local function recMsg()
 	printMsg("Type /logout to exit")
   while true do
     stream = http.post(server.."update.php",head)
-    newMessages = textutils.unserialize(stream.readAll())
-    stream.close()
-    for i,v in pairs(newMessages) do
-      t = textutils.unserialize(v)
-      if t then
-        date = t["date"]
-        mesg = "<"..t["from"].."> "..t["message"]
-        printMsg(mesg)
+    if stream then
+      local newMessages = textutils.unserialize(stream.readAll())
+      stream.close()
+      for i,v in pairs(newMessages) do
+        t = textutils.unserialize(v)
+        if t then
+          date = t["date"]
+          mesg = "<"..t["from"].."> "..t["message"]
+          printMsg(mesg)
+        end
       end
     end
   end
