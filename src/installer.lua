@@ -19,6 +19,7 @@ local files = {
 	["src/apps/cst/api.lua"] = "/.sPhone/apps/cst/api",
 	
 	["src/apps/sms.lua"] = "/.sPhone/apps/sms",
+	["src/apps/sms-new.lua"] = "/.sPhone/apps/sms-new",
 	["src/apps/gps.lua"] = "/.sPhone/apps/gps",
 	
 	["src/interfaces/login"] = "/.sPhone/interfaces/login",
