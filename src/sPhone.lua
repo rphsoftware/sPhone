@@ -36,7 +36,7 @@ end
 
 local function kernel()
 	_G.sPhone = {
-		version = "Alpha 2.2",
+		version = "Alpha 2.2.1",
 		user = "Run sID",
 		devMode = false,
 		mainTerm = term.current()
