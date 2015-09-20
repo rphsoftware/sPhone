@@ -39,6 +39,7 @@ local function kernel()
 		version = "Alpha 2.2",
 		user = "Run sID",
 		devMode = false,
+		mainTerm = term.current()
 	}
 	
 	if runningOnStartup then
@@ -288,6 +289,7 @@ local function kernel()
 				write("Shutdown")
 			end
 			while true do
+				term.redirect(sPhone.mainTerm)
 				redraw()
 				local _,_,x,y = os.pullEvent("mouse_click")
 				if y == 3 then
