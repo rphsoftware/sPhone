@@ -137,7 +137,7 @@ local function recMsg()
   end
 	printMsg("Type /logout to exit")
   while true do
-    stream = http.post(server.."update.php",head)
+    stream = http.post(server.."update-new.php",head)
     if stream then
       local newMessages = textutils.unserialize(stream.readAll())
       stream.close()
