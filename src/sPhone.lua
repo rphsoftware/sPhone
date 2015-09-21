@@ -119,6 +119,167 @@ local function kernel()
 		sleep(0.2)
 		sPhone.forceReboot()
 	end
+  
+  function sPhone.header(butt)
+
+    if not sPhone then
+      sPhone = {
+        user = "Unknown",
+      }
+    end
+    
+    local w, h = term.getSize()
+
+    paintutils.drawLine(1,1,w,1, colors.blue)
+    term.setTextColor(colors.white)
+    term.setCursorPos(1,1)
+    write(" "..sPhone.user)
+    term.setCursorPos(w,1)
+    write("X")
+    term.setBackgroundColor(colors.white)
+    term.setTextColor(colors.black)
+    term.setCursorPos(1,3)
+  end
+  
+  function sPhone.menu(items, title, closeButton)
+    local function cprint(text)
+      if type(text) ~= 'table' then
+        text = {text}
+      end
+	
+      local w, h = term.getSize()
+	
+      for i=1,#text do
+        local x, y = term.getCursorPos()
+        term.setCursorPos(math.floor(w/2)-math.floor(text[i]:len()/2), y)
+        print(text[i])
+      end
+    end
+    local function clear()
+      term.clear()
+      term.setCursorPos(1, 1)
+    end
+	
+    local termWidth, termHeight = term.getSize()
+    local drawSize = termHeight - 6
+	
+    local function maxPages()
+    local itemCount = #items
+    local pageCount = 0
+		while itemCount > 0 do
+			itemCount = itemCount - drawSize
+			pageCount = pageCount + 1
+		end
+		return pageCount
+	end
+	
+	local function iif(cond, trueval, falseval)
+		if cond then
+			return trueval
+		else
+			return falseval
+		end
+	end
+	
+	local function pagedItems()
+		local ret = {}
+		for i = 1, maxPages() do
+			local tmp = {}
+			local nElements = 0
+			for j = drawSize*(i-1)+1, iif(drawSize*(i+1) > #items, #items, drawSize*(i+1)) do
+				if nElements < drawSize then
+					table.insert(tmp, items[j])
+					nElements = nElements + 1
+				end
+			end
+			table.insert(ret, tmp)
+		end
+		return ret
+	end
+	
+	local selected = 1
+	if start then
+		selected = start
+	end
+	local page = 1
+	
+	local function redraw()
+		term.setBackgroundColor(colors.white)
+		term.setTextColor(colors.black)
+		term.clear()
+    term.setCursorPos(1,1)
+		sPhone.header(closeButton)
+		term.setCursorPos(1,3)
+		if not title then
+			title = "sPhone"
+		end
+		cprint("  "..title)
+		if moreTitle then
+			head = moreTitle
+		else
+			head = {"\n",}
+			if not allowNil or allowNil == true then
+				--head[3] = 'Terminate to cancel.'
+			end
+		end
+		for i=1,#head do
+			print(head[i])
+		end
+		if maxPages() > 1 then
+			pages = "<- (page "..page.." of "..maxPages()..") ->"
+			print(pages)
+		end
+		for i = 1, #pagedItems()[page] do
+			if selected == drawSize*(page-1)+i then
+				term.setBackgroundColor(colors.white)
+				term.setTextColor(colors.black)
+			else
+				term.setBackgroundColor(colors.white)
+				term.setTextColor(colors.black)
+			end
+			term.clearLine()
+			cprint(iif(selected == drawSize*(page-1)+i,"","").." "..pagedItems()[page][i])
+			term.setBackgroundColor(colors.white)
+			term.setTextColor(colors.black)
+		end
+	end
+
+	local function changePage(pW)
+		if pW == 1 and page < maxPages() then
+			page = page + 1
+			if selected + drawSize > #items then
+				selected = #items
+			else
+				selected = selected + drawSize
+			end
+		elseif pW == -1 and page > 1 then
+			page = page - 1
+			if selected - drawSize < 1 then
+				selected = 1
+			else
+				selected = selected - drawSize
+			end
+		end
+	end
+	
+	while true do
+		redraw()
+		local eventData = {os.pullEventRaw()}
+		if eventData[1] == 'mouse_click' then
+			if eventData[4] == 1 and eventData[3] == 26 then
+				return false, 0
+			end
+			if eventData[4] > 3 then
+				clear()
+				selected = (eventData[4]-6+((page-1)*drawSize))+1
+				if selected then
+					return items[selected], selected
+				end
+			end
+		end
+		sleep(0)
+	end
+end
 	
 	function sPhone.yesNo(title, desc, hideUser)
 		term.setBackgroundColor(colors.white)
@@ -126,7 +287,7 @@ local function kernel()
 		term.setCursorPos(1,1)
 		term.setTextColor(colors.black)
 		local w, h = term.getSize()
-		paintutils.drawLine(1,1,w,1, colors.gray)
+		paintutils.drawLine(1,1,w,1, colors.blue)
 		term.setTextColor(colors.white)
 		term.setCursorPos(1,1)
 		if not hideUser then
@@ -170,7 +331,7 @@ local function kernel()
 			smessage = ""
 		end
 		if not bg then
-			bg = colors.gray
+			bg = colors.lightBlue
 		end
 		if not text then
 			text = colors.white
@@ -179,7 +340,7 @@ local function kernel()
 			button = colors.lightGray
 		end
 		if not side then
-			side = colors.lightGray
+			side = colors.blue
 		end
 		if #fmessage >= #smessage then
 			local w, h = term.getSize
@@ -226,7 +387,7 @@ local function kernel()
 	local function lChat()
 		clear()
 		local w, h = term.getSize()
-		paintutils.drawLine(1,1,w,1,colors.gray)
+		paintutils.drawLine(1,1,w,1,colors.blue)
 		term.setTextColor(colors.white)
 		sertextext.center(1,"  Chat")
 		term.setBackgroundColor(colors.white)
@@ -255,7 +416,7 @@ local function kernel()
 			end
 			clear()
 			local w, h = term.getSize()
-			paintutils.drawLine(1,1,w,1, colors.gray)
+			paintutils.drawLine(1,1,w,1, colors.blue)
 			term.setTextColor(colors.white)
 			sertextext.right(1,"vvv")
 			term.setCursorPos(1,1)
@@ -278,9 +439,9 @@ local function kernel()
 			sPhone.isFooterMenuOpen = true
 			function redraw()
 				local w, h = term.getSize()
-				graphics.box(1,2,w,4,colors.gray)
+				graphics.box(1,2,w,4,colors.blue)
 				term.setTextColor(colors.white)
-				term.setBackgroundColor(colors.gray)
+				term.setBackgroundColor(colors.blue)
 				sertextext.right(1,"^^^")
 				sertextext.right(3, "Reboot")
 				term.setCursorPos(11,3)
@@ -355,7 +516,7 @@ local function kernel()
 				term.setCursorPos(1,1)
 				paintutils.drawImage(paintutils.loadImage("/.sPhone/interfaces/login"),1,1)
 				term.setTextColor(colors.white)
-				term.setBackgroundColor(colors.gray)
+				term.setBackgroundColor(colors.blue)
 				term.setCursorPos(1,1)
 				write(" "..sPhone.user)
 				if sPhone.wrongPassword then
@@ -366,22 +527,14 @@ local function kernel()
 				term.setTextColor(colors.black)
 				term.setBackgroundColor(colors.white)
 				sertextext.center(7,"  Insert Password")
-				term.setTextColor(colors.black)
-				term.setCursorBlink(true)
-				term.setCursorPos(9,10)
-				local _, k1 = os.pullEvent("char")
-				write("*")
-				term.setCursorPos(12,10)
-				local _, k2 = os.pullEvent("char")
-				write("*")
-				term.setCursorPos(15,10)
-				local _, k3 = os.pullEvent("char")
-				write("*")
-				term.setCursorPos(18,10)
-				local _, k4 = os.pullEvent("char")
-				write("*")
-				term.setCursorBlink(false)
-				local passwordLogin = k1..k2..k3..k4
+        local loginTerm = window.create(term.native(), 8,10,12,1, true)
+        term.redirect(loginTerm)
+        term.setBackgroundColor(colors.white)
+        term.clear()
+        term.setCursorPos(1,1)
+        term.setTextColor(colors.black)
+				local passwordLogin = read("*")
+        term.redirect(sPhone.mainTerm)
 				local fpw = fs.open("/.sPhone/.password","r")
 				if sha256.sha256(passwordLogin) == fpw.readLine() then
 					sPhone.wrongPassword = false
@@ -407,22 +560,14 @@ local function kernel()
 				term.setBackgroundColor(colors.white)
 				sertextext.center(3,"  Setup")
 				sertextext.center(7,"  Insert Password")
-				term.setTextColor(colors.black)
-				term.setCursorBlink(true)
-				term.setCursorPos(9,10)
-				local _, k1 = os.pullEvent("char")
-				write("*")
-				term.setCursorPos(12,10)
-				local _, k2 = os.pullEvent("char")
-				write("*")
-				term.setCursorPos(15,10)
-				local _, k3 = os.pullEvent("char")
-				write("*")
-				term.setCursorPos(18,10)
-				local _, k4 = os.pullEvent("char")
-				write("*")
-				term.setCursorBlink(false)
-				local password1 = k1..k2..k3..k4
+				local loginTerm = window.create(term.native(), 8,10,12,1, true)
+        term.redirect(loginTerm)
+        term.setBackgroundColor(colors.white)
+        term.clear()
+        term.setCursorPos(1,1)
+        term.setTextColor(colors.black)
+				local password1 = read("*")
+        term.redirect(sPhone.mainTerm)
 				term.clear()
 				term.setCursorPos(1,1)
 				paintutils.drawImage(paintutils.loadImage("/.sPhone/interfaces/login"),1,1)
@@ -430,22 +575,14 @@ local function kernel()
 				term.setBackgroundColor(colors.white)
 				sertextext.center(3,"  Setup")
 				sertextext.center(7,"  Repeat")
-				term.setTextColor(colors.black)
-				term.setCursorBlink(true)
-				term.setCursorPos(9,10)
-				local _, v1 = os.pullEvent("char")
-				write("*")
-				term.setCursorPos(12,10)
-				local _, v2 = os.pullEvent("char")
-				write("*")
-				term.setCursorPos(15,10)
-				local _, v3 = os.pullEvent("char")
-				write("*")
-				term.setCursorPos(18,10)
-				local _, v4 = os.pullEvent("char")
-				write("*")
-				term.setCursorBlink(false)
-				local password2 = v1..v2..v3..v4
+				local loginTerm = window.create(term.native(), 8,10,12,1, true)
+        term.redirect(loginTerm)
+        term.setBackgroundColor(colors.white)
+        term.clear()
+        term.setCursorPos(1,1)
+        term.setTextColor(colors.black)
+				local password2 = read("*")
+        term.redirect(sPhone.mainTerm)
 				if password1 == password2 then
 					local f = fs.open("/.sPhone/.password", "w")
 					f.write(sha256.sha256(password1))
@@ -463,7 +600,7 @@ local function kernel()
 			term.clear()
 			term.setCursorPos(1,1)
 			local w, h = term.getSize()
-			paintutils.drawLine(1,1,w,1,colors.gray)
+			paintutils.drawLine(1,1,w,1,colors.blue)
 			term.setTextColor(colors.black)
 			term.setBackgroundColor(colors.white)
 			sertextext.center(3,"  Setup Sertex ID")
@@ -481,7 +618,7 @@ local function kernel()
 					term.clear()
 					term.setCursorPos(1,1)
 					local w, h = term.getSize()
-					paintutils.drawLine(1,1,w,1,colors.gray)
+					paintutils.drawLine(1,1,w,1,colors.blue)
 					term.setTextColor(colors.black)
 					term.setBackgroundColor(colors.white)
 					sertextext.center(3,"  Setup Sertex ID")
@@ -522,7 +659,7 @@ local function kernel()
 					term.clear()
 					term.setCursorPos(1,1)
 					local w, h = term.getSize()
-					paintutils.drawLine(1,1,w,1,colors.gray)
+					paintutils.drawLine(1,1,w,1,colors.blue)
 					term.setTextColor(colors.black)
 					term.setBackgroundColor(colors.white)
 					sertextext.center(3,"  Setup Sertex ID")
