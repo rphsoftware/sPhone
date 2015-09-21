@@ -42,7 +42,12 @@ function checkUser(username)
 end
 
 function sendSMS(username, password, to, msg)
-
+  local send = http.post(SERVER.."send.php","user="..username.."&password="..password.."&to="..to.."&message="..message).readAll()
+  if send = "true" then
+    return true
+  else
+    return false,send
+  end
 end
 
 function updateSMS(username, password, all, from)
