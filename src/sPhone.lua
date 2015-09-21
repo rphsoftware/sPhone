@@ -36,7 +36,7 @@ end
 
 local function kernel()
 	_G.sPhone = {
-		version = "Alpha 2.2.1",
+		version = "Alpha 2.3",
 		user = "Run sID",
 		devMode = false,
 		mainTerm = term.current()
@@ -337,7 +337,7 @@ end
 			text = colors.white
 		end
 		if not button then
-			button = colors.lightGray
+			button = colors.lightBlue
 		end
 		if not side then
 			side = colors.blue
