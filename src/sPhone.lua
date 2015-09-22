@@ -36,11 +36,19 @@ end
 
 local function kernel()
 	_G.sPhone = {
-		version = "Alpha 2.3",
+		version = "Alpha 2.3.1",
 		user = "Run sID",
 		devMode = false,
 		mainTerm = term.current()
 	}
+	
+	if not fs.exists("/.sPhone/autorun") then
+		fs.makeDir("/.sPhone/autorun")
+	end
+	
+	for k, v in pairs(fs.list("/.sPhone/autorun")) do
+		dofile("/.sPhone/autorun/"..v)
+	end
 	
 	if runningOnStartup then
 		fs.open("/startup","r")
