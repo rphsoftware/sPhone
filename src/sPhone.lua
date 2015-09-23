@@ -46,7 +46,11 @@ local function kernel()
 		fs.makeDir("/.sPhone/autorun")
 	end
 	
+	term.setBackgroundColor(colors.white)
+	term.clear()
+	
 	for k, v in pairs(fs.list("/.sPhone/autorun")) do
+		term.setTextColor(colors.black)
 		if not fs.isDir("/.sPhone/autorun/"..v) then
 			local f = fs.open("/.sPhone/autorun/"..v,"r")
 			local script = f.readAll()
@@ -55,9 +59,11 @@ local function kernel()
 			sleep(0)
 			local ok, err = pcall(function() setfenv(loadstring(script),getfenv())() end)
 			if not ok then
-				printError("Script error: "..v..": "..err)
+				term.setTextColor(colors.red)
+				print("Script error: "..v..": "..err)
 				fs.move("/.sPhone/autorun/"..v, "/.sPhone/autorun/disabled/"..v)
-				printError(v.." disabled to prevent errors")
+				term.setTextColor(colors.blue)
+				print(v.." disabled to prevent errors")
 				sleep(0.5)
 			end
 			
