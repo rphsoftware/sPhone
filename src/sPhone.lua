@@ -720,7 +720,7 @@ end
 		end
 	end
 	
-	local newVersion = http.get("https://raw.githubusercontent.com/Sertex-Team/sPhone/master/src/version").readAll()
+	local newVersion = http.get("https://raw.githubusercontent.com/Sertex-Team/sPhone/master/src/version").readLine()
 	if newVersion ~= sPhone.version then
 		sPhone.newUpdate = true
 	else
