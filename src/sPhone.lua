@@ -47,7 +47,21 @@ local function kernel()
 	end
 	
 	for k, v in pairs(fs.list("/.sPhone/autorun")) do
-		dofile("/.sPhone/autorun/"..v)
+		if not fs.isDir("/.sPhone/autorun/"..v) then
+			local f = fs.open("/.sPhone/autorun/"..v,"r")
+			local script = f.readAll()
+			f.close()
+			print("Loading script "..v)
+			sleep(0)
+			local ok, err = pcall(function() setfenv(loadstring(script),getfenv())() end)
+			if not ok then
+				printError("Script error: "..v..": "..err)
+				fs.move("/.sPhone/autorun/"..v, "/.sPhone/autorun/disabled/"..v)
+				printError(v.." disabled to prevent errors")
+			end
+			
+			
+		end
 	end
 	
 	if runningOnStartup then
