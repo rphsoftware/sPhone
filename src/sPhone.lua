@@ -58,6 +58,7 @@ local function kernel()
 				printError("Script error: "..v..": "..err)
 				fs.move("/.sPhone/autorun/"..v, "/.sPhone/autorun/disabled/"..v)
 				printError(v.." disabled to prevent errors")
+				sleep(0.5)
 			end
 			
 			
