@@ -11,6 +11,7 @@ local files = {
 	["src/apis/graphics.lua"] = "/.sPhone/apis/graphics",
 	["src/apis/ui.lua"] = "/.sPhone/apis/ui",
 	["src/apis/base64.lua"] = "/.sPhone/apis/base64",
+	["src/apis/config.lua"] = "/.sPhone/apis/config",
 	
 	["src/apps/system/settings.lua"] = "/.sPhone/apps/system/settings",
 	["src/apps/system/info.lua"] = "/.sPhone/apps/system/info",
