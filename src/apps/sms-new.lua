@@ -88,6 +88,7 @@ local function readMsg()
     term.setCursorPos(1,1)
     term.write("Send: ")
     local msg = read()
+    local msg = base64.encode(msg)
     term.clear()
 		if msg == "/logout" then
 			term.redirect(mainTerm)
