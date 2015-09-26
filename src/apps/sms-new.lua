@@ -109,7 +109,7 @@ local function readMsg()
 					if pos > #loading then pos = 1 end
 				elseif e[1] == "http_success" then
 					displayWin.setCursorPos(1,y)
-					displayWin.write("<You> "..msg)
+					displayWin.write("<You> "..base64.decode(msg))
 					if y == my then displayWin.scroll(1) else y = y +1 end
 					break
 				elseif e[1] == "http_failure" then
