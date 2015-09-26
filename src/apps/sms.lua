@@ -88,6 +88,7 @@ local function readMsg()
     term.setCursorPos(1,1)
     term.write("Send: ")
     local msg = read()
+    local msg = base64.encode(msg)
     term.clear()
 		if msg == "/logout" then
 			term.redirect(mainTerm)
@@ -148,7 +149,7 @@ local function recMsg()
       t = textutils.unserialize(v)
       if t then
         date = t["date"]
-        mesg = "<"..t["from"].."> "..t["message"]
+        mesg = "<"..t["from"].."> "..base64.decode(t["message"])
         printMsg(mesg)
       end
     end
