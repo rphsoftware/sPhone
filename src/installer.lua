@@ -22,6 +22,7 @@ local files = {
 	["src/apps/sms.lua"] = "/.sPhone/apps/sms",
 	["src/apps/sms-new.lua"] = "/.sPhone/apps/sms-new",
 	["src/apps/gps.lua"] = "/.sPhone/apps/gps",
+	["src/apps/buddies.lua"] = "/.sPhone/apps/buddies",
 	
 	["src/interfaces/login"] = "/.sPhone/interfaces/login",
 	
