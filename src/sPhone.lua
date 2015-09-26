@@ -38,7 +38,7 @@ local function kernel()
 	_G.sPhone = {
 		version = "Alpha 2.3.1.1",
 		user = "Run sID",
-		devMode = false,
+		devMode = true,
 		mainTerm = term.current()
 	}
 	
@@ -457,8 +457,8 @@ end
 			box(2,3,"Shell",colors.black,colors.yellow)
 			box(19,3,"Lock",colors.lightGray,colors.black)
 			box(11,3,"sID",colors.red,colors.white)
-			box(2,7,"Games",colors.pink,colors.blue)
-			box(10,7,"Chat", colors.black,colors.white)
+			box(2,7,"Buddies",colors.brown,colors.white)
+			box(12,7,"Chat", colors.black,colors.white)
 			box(19,7,"SMS",colors.green,colors.white)
 			box(3, 11, "CST", colors.lightBlue, colors.blue)
 			box(10, 11, "GPS", colors.red, colors.black)
@@ -521,9 +521,9 @@ end
 					shell.run("/.sPhone/apps/system/sID")
 				elseif (y > 2 and x > 18) and (y < 6 and x < 25) then
 					login()
-				elseif (y > 6 and x > 1) and (y < 10 and x < 9) then
-					sPhone.winOk("Work In", "Progress")
-				elseif (y > 6 and x > 9) and (y < 10 and x < 16) then
+				elseif (y > 6 and x > 1) and (y < 10 and x < 11) then
+					shell.run("/.sPhone/apps/buddies")
+				elseif (y > 6 and x > 11) and (y < 10 and x < 18) then
 					lChat()
 				elseif (y > 6 and x > 18) and (y < 10 and x < 24) then
 					shell.run("/.sPhone/apps/sms")
