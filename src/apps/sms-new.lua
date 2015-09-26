@@ -146,7 +146,7 @@ local function recMsg()
         t = textutils.unserialize(v)
         if t then
           date = t["date"]
-          mesg = "<"..t["from"].."> "..t["message"]
+          mesg = "<"..t["from"].."> "..base64.decode(t["message"])
           printMsg(mesg)
         end
       end
