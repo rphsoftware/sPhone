@@ -90,7 +90,7 @@ local function readMsg()
     local msg = read()
     local msg = base64.encode(msg)
     term.clear()
-		if msg == "/logout" then
+		if base64.decode(msg) == "/logout" then
 			term.redirect(mainTerm)
 			return
 		end
