@@ -43,7 +43,7 @@ end
 
 function sendSMS(username, password, to, msg)
   local send = http.post(SERVER.."send.php","user="..username.."&password="..password.."&to="..to.."&message="..message).readAll()
-  if send = "true" then
+  if send == "true" then
     return true
   else
     return false,send
