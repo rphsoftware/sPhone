@@ -41,7 +41,7 @@ local function add()
   term.setCursorPos(2,3)
   sertextext.center(3, "  Name")
   term.setCursorPos(2,5)
-  term.setCursorBlick(true)
+  term.setCursorBlink(true)
   local e,_,x,y = os.pullEvent()
   if e == "mouse_click" then
     if y == 1 and x == w then
