@@ -444,7 +444,7 @@ end
 	end
 	
 	local function home()
-    sPhone.winOk("The 5th of october the","database will be reset")
+    		sPhone.winOk("We wiped sID Database","for security issues")
 		local function drawHome()
 			local function box(x,y,text,bg,colorText,page)
 				graphics.box(x,y,x+1+#text,y+2,bg)
