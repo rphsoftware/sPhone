@@ -382,9 +382,9 @@ end
 		if #fmessage >= #smessage then
 			local w, h = term.getSize
 			term.setBackgroundColor(side)
-			paintutils.drawBox(14 - math.ceil(#fmessage / 2), 5, 13 + math.ceil(#fmessage / 2), 10, side)
+			paintutils.drawBox(13 - math.ceil(#fmessage / 2), 5, 14 + math.ceil(#fmessage / 2), 10, side)
 			term.setBackgroundColor(bg)
-			paintutils.drawFilledBox(15 - math.ceil(#fmessage / 2), 6, 12 + math.ceil(#fmessage / 2), 9, bg)
+			paintutils.drawFilledBox(14 - math.ceil(#fmessage / 2), 6, 13 + math.ceil(#fmessage / 2), 9, bg)
 			term.setCursorPos(14 - math.ceil(#fmessage / 2), 7)
 			term.setTextColor(text)
 			write(fmessage)
@@ -393,9 +393,9 @@ end
 		else
 			local w, h = term.getSize
 			term.setBackgroundColor(side)
-			paintutils.drawBox(11 - math.ceil(#smessage / 2), 5, 16 + math.ceil(#smessage / 2), 10, side)
+			paintutils.drawBox(13 - math.ceil(#smessage / 2), 5, 14 + math.ceil(#smessage / 2), 10, side)
 			term.setBackgroundColor(bg)
-			paintutils.drawFilledBox(12 - math.ceil(#smessage / 2), 6, 15 + math.ceil(#smessage / 2), 9, bg)
+			paintutils.drawFilledBox(14 - math.ceil(#smessage / 2), 6, 13 + math.ceil(#smessage / 2), 9, bg)
 			term.setCursorPos(14 - math.ceil(#fmessage / 2), 7)
 			term.setTextColor(text)
 			write(fmessage)
