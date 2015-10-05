@@ -436,7 +436,7 @@ end
 	end
 	
 	local function home()
-    sPhone.winOk("The 5th of october","the databse will be reset")
+    sPhone.winOk("The 5th of october the","database will be reset")
 		local function drawHome()
 			local function box(x,y,text,bg,colorText,page)
 				graphics.box(x,y,x+1+#text,y+2,bg)
