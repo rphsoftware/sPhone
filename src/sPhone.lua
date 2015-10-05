@@ -36,7 +36,7 @@ end
 
 local function kernel()
 	_G.sPhone = {
-		version = "Alpha 2.3.4",
+		version = "Alpha 2.3.4.1",
 		user = "Run sID",
 		devMode = false,
 		mainTerm = term.current()
@@ -436,6 +436,7 @@ end
 	end
 	
 	local function home()
+    sPhone.winOk("The 10th of october","the databse will be reset")
 		local function drawHome()
 			local function box(x,y,text,bg,colorText,page)
 				graphics.box(x,y,x+1+#text,y+2,bg)
