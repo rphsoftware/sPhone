@@ -42,6 +42,14 @@ local function kernel()
 		mainTerm = term.current()
 	}
 	
+	if not fs.exists("/.sPhone/config/newIDSystem") then
+		fs.delete("/.sPhone/config/username")
+		fs.delete("/.sPhone/config/.sIDpw")
+		f = fs.open("/.sPhone/config/newIDSystem","w")
+		f.write("Ignore Me. I just check if you use the new Sertex ID system to fix password issues")
+		f.close()
+	end
+	
 	if not fs.exists("/.sPhone/autorun") then
 		fs.makeDir("/.sPhone/autorun")
 	end
