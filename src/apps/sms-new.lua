@@ -27,9 +27,9 @@ f = fs.open("/.sPhone/config/username", "r")
 local user = f.readLine()
 f.close()
 f = fs.open("/.sPhone/config/.sIDpw", "r")
-local pass = base64.decode(f.readLine())
+local pass = f.readLine()
 f.close()
-local head = "user="..user.."&password="..pass
+local head = "user="..user.."&password="..pass.."$hashed=true"
 http.request(server.."login.php",head)
 local update = os.startTimer(0.15)
 local pos = 1
