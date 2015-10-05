@@ -97,7 +97,7 @@ local function readMsg()
 		if msg ~= "" then
 			local pos = 1
 			local update = os.startTimer(0.15)
-			http.request(server.."send.php","user="..user.."&password="..pass.."&message="..msg.."&to="..sendTo)
+			http.request(server.."send.php","user="..user.."&password="..pass.."&message="..msg.."&to="..sendTo.."&hashed=true")
 			while true do
 				term.clear()
 				term.setCursorPos(1,1)
