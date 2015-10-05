@@ -20,7 +20,7 @@ end
 local function header()
 	clear()
 	local w, h = term.getSize()
-	paintutils.drawLine(1,1,w,1, colors.blue)
+	paintutils.drawLine(1,1,w,1, colors.red)
 	term.setTextColor(colors.white)
 	term.setCursorPos(1,1)
 	write(" "..sPhone.user)
@@ -65,7 +65,7 @@ local function login()
 		f.write(name)
 		f.close()
 		f = fs.open("/.sPhone/config/.sIDpw", "w")
-		f.write(base64.encode(pw))
+		f.write(sha256.sha256(pw))
 		f.close()
 		sPhone.name = name
 	end
@@ -109,7 +109,7 @@ local function register()
 		f.write(name)
 		f.close()
 		local pwf = fs.open("/.sPhone/config/.sIDPw", "w")
-		pwf.write(base64.encode(pw))
+		pwf.write(sha256.sha256(pw))
 		pwf.close()
 		sPhone.name = name
 	end
