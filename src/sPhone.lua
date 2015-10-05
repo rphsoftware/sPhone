@@ -591,13 +591,13 @@ end
 				sertextext.center(3,"  Setup")
 				sertextext.center(7,"  Insert Password")
 				local loginTerm = window.create(term.native(), 8,10,12,1, true)
-        term.redirect(loginTerm)
-        term.setBackgroundColor(colors.white)
-        term.clear()
-        term.setCursorPos(1,1)
-        term.setTextColor(colors.black)
+				term.redirect(loginTerm)
+				term.setBackgroundColor(colors.white)
+				term.clear()
+				term.setCursorPos(1,1)
+				term.setTextColor(colors.black)
 				local password1 = read("*")
-        term.redirect(sPhone.mainTerm)
+				term.redirect(sPhone.mainTerm)
 				term.clear()
 				term.setCursorPos(1,1)
 				paintutils.drawImage(paintutils.loadImage("/.sPhone/interfaces/login"),1,1)
@@ -606,13 +606,13 @@ end
 				sertextext.center(3,"  Setup")
 				sertextext.center(7,"  Repeat")
 				local loginTerm = window.create(term.native(), 8,10,12,1, true)
-        term.redirect(loginTerm)
-        term.setBackgroundColor(colors.white)
-        term.clear()
-        term.setCursorPos(1,1)
-        term.setTextColor(colors.black)
+				term.redirect(loginTerm)
+				term.setBackgroundColor(colors.white)
+				term.clear()
+				term.setCursorPos(1,1)
+				term.setTextColor(colors.black)
 				local password2 = read("*")
-        term.redirect(sPhone.mainTerm)
+				term.redirect(sPhone.mainTerm)
 				if password1 == password2 then
 					local f = fs.open("/.sPhone/.password", "w")
 					f.write(sha256.sha256(password1))
@@ -641,7 +641,7 @@ end
 				name = "Run sID"
 				sleep(2)
 			else
-
+				
 				local choose = sPhone.yesNo("Setup Sertex ID", "Do you have a Sertex ID?", true)
 				if not choose then
 					term.setBackgroundColor(colors.white)
@@ -681,7 +681,7 @@ end
 						f.write(name)
 						f.close()
 						local pwf = fs.open("/.sPhone/config/.sIDPw", "w")
-						pwf.write(base64.encode(pw))
+						pwf.write(sha256.sha256(pw))
 						pwf.close()
 					end
 				else
@@ -711,7 +711,7 @@ end
 						f.write(name)
 						f.close()
 						f = fs.open("/.sPhone/config/.sIDpw", "w")
-						f.write(base64.encode(pw))
+						f.write(sha256.sha256(pw))
 						f.close()
 					end
 				end
