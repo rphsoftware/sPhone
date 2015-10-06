@@ -80,8 +80,8 @@ local function remove()
       if users[y-1] then
         local user = users[y-1]
         if sPhone.yesNo("Remove "..users[y-1].."?",nil,false) then
-          table.remove(users, user)
           local f = fs.open("/.sPhone/config/buddies", "w")
+          table.remove(users,users[y-1])
           for i = 1, #users do
             f.write(users[i].."\n")
           end
