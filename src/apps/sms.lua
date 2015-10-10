@@ -128,7 +128,6 @@ local function recMsg()
 	displayWin.setTextColor(colors.black)
 	displayWin.clear()
   local function printMsg(msg)
-  	local 
 	displayWin.setCursorBlink(false)
 	displayWin.setCursorPos(1,y)
 	local nTerm = term.current()
