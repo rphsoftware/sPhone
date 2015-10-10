@@ -110,7 +110,7 @@ local function readMsg()
 				elseif e[1] == "http_success" then
 					displayWin.setCursorPos(1,y)
 					displayWin.write("<You> "..base64.decode(msg))
-					if y == my then displayWin.scroll(1) else if #msg < 20 then y = y + 1 else y = y + 2 end end
+					if y == my then displayWin.scroll(1) else if #base.decode(msg) < 20 then y = y + 1 else y = y + 2 end end
 					break
 				elseif e[1] == "http_failure" then
 					term.redirect(ntv)
