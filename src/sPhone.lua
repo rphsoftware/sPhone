@@ -35,6 +35,17 @@ local function crash(err)
 end
 
 local function kernel()
+	term.setBackgroundColor(colors.white)
+	term.setCursorPos(1,1)
+	term.clear()
+	term.setTextColor(colors.black)
+	if fs.exists("/.sPhone/interfaces/bootImage") then
+		local bootImage = paintutils.loadImage("/.sPhone/interfaces/bootImage")
+		paintutils.drawImage(bootImage, 11,7)
+	else
+		print("Missing bootImage")
+	end
+	sleep(1)
 	_G.sPhone = {
 		version = "Alpha 2.4.1",
 		user = "Run sID",
