@@ -67,6 +67,7 @@ local function kernel()
 	
 	term.setBackgroundColor(colors.white)
 	term.clear()
+	term.setCursorPos(1,1)
 	
 	for k, v in pairs(fs.list("/.sPhone/autorun")) do
 		term.setTextColor(colors.black)
