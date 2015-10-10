@@ -548,37 +548,41 @@ end
 		while true do
 			drawHome()
 			term.setCursorBlink(false)
-			local _,m,x,y = os.pullEvent("mouse_click")
-			
-			if y == 1 then
-				if x < 26 and x > 22 then
-					footerMenu()
+			local autoLockTimer = os.startTimer(120)
+			local e,m,x,y = os.pullEvent()
+			if e == "mouse_click" then
+				if y == 1 then
+					if x < 26 and x > 22 then
+						footerMenu()
+					end
+				else
+					if (y > 2 and x > 1) and (y < 6 and x < 9) then
+						term.setBackgroundColor(colors.black)
+						term.clear()
+						term.setCursorPos(1,1)
+						term.setTextColor(colors.white)
+						print("Type \"exit\" to close the shell")
+						shell.run("/rom/programs/shell")
+					elseif (y > 2 and x > 10) and (y < 7 and x < 16) then
+						shell.run("/.sPhone/apps/system/sID")
+					elseif (y > 2 and x > 18) and (y < 6 and x < 25) then
+						login()
+					elseif (y > 6 and x > 1) and (y < 10 and x < 11) then
+						shell.run("/.sPhone/apps/buddies")
+					elseif (y > 6 and x > 11) and (y < 10 and x < 18) then
+						lChat()
+					elseif (y > 6 and x > 18) and (y < 10 and x < 24) then
+						shell.run("/.sPhone/apps/sms")
+					elseif (y > 10 and x > 2) and (y < 14 and x < 8) then
+						shell.run("/.sPhone/apps/cstwallet")
+					elseif (y > 10 and x > 9) and (y < 14 and x < 15) then
+						shell.run("/.sPhone/apps/gps")
+					elseif (y > 10 and x > 17) and (y < 14 and x < 24) then
+						shell.run("/.sPhone/apps/system/info")
+					end
 				end
-			else
-				if (y > 2 and x > 1) and (y < 6 and x < 9) then
-					term.setBackgroundColor(colors.black)
-					term.clear()
-					term.setCursorPos(1,1)
-					term.setTextColor(colors.white)
-					print("Type \"exit\" to close the shell")
-					shell.run("/rom/programs/shell")
-				elseif (y > 2 and x > 10) and (y < 7 and x < 16) then
-					shell.run("/.sPhone/apps/system/sID")
-				elseif (y > 2 and x > 18) and (y < 6 and x < 25) then
-					login()
-				elseif (y > 6 and x > 1) and (y < 10 and x < 11) then
-					shell.run("/.sPhone/apps/buddies")
-				elseif (y > 6 and x > 11) and (y < 10 and x < 18) then
-					lChat()
-				elseif (y > 6 and x > 18) and (y < 10 and x < 24) then
-					shell.run("/.sPhone/apps/sms")
-				elseif (y > 10 and x > 2) and (y < 14 and x < 8) then
-					shell.run("/.sPhone/apps/cstwallet")
-				elseif (y > 10 and x > 9) and (y < 14 and x < 15) then
-					shell.run("/.sPhone/apps/gps")
-				elseif (y > 10 and x > 17) and (y < 14 and x < 24) then
-					shell.run("/.sPhone/apps/system/info")
-				end
+			elseif e == "timer" and m == autoLockTimer then
+				login()
 			end
 		end
 	end
