@@ -47,7 +47,7 @@ local function kernel()
 	end
 	sleep(1)
 	_G.sPhone = {
-		version = "Alpha 2.4.1",
+		version = "Alpha 2.4.2",
 		user = "Run sID",
 		devMode = false,
 		mainTerm = term.current()
