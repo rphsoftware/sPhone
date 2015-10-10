@@ -81,9 +81,9 @@ local mx,my = displayWin.getSize()
 local function readMsg()
 	term.redirect(readWin)
   while true do
-		term.setCursorBlink(true)
-		term.setBackgroundColor(colors.green)
-		term.setTextColor(colors.white)
+	term.setCursorBlink(true)
+	term.setBackgroundColor(colors.green)
+	term.setTextColor(colors.white)
     term.clear()
     term.setCursorPos(1,1)
     term.write("Send: ")
@@ -110,7 +110,7 @@ local function readMsg()
 				elseif e[1] == "http_success" then
 					displayWin.setCursorPos(1,y)
 					displayWin.write("<You> "..base64.decode(msg))
-					if y == my then displayWin.scroll(1) else y = y +1 end
+					if y == my then displayWin.scroll(1) else if #msg < 20 then y = y + 1 else y = y + 2 end end
 					break
 				elseif e[1] == "http_failure" then
 					term.redirect(ntv)
@@ -128,13 +128,22 @@ local function recMsg()
 	displayWin.setTextColor(colors.black)
 	displayWin.clear()
   local function printMsg(msg)
+  	local 
 	displayWin.setCursorBlink(false)
 	displayWin.setCursorPos(1,y)
 	local nTerm = term.current()
 	term.redirect(displayWin)
 	print(msg)
 	term.redirect(nTerm)
-	if y == my then displayWin.scroll(1) else y = y + 1 end
+	if y == my then
+		displayWin.scroll(1)
+	else
+		if #msg < 26 then
+			y = y + 1
+		else
+			y = y + 2
+		end
+	end
   end
 	printMsg("Type /logout to exit")
   while true do
