@@ -26,6 +26,7 @@ local files = {
 	["src/apps/buddies.lua"] = "/.sPhone/apps/buddies",
 	
 	["src/interfaces/login"] = "/.sPhone/interfaces/login",
+	["src/interfaces/bootImage"] = "/.sPhone/interfaces/bootImage",
 	
 	["src/startup"] = "/startup",
 }
