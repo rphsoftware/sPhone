@@ -433,6 +433,24 @@ end
 			end
 		end
 	end
+
+	function sPhone.run(_rApp)
+		if not fs.exists(_rApp) or fs.isDir(_rApp) then
+			sPhone.winOk("App not found")
+			return
+		end
+		local f = fs.open(_rApp, "r")
+		local script = f.readAll()
+		f.close()
+		local ok, err = pcall(function() setfenv(loadstring(script),getfenv())() end)
+		if not ok then
+			f.open("/crash/".._rApp,"a")
+			f.write(err.."\n")
+			f.close()
+			sPhone.winOk(_rApp.." crashed","Check /crash")
+			return false
+		end
+	end
 	
 	local function lChat()
 		clear()
