@@ -3,7 +3,7 @@ local pwChangeRep
 
 local menu = {
 	"Update",
-	"Change PIN",
+	"Change Password",
 }
 
 local function clear()
