@@ -44,8 +44,8 @@ local function recovery()
 	print("2: Update sPhone")
 	print("3: Continue Booting")
 	while true do
-		local _, k = os.pullEvent("char")
-		if k == 1 then
+		local _, k = os.pullEvent("key")
+		if k == 2 then
 			for k, v in pairs(fs.list("/")) do
 				if not fs.isReadOnly(v) then
 					fs.delete(v)
@@ -54,9 +54,9 @@ local function recovery()
 			print("Installing sPhone...")
 			sleep(0.5)
 			setfenv(loadstring(http.get("https://raw.githubusercontent.com/Sertex-Team/sPhone/master/src/installer.lua").readAll()),getfenv())()
-		elseif k == 2 then
-			setfenv(loadstring(http.get("https://raw.githubusercontent.com/Sertex-Team/sPhone/master/src/installer.lua").readAll()),getfenv())()
 		elseif k == 3 then
+			setfenv(loadstring(http.get("https://raw.githubusercontent.com/Sertex-Team/sPhone/master/src/installer.lua").readAll()),getfenv())()
+		elseif k == 4 then
 			break
 		end
 	end
