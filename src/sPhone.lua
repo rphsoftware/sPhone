@@ -512,11 +512,14 @@ end
 	end
 	
 	local function home()
-		if not fs.exists("/.sPhone/config/resetDBNews") then
-    			sPhone.winOk("We wiped sID Database","for security issues")
-    			local f = fs.open("/.sPhone/config/resetDBNews","w")
-    			f.write("Ignore me")
-    			f.close()
+		--if not fs.exists("/.sPhone/config/resetDBNews") then
+    			--sPhone.winOk("We wiped sID Database","for security issues")
+    			--local f = fs.open("/.sPhone/config/resetDBNews","w")
+    			--f.write("Ignore me")
+    			--f.close()
+    		--end
+    		if fs.exists("/.sPhone/config/resetDBNews") then
+    			fs.delete("/.sPhone/config/resetDBNews")
     		end
 		local function drawHome()
 			local function box(x,y,text,bg,colorText,page)
