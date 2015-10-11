@@ -34,6 +34,34 @@ local function crash(err)
 	shell.run("/rom/programs/shell")
 end
 
+local function recovery()
+	term.setBackgroundColor(colors.white)
+	term.setTextColor(colors.black)
+	term.clear()
+	term.setCursorPos(1,1)
+	print("sPhone Recovery")
+	print("1: Hard Reset")
+	print("2: Update sPhone")
+	print("3: Continue Booting")
+	while true do
+		local _, k = os.pullEvent("char")
+		if k == 1 then
+			for k, v in pairs(fs.list("/")) do
+				if not fs.isReadOnly(v) then
+					fs.delete(v)
+				end
+			end
+			print("Installing sPhone...")
+			sleep(0.5)
+			setfenv(loadstring(http.get("https://raw.githubusercontent.com/Sertex-Team/sPhone/master/src/installer.lua").readAll()),getfenv())()
+		elseif k == 2 then
+			setfenv(loadstring(http.get("https://raw.githubusercontent.com/Sertex-Team/sPhone/master/src/installer.lua").readAll()),getfenv())()
+		elseif k == 3 then
+			break
+		end
+	end
+end
+
 local function kernel()
 	term.setBackgroundColor(colors.white)
 	term.setCursorPos(1,1)
@@ -45,9 +73,18 @@ local function kernel()
 	else
 		print("Missing bootImage")
 	end
-	sleep(1)
+	local bootTimer = os.startTimer(1)
+	while true do
+		local e,k = os.pullEvent()
+		if e == "key" and k == 56 then
+			recovery()
+			break
+		elseif e == "timer" then
+			break
+		end
+	end
 	_G.sPhone = {
-		version = "Alpha 2.4.3",
+		version = "Alpha 2.5",
 		user = "Run sID",
 		devMode = false,
 		mainTerm = term.current()
