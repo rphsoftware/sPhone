@@ -14,8 +14,8 @@ function status()
   end
 end
 
-function login(username, password)
-  local login = http.post(SERVER.."login.php", "user="..username.."&password="..password).readAll()
+function login(username, password, isHashed)
+  local login = http.post(SERVER.."login.php", "user="..username.."&password="..password if isHashed then .."hashed=true" end).readAll()
   if login == "true" then
     return true
   else
@@ -23,8 +23,8 @@ function login(username, password)
   end
 end
 
-function register(username, password)
-  local register = http.post(SERVER.."register.php", "user="..username.."&password="..password).readAll()
+function register(username, password, isHashed)
+  local register = http.post(SERVER.."register.php", "user="..username.."&password="..password if isHashed then .."hashed=true" end).readAll()
   if register == "Success!" then
     return true
   else
@@ -41,8 +41,8 @@ function checkUser(username)
   end
 end
 
-function sendSMS(username, password, to, msg)
-  local send = http.post(SERVER.."send.php","user="..username.."&password="..password.."&to="..to.."&message="..message).readAll()
+function sendSMS(username, password, to, msg, isHashed)
+  local send = http.post(SERVER.."send.php","user="..username.."&password="..password.."&to="..to.."&message="..message if isHashed then .."hashed=true" end).readAll()
   if send == "true" then
     return true
   else
@@ -50,6 +50,11 @@ function sendSMS(username, password, to, msg)
   end
 end
 
-function updateSMS(username, password, all, from)
-  
+function updateSMS(username, password, all, from, isHashed)
+  local update = http.post(SERVER.."update.php","user="..username.."&password="..password if isHashed then .."hashed=true" end).readAll()
+  if update then
+    return true, update
+  else
+    return false
+  end
 end
