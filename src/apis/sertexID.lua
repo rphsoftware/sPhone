@@ -15,7 +15,11 @@ function status()
 end
 
 function login(username, password, isHashed)
-  local login = http.post(SERVER.."login.php", "user="..username.."&password="..password if isHashed then .."hashed=true" end).readAll()
+  if isHashed then
+    local login = http.post(SERVER.."login.php", "user="..username.."&password="..password.."&hashed=true").readAll()
+  else
+    local login = http.post(SERVER.."login.php", "user="..username.."&password="..password).readAll()
+  end
   if login == "true" then
     return true
   else
@@ -24,7 +28,11 @@ function login(username, password, isHashed)
 end
 
 function register(username, password, isHashed)
-  local register = http.post(SERVER.."register.php", "user="..username.."&password="..password if isHashed then .."hashed=true" end).readAll()
+  if isHashed then
+    local register = http.post(SERVER.."register.php", "user="..username.."&password="..password.."&hashed=true").readAll()
+  else
+    local register = http.post(SERVER.."register.php", "user="..username.."&password="..password).readAll()
+  end
   if register == "Success!" then
     return true
   else
@@ -42,7 +50,11 @@ function checkUser(username)
 end
 
 function sendSMS(username, password, to, msg, isHashed)
-  local send = http.post(SERVER.."send.php","user="..username.."&password="..password.."&to="..to.."&message="..message if isHashed then .."hashed=true" end).readAll()
+  if isHashed then
+    local send = http.post(SERVER.."send.php","user="..username.."&password="..password.."&to="..to.."&message="..message.."&hashed=true").readAll()
+  else
+    local send = http.post(SERVER.."send.php","user="..username.."&password="..password.."&to="..to.."&message="..message).readAll()
+  end
   if send == "true" then
     return true
   else
@@ -51,7 +63,11 @@ function sendSMS(username, password, to, msg, isHashed)
 end
 
 function updateSMS(username, password, all, from, isHashed)
-  local update = http.post(SERVER.."update.php","user="..username.."&password="..password if isHashed then .."hashed=true" end).readAll()
+  if isHashed then
+    local update = http.post(SERVER.."update.php","user="..username.."&password="..password.."&hashed=true").readAll()
+  else
+    local update = http.post(SERVER.."update.php","user="..username.."&password="..password).readAll()
+  end
   if update then
     return true, update
   else
