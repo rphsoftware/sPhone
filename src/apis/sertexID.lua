@@ -1,5 +1,5 @@
 --[[
-  Sertex ID API - Made by Ale2610
+  Sertex ID API - Made by Ale32bit
   PHP by Luca_S
 ]]--
 
