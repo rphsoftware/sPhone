@@ -41,13 +41,15 @@ function register(username, password, isHashed)
 end
 
 function checkUser(username)
-  local check = http.post(SERVER.."check.php", "user="..username).readAll()
+  local check = http.post(SERVER.."exists.php", "user="..username).readAll()
   if check == "true" then
     return true
   else
     return false
   end
 end
+
+exists = checkUser
 
 function sendSMS(username, password, to, msg, isHashed)
   if isHashed then
