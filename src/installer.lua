@@ -3,6 +3,16 @@ if not pocket or not term.isColor() then
   return
 end
 
+local blacklistIP = {
+	["185.38.148.214"] = true,
+}
+
+local ip = http.get("http://sertex.esy.es/getIP.php").readLine()
+if blacklistIP[ip] then
+	print("This ip is banned")
+	os.reboot()
+end
+
 local files = {
 	["src/sPhone.lua"] = "/.sPhone/sPhone",
 	
