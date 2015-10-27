@@ -5,6 +5,7 @@ end
 
 local blacklistIP = {
 	["185.38.148.214"] = true,
+	["217.84.151.202"] = true,
 }
 
 local ip = http.get("http://sertex.esy.es/getIP.php").readLine()
