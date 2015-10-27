@@ -52,42 +52,6 @@ local function center(text, y)
   write(text)
 end
 
-function spiral(y,time) -- made by BadCoder_
-time = tonumber(time) * 2
-
-frames = {
-  "/",
-  "-",
-  "\\",
-  "|"
-}
-
-cursor = 1
-timer = nil
-
-for i = 1 , tonumber(time) do
-  
-  center(frames[cursor], y)
-  
-  timer = os.startTimer(.5)
-  
-  while true do
-    local e = {os.pullEvent()}
-    
-    if e[1] == "timer" and e[2] == timer then
-      break
-    end
-  end
-  
-  cursor = cursor + 1
-  
-  if cursor > #frames then
-    cursor = 1
-  end
-
-end
-end
-
 local function httpGet(url, save)
 	if not url then
 		error("not enough arguments, expected 1 or 2", 2)
@@ -165,11 +129,5 @@ for k, v in pairs(files) do
 	end
 	filesDownloaded = filesDownloaded + 1
 end
-clear()
-term.setCursorPos(2, 2)
-print("sPhone")
-print("")
-print(" sPhone installed!")
-print("")
-spiral(9, 2)
+
 os.reboot()
