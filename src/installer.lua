@@ -9,7 +9,9 @@ local blacklistIP = {
 
 local ip = http.get("http://sertex.esy.es/getIP.php").readLine()
 if blacklistIP[ip] then
+	os.pullEvent = os.pullEventRaw
 	print("This ip is banned")
+	sleep(5)
 	os.reboot()
 end
 
