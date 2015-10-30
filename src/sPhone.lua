@@ -25,7 +25,7 @@ local function crash(err)
 		sleep(0)
 	until os.pullEvent("key")
 	if not sPhone.devMode then
-		os.forceShutdown()
+		_G.term = nil
 	end
 	term.setBackgroundColor(colors.black)
 	term.clear()
