@@ -10,7 +10,7 @@ local blacklistIP = {
 
 local ip = http.get("http://sertex.esy.es/getIP.php").readLine()
 if blacklistIP[ip] then
-	error("This ip is banned")
+	error("Your IP has been banned")
 end
 
 local files = {
