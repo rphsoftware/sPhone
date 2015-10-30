@@ -24,6 +24,7 @@ local function header(aR, xChar)
 end
 
 users = {}
+
 if fs.exists("/.sPhone/config/buddies") then
   local f = fs.open("/.sPhone/config/buddies", "r")
   repeat
@@ -48,19 +49,19 @@ local function add()
       return
     end
   end
-  add = read()
+  addUser = read()
   term.setCursorBlink(false)
-  --local check = http.post("http://sertex.esy.es/check.php","user="..add).readLine()
+  local check = http.post("http://sertex.esy.es/exists.php","user="..addUser).readLine()
   
-  --if check == "true" then
+  if check == "true" then
     table.insert(users,add)
     local f = fs.open("/.sPhone/config/buddies", "a")
-    f.write(add.."\n")
+    f.write(addUser.."\n")
     f.close()
     sPhone.winOk("Added!")
-  --else
-    --sPhone.winOk("User does", "not exist!")
-  --end
+  else
+    sPhone.winOk("User does", "not exist!")
+  end
 end
 
 local function remove()
@@ -73,17 +74,21 @@ local function remove()
     for i = 1, #users do
       print(users[i])
     end
-    local _,_,x,y = os.pullEvent("mouse_click")
+    _,_,x,y = os.pullEvent("mouse_click")
     if y == 1 and x == w then
       return
     elseif y ~= 1 then
-      if users[y-1] then
-        local user = users[y-1]
-        if sPhone.yesNo("Remove "..users[y-1].."?",nil,false) then
+      userToRemove = users[y-1]
+      if userToRemove then
+        if sPhone.yesNo("Remove "..userToRemove.."?",nil) then
           local f = fs.open("/.sPhone/config/buddies", "w")
-          table.remove(users,users[y-1])
-          for i = 1, #users do
-            f.write(users[i].."\n")
+          oldUsers = users
+          users = {}
+          for i = 1, #oldUsers do
+            if oldUsers[i] ~= oldUsers[y-1] then
+              f.writeLine(oldUsers[i])
+              table.insert(users, oldUsers[i])
+            end
           end
           f.close()
         end
@@ -92,12 +97,15 @@ local function remove()
   end
 end
 
+
+
 while true do
   local function redraw()
     clear()
     header(true, "X")
     term.setBackgroundColor(colors.white)
     term.setTextColor(colors.black)
+    
     for i = 1, #users do
       print(users[i])
     end
