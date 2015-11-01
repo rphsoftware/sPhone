@@ -103,8 +103,6 @@ local function readMsg()
     		_,c = os.pullEvent("key")
     		if c == keys.enter then
     			local msg = "/logout"
-    		else
-    			local msg = ""
     		end
     	end
     	local msg = base64.encode(msg)
