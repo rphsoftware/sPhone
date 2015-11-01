@@ -28,9 +28,6 @@ print("sPhoneOS "..sPhone.version.." by Sertex-Team")
 print("KST by 3d6")
 print("UI by LMNetOS")
 print("SHA256 by GravityScore")
-print("SertexText by Sertex-Team")
-print("Graphics by Sertex-Team")
-print("Thanks to Luca_S for SMS system and Sertex ID")
 print("And thanks to dan200 for this mod!")
 
 while true do
