@@ -161,8 +161,10 @@ local function recMsg()
 			y = y + 2
 		end
 	end
-  end
-	printMsg("Type /logout to exit")
+end
+	if not getAllSMS then
+		printMsg("Type /logout to exit")
+	end
   while true do
     stream = http.post(server.."update.php",head)
     newMessages = {}
