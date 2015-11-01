@@ -545,7 +545,7 @@ end
 			box(2,7,"Buddies",colors.brown,colors.white)
 			box(12,7,"Chat", colors.black,colors.white)
 			box(19,7,"SMS",colors.green,colors.white)
-			box(3, 11, "KST", colors.lime, colors.green)
+			box(3, 11, "KST", colors.green, colors.lime)
 			box(10, 11, "GPS", colors.red, colors.black)
 			box(18, 11, "Info", colors.lightGray, colors.black)
 		end
