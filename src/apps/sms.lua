@@ -90,13 +90,22 @@ local function readMsg()
 	term.setTextColor(colors.white)
 	 term.clear()
     	term.setCursorPos(1,1)
-    	term.write("Send: ")
+    	if not getAllSMS then
+    		term.write("Send: ")
+    	else
+    		term.write("Enter to exit")
+    		term.setCursorBlink(false)
+    	end
     	if not getAllSMS then
     		local msg = read()
     	else
-    		term.write("Disabled")
-    		sleep(100)
-    		local msg = ""
+    		
+    		_,c = os.pullEvent("key")
+    		if c == keys.enter then
+    			local msg = "/logout"
+    		else
+    			local msg = ""
+    		end
     	end
     	local msg = base64.encode(msg)
     	term.clear()
