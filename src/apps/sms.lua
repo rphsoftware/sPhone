@@ -54,6 +54,9 @@ while true do
 			else
 				sendTo = tArgs[1]
 			end
+			if sendTo == "" then
+					local getAllSMS = true
+			end
 			local doesUserExist = http.post(server.."exists.php", "user="..sendTo).readAll()
 			if doesUserExist ~= "true" then
 				sPhone.winOk(sendTo.." does","not exist!", colors.lime, colors.green, colors.white, colors.lime)
@@ -70,9 +73,6 @@ while true do
     sPhone.winOk("Connection lost!","Check internet!", colors.lime, colors.green, colors.white, colors.lime)
     return
   end
-end
-if sendTo == "" then
-	local getAllSMS = true
 end
 term.clear()
 local x,y = term.getSize()
