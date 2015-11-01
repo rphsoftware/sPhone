@@ -48,6 +48,7 @@ while true do
 			if not tArgs[1] then
 				term.clearLine()
 				term.setCursorPos(1,y)
+				print("Leave blank to get unread chat\n")
 				write("Send To: ")
 				sendTo = read()
 			else
@@ -70,6 +71,9 @@ while true do
     return
   end
 end
+if sendTo == "" then
+	getAllSMS = true
+end
 term.clear()
 local x,y = term.getSize()
 local mainTerm = term.current()
@@ -84,12 +88,18 @@ local function readMsg()
 	term.setCursorBlink(true)
 	term.setBackgroundColor(colors.green)
 	term.setTextColor(colors.white)
-    term.clear()
-    term.setCursorPos(1,1)
-    term.write("Send: ")
-    local msg = read()
-    local msg = base64.encode(msg)
-    term.clear()
+	 term.clear()
+    	term.setCursorPos(1,1)
+    	term.write("Send: ")
+    	if not getAllSMS then
+    		local msg = read()
+    	else
+    		term.write("Disabled")
+    		sleep(100)
+    		local msg = ""
+    	end
+    	local msg = base64.encode(msg)
+    	term.clear()
 		if base64.decode(msg) == "/logout" then
 			term.redirect(mainTerm)
 			return
