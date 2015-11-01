@@ -27,8 +27,7 @@ local files = {
 	["src/apps/system/settings.lua"] = "/.sPhone/apps/system/settings",
 	["src/apps/system/info.lua"] = "/.sPhone/apps/system/info",
 	["src/apps/system/sID.lua"] = "/.sPhone/apps/system/sID",
-	["src/apps/cstwallet.lua"] = "/.sPhone/apps/cstwallet",
-	["src/apps/cst/api.lua"] = "/.sPhone/apps/cst/api",
+	["src/apps/kstwallet.lua"] = "/.sPhone/apps/kstwallet",
 	
 	["src/apps/sms.lua"] = "/.sPhone/apps/sms",
 	["src/apps/sms-new.lua"] = "/.sPhone/apps/sms-new",
