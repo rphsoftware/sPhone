@@ -72,7 +72,7 @@ while true do
   end
 end
 if sendTo == "" then
-	getAllSMS = true
+	local getAllSMS = true
 end
 term.clear()
 local x,y = term.getSize()
