@@ -84,7 +84,7 @@ local function kernel()
 		end
 	end
 	_G.sPhone = {
-		version = "Alpha 2.7",
+		version = "Alpha 2.8",
 		user = "Run sID",
 		devMode = false,
 		mainTerm = term.current()
@@ -545,7 +545,7 @@ end
 			box(2,7,"Buddies",colors.brown,colors.white)
 			box(12,7,"Chat", colors.black,colors.white)
 			box(19,7,"SMS",colors.green,colors.white)
-			box(3, 11, "CST", colors.lightBlue, colors.blue)
+			box(3, 11, "KST", colors.lime, colors.green)
 			box(10, 11, "GPS", colors.red, colors.black)
 			box(18, 11, "Info", colors.lightGray, colors.black)
 		end
@@ -615,7 +615,7 @@ end
 					elseif (y > 6 and x > 18) and (y < 10 and x < 24) then
 						sPhone.run("/.sPhone/apps/sms")
 					elseif (y > 10 and x > 2) and (y < 14 and x < 8) then
-						sPhone.run("/.sPhone/apps/cstwallet")
+						sPhone.run("/.sPhone/apps/kstwallet")
 					elseif (y > 10 and x > 9) and (y < 14 and x < 15) then
 						sPhone.run("/.sPhone/apps/gps")
 					elseif (y > 10 and x > 17) and (y < 14 and x < 24) then
