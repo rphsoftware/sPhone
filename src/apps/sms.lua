@@ -81,48 +81,59 @@ local x,y = 1,1
 local mx,my = displayWin.getSize()
 local function readMsg()
 	term.redirect(readWin)
-  while true do
-	term.setCursorBlink(true)
-	term.setBackgroundColor(colors.green)
-	term.setTextColor(colors.white)
-	 term.clear()
-    	term.setCursorPos(1,1)
-    	term.write("Send: ")
-    	local msg = read()
-    	local msg = base64.encode(msg)
-    	term.clear()
-		if base64.decode(msg) == "/logout" then
-			term.redirect(mainTerm)
-			return
-		end
-		if msg ~= "" then
-			local pos = 1
-			local update = os.startTimer(0.15)
-			http.request(server.."send.php","user="..user.."&password="..pass.."&message="..msg.."&to="..sendTo.."&hashed=true")
-			while true do
-				term.clear()
-				term.setCursorPos(1,1)
-				term.write("Sending "..loading[pos])
-				e = {os.pullEvent()}
-				if e[1] == "timer" and e[2] == update then
-					update = os.startTimer(0.15)
-					pos = pos + 1
-					if pos > #loading then pos = 1 end
-				elseif e[1] == "http_success" then
-					displayWin.setCursorPos(1,y)
-					displayWin.write("<You> "..base64.decode(msg))
-					if y == my then displayWin.scroll(1) else y = y + 1  end
-					break
-				elseif e[1] == "http_failure" then
-					term.redirect(ntv)
+	while true do
+		term.setCursorBlink(true)
+		term.setBackgroundColor(colors.green)
+		term.setTextColor(colors.white)
+		term.clear()
+		term.setCursorPos(1,1)
+		if sendTo ~= "" then
+			term.write("Send: ")
+			local msg = read()
+			local msg = base64.encode(msg)
+			term.clear()
+			if base64.decode(msg) == "/logout" then
+				term.redirect(mainTerm)
+				return
+			end
+			if msg ~= "" then
+				local pos = 1
+				local update = os.startTimer(0.15)
+				http.request(server.."send.php","user="..user.."&password="..pass.."&message="..msg.."&to="..sendTo.."&hashed=true")
+				while true do
 					term.clear()
 					term.setCursorPos(1,1)
-					sPhone.winOk("Disconnected",nil, colors.lime, colors.green, colors.white, colors.lime)
+					term.write("Sending "..loading[pos])
+					e = {os.pullEvent()}
+					if e[1] == "timer" and e[2] == update then
+						update = os.startTimer(0.15)
+						pos = pos + 1
+						if pos > #loading then pos = 1 end
+					elseif e[1] == "http_success" then
+						displayWin.setCursorPos(1,y)
+						displayWin.write("<You> "..base64.decode(msg))
+						if y == my then displayWin.scroll(1) else y = y + 1  end
+						break
+					elseif e[1] == "http_failure" then
+						term.redirect(ntv)
+						term.clear()
+						term.setCursorPos(1,1)
+						sPhone.winOk("Disconnected",nil, colors.lime, colors.green, colors.white, colors.lime)
+						return
+					end
+				end
+			end
+		else
+			term.write("Press enter to exit")
+			while true do
+				local _, k = os.pullEvent("key")
+				if k == keys.enter then
+					term.redirect(mainTerm)
 					return
 				end
 			end
-    end
-  end
+		end
+	end
 end
 local function recMsg()
 	displayWin.setBackgroundColor(colors.white)
@@ -145,7 +156,9 @@ local function recMsg()
 		end
 	end
 end
-printMsg("Type /logout to exit")
+if sendTo ~= "" then
+	printMsg("Type /logout to exit")
+end
   while true do
     stream = http.post(server.."update.php",head)
     newMessages = {}
