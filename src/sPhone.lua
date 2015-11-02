@@ -369,6 +369,7 @@ local function kernel()
 end
 	
 	function sPhone.yesNo(title, desc, hideUser)
+		term.setCursorBlink(false)
 		term.setBackgroundColor(colors.white)
 		term.clear()
 		term.setCursorPos(1,1)
@@ -429,6 +430,7 @@ end
 		if not side then
 			side = colors.blue
 		end
+		term.setCursorBlink(false)
 		if #fmessage >= #smessage then
 			local w, h = term.getSize
 			term.setBackgroundColor(side)
@@ -479,20 +481,22 @@ end
 		local f = fs.open(_rApp, "r")
 		local script = f.readAll()
 		f.close()
-    os.pullEvent = os.oldPullEvent
+		os.pullEvent = os.oldPullEvent
 		local ok, err = pcall(function() setfenv(loadstring(script),getfenv())() end)
 		if not ok then
-      os.pullEvent = os.pullEventRaw
-			sPhone.winOk("Crash: WIP")
+		os.pullEvent = os.pullEventRaw
+			sPhone.winOk("Crash: "..fs.getName(_rApp), err)
 			return false
 		end
-    os.pullEvent = os.pullEventRaw
+		os.pullEvent = os.pullEventRaw
+		return true
 	end
 	
 	local function lChat()
 		clear()
 		local w, h = term.getSize()
 		paintutils.drawLine(1,1,w,1,colors.blue)
+		term.setCursorBlink(false)
 		term.setTextColor(colors.white)
 		sertextext.center(1,"  Chat")
 		term.setBackgroundColor(colors.white)
