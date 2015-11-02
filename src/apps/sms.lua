@@ -125,6 +125,7 @@ local function readMsg()
 			end
 		else
 			term.write("Press enter to exit")
+			term.setCursorBlink(false)
 			while true do
 				local _, k = os.pullEvent("key")
 				if k == keys.enter then
@@ -158,6 +159,8 @@ local function recMsg()
 end
 if sendTo ~= "" then
 	printMsg("Type /logout to exit")
+else
+	printMsg("All messages")
 end
   while true do
     stream = http.post(server.."update.php",head)
