@@ -54,9 +54,6 @@ while true do
 			else
 				sendTo = tArgs[1]
 			end
-			if sendTo == "" then
-					local getAllSMS = true
-			end
 			local doesUserExist = http.post(server.."exists.php", "user="..sendTo).readAll()
 			if doesUserExist ~= "true" then
 				sPhone.winOk(sendTo.." does","not exist!", colors.lime, colors.green, colors.white, colors.lime)
@@ -90,22 +87,8 @@ local function readMsg()
 	term.setTextColor(colors.white)
 	 term.clear()
     	term.setCursorPos(1,1)
-    	if not getAllSMS then
-    		term.write("Send: ")
-    	else
-    		term.write("Enter to exit")
-    		term.setCursorBlink(false)
-    	end
-    	if not getAllSMS then
-    		local msg = read()
-    	else
-    		
-    		_,c = os.pullEvent("key")
-    		if c == keys.enter then
-    			term.redirect(mainTerm)
-			return
-    		end
-    	end
+    	term.write("Send: ")
+    	local msg = read()
     	local msg = base64.encode(msg)
     	term.clear()
 		if base64.decode(msg) == "/logout" then
@@ -162,9 +145,7 @@ local function recMsg()
 		end
 	end
 end
-	if not getAllSMS then
-		printMsg("Type /logout to exit")
-	end
+printMsg("Type /logout to exit")
   while true do
     stream = http.post(server.."update.php",head)
     newMessages = {}
