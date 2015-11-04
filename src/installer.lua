@@ -38,6 +38,7 @@ local files = {
 	["src/interfaces/bootImage"] = "/.sPhone/interfaces/bootImage",
 	
 	["src/startup"] = "/startup",
+	["src/startup"] = "/.sPhone/startup",
 }
 
 local githubUser    = "Sertex-Team"
