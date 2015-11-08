@@ -883,4 +883,4 @@ if not ok then
 	crash(error)
 end
 
-os.forceShutdown()
+crash("Something went wrong.../nNo free hugs for you")
