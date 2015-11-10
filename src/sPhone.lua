@@ -144,7 +144,6 @@ local function kernel()
 		local u = fs.open("/.sPhone/config/username","r")
 		sPhone.user = u.readLine()
 		u.close()
-		os.setComputerLabel(sPhone.user.."'s sPhone")
 	end
 	
 	if not fs.exists("/.sPhone/apis") then
