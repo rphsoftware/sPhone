@@ -19,11 +19,12 @@ local function crash(err)
 	term.setTextColor(colors.red)
 	print(err)
 	term.setTextColor(colors.black)
+	print("")
 	if sPhone.version then
-		print("sPhone version: "..sPhone.version)
+		print("sPhone "..sPhone.version)
 	end
 	print("Computer ID: "..os.getComputerID())
-	print("\nContact sPhone devs: GitHub: Sertex-Team/sPhone")
+	print("Contact sPhone devs: GitHub: Sertex-Team/sPhone")
 	print("Thanks for using sPhone")
 	print("Press any key")
 	repeat
@@ -89,7 +90,7 @@ local function kernel()
 		end
 	end
 	_G.sPhone = {
-		version = "Alpha 2.8.1",
+		version = "Alpha 2.8.2",
 		user = "Run sID",
 		devMode = false,
 		mainTerm = term.current()
