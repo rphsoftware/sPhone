@@ -7,19 +7,24 @@ local function crash(err)
 		}
 	end
 	term.setCursorBlink(false)
-	term.setBackgroundColor(colors.blue)
+	term.setBackgroundColor(colors.white)
 	term.clear()
 	term.setCursorPos(1,1)
-	term.setTextColor(colors.white)
+	term.setTextColor(colors.black)
 	if not err then
-		err = "Unknown"
+		err = "Undefined Error"
 	end
 	
-	print("sPhone Crash:\n")
-	term.setBackgroundColor(colors.black)
-	printError(err)
-	term.setBackgroundColor(colors.blue)
+	print("sPhone got an error :(\n")
+	term.setTextColor(colors.red)
+	print(err)
+	term.setTextColor(colors.black)
+	if sPhone.version then
+		print("sPhone version: "..sPhone.version)
+	end
+	print("Computer ID: "..os.getComputerID())
 	print("\nContact sPhone devs: GitHub: Sertex-Team/sPhone")
+	print("Thanks for using sPhone")
 	print("Press any key")
 	repeat
 		sleep(0)
@@ -888,4 +893,4 @@ if not ok then
 	crash(error)
 end
 
-crash("Something went wrong.../nNo free hugs for you")
+crash("Something went wrong...")
