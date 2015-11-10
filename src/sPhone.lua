@@ -828,13 +828,14 @@ end
 					end
 				end
 			end
+			sPhone.user = name
+			os.setComputerLabel(sPhone.user.."'s sPhone")
 			term.setCursorPos(1,13)
 			term.clearLine()
 			sertextext.center(13,"  All Set!")
 			term.setCursorPos(1,14)
 			term.clearLine()
 			sertextext.center(14,"  Have fun with sPhone")
-			sPhone.user = name
 			sleep(2)
 			home()
 		end
