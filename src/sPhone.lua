@@ -52,9 +52,19 @@ local function recovery()
 	while true do
 		local _, k = os.pullEvent("key")
 		if k == 2 then
+			term.setBackgroundColor(colors.black)
+			term.setTextColor(colors.white)
 			for k, v in pairs(fs.list("/")) do
 				if not fs.isReadOnly(v) then
+					if fs.isDir(v) then
+						shell.setDir(v)
+						for k, v in pairs(fs.list("/"..v)) do
+							fs.delete(v)
+							print("Removed "..shell.dir().."/"..v)
+						end
+					end
 					fs.delete(v)
+					print("Removed "..v)
 				end
 			end
 			print("Installing sPhone...")
