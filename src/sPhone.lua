@@ -95,7 +95,7 @@ local function kernel()
 		mainTerm = term.current()
 	}
 	
-	if sPhone.dev then
+	if sPhone.devMode then
 		sPhone.crash = crash
 	end
 	
