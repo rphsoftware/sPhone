@@ -62,7 +62,7 @@ local function recovery()
 							fs.delete(v)
 							print("Removed "..shell.dir().."/"..v)
 						end
-						shell.setDir("..")
+						shell.setDir(shell.resolve(".."))
 					end
 					fs.delete(v)
 					print("Removed "..v)
