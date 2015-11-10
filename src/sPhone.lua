@@ -90,6 +90,11 @@ local function kernel()
 		mainTerm = term.current()
 	}
 	
+	if sPhone.dev then
+		sPhone.crash = crash
+	end
+	
+	
 	if not fs.exists("/.sPhone/config/newIDSystem") then
 		fs.delete("/.sPhone/config/username")
 		fs.delete("/.sPhone/config/.sIDpw")
