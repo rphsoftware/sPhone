@@ -39,6 +39,8 @@ local files = {
 	
 	["src/startup"] = "/startup",
 	["src/startup"] = "/.sPhone/startup",
+	
+	["src/config/sPhone"] = "/.sPhone/config/sPhone",
 }
 
 local githubUser    = "Sertex-Team"
