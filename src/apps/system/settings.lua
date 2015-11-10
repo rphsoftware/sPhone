@@ -4,6 +4,8 @@ local pwChangeRep
 local menu = {
 	"Update",
 	"Change Password",
+	"Set Label",
+	"Clear Label",
 }
 
 local function clear()
@@ -122,6 +124,20 @@ local function changePassword()
 	print("All Set!")
 	sleep(2)
 	return
+end
+
+local function changeLabel()
+	header()
+	sertextext.center(3, "Set Label")
+	term.setCursorPos(2,5)
+	local newLabel = read()
+	os.setComputerLabel(newLabel)
+	sPhone.winOk("Computer Label set")
+end
+
+local function clearLabel()
+	os.setComputerLabel(nil)
+	sPhone.winOk("Computer Label cleared")
 end
 
 local w, h = term.getSize()
