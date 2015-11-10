@@ -95,9 +95,6 @@ local function kernel()
 		mainTerm = term.current()
 	}
 	
-	if sPhone.devMode then
-		sPhone.crash = crash
-	end
 	
 	
 	if not fs.exists("/.sPhone/config/newIDSystem") then
@@ -154,7 +151,19 @@ local function kernel()
 	end
 	
 	for k, v in pairs(fs.list("/.sPhone/apis")) do
-		os.loadAPI("/.sPhone/apis/"..v)
+		if not fs.isDir("/.sPhone/apis/"..v) then
+			os.loadAPI("/.sPhone/apis/"..v)
+		end
+	end
+	
+	if not fs.exists("/.sPhone/config/sPhone") then
+		config.write("/.sPhone/config/sPhone","devMode",false)
+	end
+	
+	sPhone.devMode = config.read("/.sPhone/config/sPhone","devMode")
+	
+	if sPhone.devMode then
+		sPhone.crash = crash
 	end
 	
 	function os.version()
