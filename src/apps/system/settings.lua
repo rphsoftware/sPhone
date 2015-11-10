@@ -166,5 +166,9 @@ local function redraw()
 				setfenv(loadstring(http.get("https://raw.githubusercontent.com/Sertex-Team/sPhone/master/src/installer.lua").readAll()),getfenv())()
 			elseif id == 2 then
 				changePassword()
+			elseif id == 3 then
+				changeLabel()
+			elseif id == 4 then
+				clearLabel()
 			end
 		end
