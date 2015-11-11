@@ -757,7 +757,7 @@ end
 			term.setTextColor(colors.black)
 			term.setBackgroundColor(colors.white)
 			sertextext.center(3,"  Setup Sertex ID")
-			local isDown = http.get("http://sertex.esy.es/status.php").readAll()
+			local isDown = http.get("http://sertex.x10.bz/status.php").readAll()
 			if isDown ~= "true" then
 				sertextext.center(5, "  The server is down")
 				sertextext.center(6, "  Run sID on the home")
@@ -794,7 +794,7 @@ end
 							sleep(1)
 						end
 					end
-					local rServer = http.post("http://sertex.esy.es/register.php", "user="..name.."&password="..pw).readAll()
+					local rServer = http.post("http://sertex.x10.bz/register.php", "user="..name.."&password="..pw).readAll()
 					if rServer ~= "Success!" then
 						print("Username already exists")
 						print("Retry later in the app sID")
@@ -824,7 +824,7 @@ end
 					term.clearLine()
 					pw = read("*")
 					sertextext.center(11, "  Checking...")
-					rServer = http.post("http://sertex.esy.es/login.php", "user="..name.."&password="..pw).readAll()
+					rServer = http.post("http://sertex.x10.bz/login.php", "user="..name.."&password="..pw).readAll()
 						if rServer ~= "true" then
 						print("   Wrong Username/Password")
 						print("   Run sID")
