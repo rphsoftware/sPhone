@@ -51,7 +51,7 @@ local function add()
   end
   addUser = read()
   term.setCursorBlink(false)
-  local check = http.post("http://sertex.esy.es/exists.php","user="..addUser).readLine()
+  local check = http.post("http://sertex.x10.bz/exists.php","user="..addUser).readLine()
   
   if check == "true" then
     table.insert(users,add)
