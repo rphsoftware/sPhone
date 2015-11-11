@@ -90,6 +90,11 @@ local function kernel()
 	else
 		print("Missing bootImage")
 	end
+	local w, h = term.getSize()
+	term.setBackgroundColor(colors.white)
+	term.setTextColor(colors.black)
+	term.setCursorPos(1,h)
+	write("Press ALT to recovery mode")
 	local bootTimer = os.startTimer(1)
 	while true do
 		local e,k = os.pullEvent()
