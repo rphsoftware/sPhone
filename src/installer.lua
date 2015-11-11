@@ -144,4 +144,8 @@ for k, v in pairs(files) do
 	filesDownloaded = filesDownloaded + 1
 end
 
+if not fs.exists("/startup") then
+	fs.copy("/.sPhone/startup","/startup")
+end
+
 os.reboot()
