@@ -1,9 +1,8 @@
 --[[
-  Sertex ID API - Made by Ale32bit
-  PHP by Luca_S
+  Sertex ID API - Made by Sertex-Team
 ]]--
 
-local SERVER = "http://sertex.esy.es/"
+local SERVER = "http://sertex.x10.bz/"
 
 function status()
   local isUp = http.get(SERVER.."status.php").readAll()
