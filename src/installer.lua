@@ -8,7 +8,7 @@ local blacklistIP = {
 	["217.84.151.202"] = true,
 }
 
-local ip = http.get("http://sertex.esy.es/getIP.php").readLine()
+local ip = http.get("http://sertex.x10.bz/getIP.php").readLine()
 if blacklistIP[ip] then
 	error("Your IP has been banned")
 end
