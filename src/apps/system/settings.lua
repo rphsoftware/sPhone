@@ -52,7 +52,7 @@ local function changePassword()
   term.setTextColor(colors.black)
 	local password = read("*")
   term.redirect(sPhone.mainTerm)
-	local fpw = fs.open("/.sPhone/.password","r")
+	local fpw = fs.open("/.sPhone/config/.password","r")
 	if sha256.sha256(password) ~= fpw.readLine() then
 		sPhone.wrongPassword = true
 	else
@@ -115,7 +115,7 @@ local function changePassword()
 	end
 	end
 	if not sPhone.wrongPassword then
-		local f = fs.open("/.sPhone/.password","w")
+		local f = fs.open("/.sPhone/config/.password","w")
 		f.write(sha256.sha256(pwChangeRep))
 		f.close()
 	end
