@@ -46,9 +46,10 @@ local function recovery()
 	term.clear()
 	term.setCursorPos(1,1)
 	print("sPhone Recovery")
-	print("1: Hard Reset")
-	print("2: Update sPhone")
-	print("3: Continue Booting")
+	print("[1] Hard Reset")
+	print("[2] Update sPhone")
+	print("[3] Reset User Config")
+	print("[4] Continue Booting")
 	while true do
 		local _, k = os.pullEvent("key")
 		if k == 2 then
@@ -74,6 +75,9 @@ local function recovery()
 		elseif k == 3 then
 			setfenv(loadstring(http.get("https://raw.githubusercontent.com/Sertex-Team/sPhone/master/src/installer.lua").readAll()),getfenv())()
 		elseif k == 4 then
+			fs.delete("/.sPhone/config")
+			os.reboot()
+		elseif k == 5 then
 			break
 		end
 	end
