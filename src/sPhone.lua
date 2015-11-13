@@ -675,7 +675,7 @@ end
 	end
 	
 	function login()
-		if fs.exists("/.sPhone/.password") then
+		if fs.exists("/.sPhone/config/.password") then
 			while true do
 				term.clear()
 				term.setCursorPos(1,1)
