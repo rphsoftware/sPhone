@@ -122,6 +122,13 @@ local function kernel()
 		f.close()
 	end
 	
+	if not fs.exists("/.sPhone/config/newPassword") and fs.exists("/.sPhone/.password") then
+		fs.move("/.sPhone/.password","/.sPhone/config/.password")
+		f = fs.open("/.sPhone/config/newPassword","w")
+		f.write("Ignore Me. I just check if the password is moved to the config folder")
+		f.close()
+	end
+	
 	if not fs.exists("/.sPhone/autorun") then
 		fs.makeDir("/.sPhone/autorun")
 	end
@@ -636,7 +643,7 @@ end
 					end
 				else
 					if (y > 2 and x > 1) and (y < 6 and x < 9) then
-            os.pullEvent = os.oldPullEvent
+						os.pullEvent = os.oldPullEvent
 						term.setBackgroundColor(colors.black)
 						term.clear()
 						term.setCursorPos(1,1)
@@ -691,16 +698,16 @@ end
         term.clear()
         term.setCursorPos(1,1)
         term.setTextColor(colors.black)
-				local passwordLogin = read("*")
+	local passwordLogin = read("*")
         term.redirect(sPhone.mainTerm)
-				local fpw = fs.open("/.sPhone/.password","r")
-				if sha256.sha256(passwordLogin) == fpw.readLine() then
-					sPhone.wrongPassword = false
-					home()
-				else
-					sPhone.wrongPassword = true
-				end
-			end
+	local fpw = fs.open("/.sPhone/config/.password","r")
+	if sha256.sha256(passwordLogin) == fpw.readLine() then
+		sPhone.wrongPassword = false
+		home()
+	else
+		sPhone.wrongPassword = true
+	end
+	end
 		else
 			local name
 			local pw
@@ -742,7 +749,7 @@ end
 				local password2 = read("*")
 				term.redirect(sPhone.mainTerm)
 				if password1 == password2 then
-					local f = fs.open("/.sPhone/.password", "w")
+					local f = fs.open("/.sPhone/config/.password", "w")
 					f.write(sha256.sha256(password1))
 					f.close()
 					term.setTextColor(colors.lime)
