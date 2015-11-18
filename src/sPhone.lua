@@ -50,6 +50,7 @@ local function recovery()
 	print("[2] Update sPhone")
 	print("[3] Reset User Config")
 	print("[4] Continue Booting")
+	print("[5] Boot in safe mode")
 	while true do
 		local _, k = os.pullEvent("key")
 		if k == 2 then
@@ -78,6 +79,10 @@ local function recovery()
 			fs.delete("/.sPhone/config")
 			os.reboot()
 		elseif k == 5 then
+			break
+		elseif k == 6 then
+			recoverym = {}
+			recoverym.safemode = true
 			break
 		end
 	end
@@ -133,6 +138,16 @@ local function kernel()
 		f.close()
 	end
 	
+	if not fs.exists("/.sPhone/apis") then
+		fs.makeDir("/.sPhone/apis")
+	end
+	
+	for k, v in pairs(fs.list("/.sPhone/apis")) do
+		if not fs.isDir("/.sPhone/apis/"..v) then
+			os.loadAPI("/.sPhone/apis/"..v)
+		end
+	end
+	
 	if not fs.exists("/.sPhone/autorun") then
 		fs.makeDir("/.sPhone/autorun")
 	end
@@ -140,26 +155,28 @@ local function kernel()
 	term.setBackgroundColor(colors.white)
 	term.clear()
 	term.setCursorPos(1,1)
-	
 	for k, v in pairs(fs.list("/.sPhone/autorun")) do
 		term.setTextColor(colors.black)
 		if not fs.isDir("/.sPhone/autorun/"..v) then
-			local f = fs.open("/.sPhone/autorun/"..v,"r")
-			local script = f.readAll()
-			f.close()
-			print("Loading script "..v)
-			sleep(0)
-			local ok, err = pcall(function() setfenv(loadstring(script),getfenv())() end)
-			if not ok then
-				term.setTextColor(colors.red)
-				print("Script error: "..v..": "..err)
-				fs.move("/.sPhone/autorun/"..v, "/.sPhone/autorun/disabled/"..v)
-				term.setTextColor(colors.blue)
-				print(v.." disabled to prevent errors")
-				sleep(0.5)
+			if not recoverym.safemode then
+				local f = fs.open("/.sPhone/autorun/"..v,"r")
+				local script = f.readAll()
+				f.close()
+				print("Loading script "..v)
+				sleep(0)
+				local ok, err = pcall(function() setfenv(loadstring(script),getfenv())() end)
+				if not ok then
+					term.setTextColor(colors.red)
+					print("Script error: "..v..": "..err)
+					fs.move("/.sPhone/autorun/"..v, "/.sPhone/autorun/disabled/"..v)
+					term.setTextColor(colors.blue)
+					print(v.." disabled to prevent errors")
+					sleep(0.5)
+				end
+			else
+				print("Script "..v.." not loaded because Safe Mode")
+				sleep(0)
 			end
-			
-			
 		end
 	end
 	
@@ -171,16 +188,6 @@ local function kernel()
 		local u = fs.open("/.sPhone/config/username","r")
 		sPhone.user = u.readLine()
 		u.close()
-	end
-	
-	if not fs.exists("/.sPhone/apis") then
-		fs.makeDir("/.sPhone/apis")
-	end
-	
-	for k, v in pairs(fs.list("/.sPhone/apis")) do
-		if not fs.isDir("/.sPhone/apis/"..v) then
-			os.loadAPI("/.sPhone/apis/"..v)
-		end
 	end
 	
 	if not fs.exists("/.sPhone/config/sPhone") then
