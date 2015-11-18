@@ -79,6 +79,7 @@ local function recovery()
 			fs.delete("/.sPhone/config")
 			os.reboot()
 		elseif k == 5 then
+			_G.safemode = false
 			break
 		elseif k == 6 then
 			_G.safemode = true
@@ -110,6 +111,7 @@ local function kernel()
 			recovery()
 			break
 		elseif e == "timer" then
+			_G.safemode = false
 			break
 		end
 	end
