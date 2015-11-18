@@ -81,8 +81,7 @@ local function recovery()
 		elseif k == 5 then
 			break
 		elseif k == 6 then
-			recoverym = {}
-			recoverym.safemode = true
+			_G.safemode = true
 			break
 		end
 	end
@@ -158,7 +157,7 @@ local function kernel()
 	for k, v in pairs(fs.list("/.sPhone/autorun")) do
 		term.setTextColor(colors.black)
 		if not fs.isDir("/.sPhone/autorun/"..v) then
-			if not recoverym.safemode then
+			if not safemode then
 				local f = fs.open("/.sPhone/autorun/"..v,"r")
 				local script = f.readAll()
 				f.close()
@@ -178,6 +177,10 @@ local function kernel()
 				sleep(0)
 			end
 		end
+	end
+
+	if safemode then
+		_G.safemode = nil
 	end
 	
 	if runningOnStartup then
