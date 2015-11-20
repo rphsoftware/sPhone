@@ -580,6 +580,10 @@ end
     			--f.write("Ignore me")
     			--f.close()
     		--end
+    		
+    		if not sPhone.locked then
+    			login()
+    		end
     		if fs.exists("/.sPhone/config/resetDBNews") then
     			fs.delete("/.sPhone/config/resetDBNews")
     		end
@@ -691,6 +695,7 @@ end
 	end
 	
 	function login()
+		sPhone.locked = true
 		if fs.exists("/.sPhone/config/.password") then
 			while true do
 				term.clear()
@@ -876,9 +881,12 @@ end
 			term.clearLine()
 			sertextext.center(14,"  Have fun with sPhone")
 			sleep(2)
-			home()
+			sPhone.locked = false
+			return
 		end
 	end
+
+	sPhone.lock = login
 	
 	local newVersion = http.get("https://raw.githubusercontent.com/Sertex-Team/sPhone/master/src/version").readLine()
 	if newVersion ~= sPhone.version then
@@ -887,7 +895,7 @@ end
 		sPhone.newUpdate = false
 	end
 	
-	login()
+	home()
 
 end
 
