@@ -582,7 +582,7 @@ end
     		--end
     		
     		if not sPhone.locked then
-    			login()
+    			sPhone.lock()
     		end
     		if fs.exists("/.sPhone/config/resetDBNews") then
     			fs.delete("/.sPhone/config/resetDBNews")
@@ -887,6 +887,7 @@ end
 	end
 
 	sPhone.lock = login
+	sPhone.login = login
 	
 	local newVersion = http.get("https://raw.githubusercontent.com/Sertex-Team/sPhone/master/src/version").readLine()
 	if newVersion ~= sPhone.version then
