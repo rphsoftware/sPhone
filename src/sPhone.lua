@@ -556,7 +556,7 @@ end
 		paintutils.drawLine(1,1,w,1,colors.blue)
 		term.setCursorBlink(false)
 		term.setTextColor(colors.white)
-		visum.align("center,"  Chat",6)
+		visum.align("center","  Chat",false,6)
 		term.setBackgroundColor(colors.white)
 		term.setTextColor(colors.black)
 		term.setCursorPos(2, 5)
