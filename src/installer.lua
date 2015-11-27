@@ -21,7 +21,7 @@ local files = {
 	["src/sPhone.lua"] = "/.sPhone/sPhone",
 	
 	["src/apis/sha256.lua"] = "/.sPhone/apis/sha256",
-	["src/apis/sertextext.lua"] = "/.sPhone/apis/sertextext",
+	["src/apis/visum.lua"] = "/.sPhone/apis/visum",
 	["src/apis/graphics.lua"] = "/.sPhone/apis/graphics",
 	["src/apis/ui.lua"] = "/.sPhone/apis/ui",
 	["src/apis/base64.lua"] = "/.sPhone/apis/base64",
