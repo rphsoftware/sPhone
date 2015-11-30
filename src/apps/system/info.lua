@@ -21,9 +21,12 @@ end
 header()
 
 term.setCursorPos(1,3)
-sertextext.center(3, "  Info")
+visum.align("center", "  Info",false,3)
 print("")
 print("ID: "..os.getComputerID())
+if os.getComputerLabel() then
+	print("Label: "..os.getComputerLabel())
+end
 print("sPhone "..sPhone.version.." by Sertex-Team")
 print("KST by 3d6")
 print("UI by LMNetOS")
