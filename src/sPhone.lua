@@ -24,8 +24,14 @@ local function crash(err)
 		print("sPhone "..sPhone.version)
 	end
 	print("Computer ID: "..os.getComputerID())
-	print("CC Version: ".._CC_VERSION)
-	print("MC Version: ".._MC_VERSION)
+	if _CC_VERSION then
+		print("CC Version: ".._CC_VERSION)
+		print("MC Version: ".._MC_VERSION)
+	else
+		print("CC Version: Under 1.74")
+		print("MC Version: Undefined")
+		print("Update CC to 1.74 or higher")
+	end
 	print("LUA Version: ".._VERSION)
 	print("LUAJ Version: ".._LUAJ_VERSION)
 	print("Contact sPhone devs: GitHub: Sertex-Team/sPhone")
