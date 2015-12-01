@@ -30,7 +30,9 @@ local function crash(err)
 	else
 		print("CC Version: Under 1.74")
 		print("MC Version: Undefined")
+		term.setTextColor(colors.red)
 		print("Update CC to 1.74 or higher")
+		term.setTextColor(colors.black)
 	end
 	print("LUA Version: ".._VERSION)
 	print("LUAJ Version: ".._LUAJ_VERSION)
