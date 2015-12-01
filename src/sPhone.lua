@@ -964,3 +964,4 @@ if not ok then
 end
 
 crash("Something went wrong...")
+_G.term = nil -- The OS ends here - This string force to crash the pda and shutdown
