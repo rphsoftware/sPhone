@@ -79,6 +79,39 @@ local readWin = window.create(term.native(),1,y,x,y,true)
 local ntv = term.redirect(mainTerm)
 local x,y = 1,1
 local mx,my = displayWin.getSize()
+
+
+  local function printMsg(msg)
+		displayWin.setCursorBlink(false)
+		displayWin.setCursorPos(1,y)
+		displayWin.setTextColor(colors.black)
+		local nTerm = term.current()
+		term.redirect(displayWin)
+		print(msg)
+		term.redirect(nTerm)
+		term.setTextColor(colors.white)
+		term.setCursorPos(7,1)
+		term.setCursorBlink(true)
+		if y == my then
+			displayWin.scroll(1)
+			y = y - 1
+		else
+			for i = 1, #msg do
+				if i == mx then
+					y = y + 1
+					longerText = true
+				end
+			end
+			if longerText then
+				longerText = false
+				y = y + 2
+			else
+				y = y + 1
+			end
+		end
+	end
+
+
 local function readMsg()
 	term.redirect(readWin)
 	while true do
@@ -90,6 +123,7 @@ local function readMsg()
 		if sendTo ~= "" then
 			term.write("Send: ")
 			local msg = read()
+			local rawMsg = msg
 			local msg = base64.encode(msg)
 			term.clear()
 			if base64.decode(msg) == "/logout" then
@@ -111,8 +145,8 @@ local function readMsg()
 						if pos > #loading then pos = 1 end
 					elseif e[1] == "http_success" then
 						displayWin.setCursorPos(1,y)
-						displayWin.write("<You> "..base64.decode(msg))
-						if y == my then displayWin.scroll(1) else y = y + 1  end
+						printMsg("<You> "..rawMsg, true)
+						--if y == my then displayWin.scroll(1) end
 						break
 					elseif e[1] == "http_failure" then
 						term.redirect(ntv)
@@ -140,28 +174,12 @@ local function recMsg()
 	displayWin.setBackgroundColor(colors.white)
 	displayWin.setTextColor(colors.black)
 	displayWin.clear()
-  local function printMsg(msg)
-	displayWin.setCursorBlink(false)
-	displayWin.setCursorPos(1,y)
-	local nTerm = term.current()
-	term.redirect(displayWin)
-	print(msg)
-	term.redirect(nTerm)
-	if y == my then
-		displayWin.scroll(1)
+	if sendTo ~= "" then
+		printMsg("Type /logout to exit")
 	else
-		if #msg < 26 then
-			y = y + 1
-		else
-			y = y + 2
-		end
+		printMsg("All messages")
 	end
-end
-if sendTo ~= "" then
-	printMsg("Type /logout to exit")
-else
-	printMsg("All messages")
-end
+	
   while true do
     stream = http.post(server.."update.php",head)
     newMessages = {}
