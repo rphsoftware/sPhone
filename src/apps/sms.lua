@@ -83,7 +83,6 @@ local mx,my = displayWin.getSize()
 
   local function printMsg(msg)
 		displayWin.setCursorBlink(false)
-		displayWin.setCursorPos(1,y)
 		displayWin.setTextColor(colors.black)
 		local nTerm = term.current()
 		term.redirect(displayWin)
@@ -92,23 +91,6 @@ local mx,my = displayWin.getSize()
 		term.setTextColor(colors.white)
 		term.setCursorPos(7,1)
 		term.setCursorBlink(true)
-		if y == my then
-			displayWin.scroll(1)
-			y = y - 1
-		else
-			for i = 1, #msg do
-				if i == mx then
-					y = y + 1
-					longerText = true
-				end
-			end
-			if longerText then
-				longerText = false
-				y = y + 2
-			else
-				y = y + 1
-			end
-		end
 	end
 
 
@@ -144,9 +126,7 @@ local function readMsg()
 						pos = pos + 1
 						if pos > #loading then pos = 1 end
 					elseif e[1] == "http_success" then
-						displayWin.setCursorPos(1,y)
-						printMsg("<You> "..rawMsg, true)
-						--if y == my then displayWin.scroll(1) end
+						printMsg("<You> "..rawMsg)
 						break
 					elseif e[1] == "http_failure" then
 						term.redirect(ntv)
