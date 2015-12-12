@@ -81,12 +81,17 @@ local x,y = 1,1
 local mx,my = displayWin.getSize()
 
 
-  local function printMsg(msg)
+  local function printMsg(msg, save)
 		displayWin.setCursorBlink(false)
 		displayWin.setTextColor(colors.black)
 		local nTerm = term.current()
 		term.redirect(displayWin)
 		print(msg)
+		if save then
+			f = fs.open("/.sPhone/cache/sms/"..sendTo,"a")
+			f.write(msg.."\n")
+			f.close()
+		end
 		term.redirect(nTerm)
 		term.setTextColor(colors.white)
 		term.setCursorPos(7,1)
@@ -126,7 +131,7 @@ local function readMsg()
 						pos = pos + 1
 						if pos > #loading then pos = 1 end
 					elseif e[1] == "http_success" then
-						printMsg("<You> "..rawMsg)
+						printMsg("<You> "..rawMsg,true)
 						break
 					elseif e[1] == "http_failure" then
 						term.redirect(ntv)
@@ -155,9 +160,18 @@ local function recMsg()
 	displayWin.setTextColor(colors.black)
 	displayWin.clear()
 	if sendTo ~= "" then
-		printMsg("Type /logout to exit")
+		printMsg("Type /logout to exit",false)
+		if fs.exists("/.sPhone/cache/sms/"..sendTo) then
+			local f = fs.open("/.sPhone/cache/sms/"..sendTo,"r")
+			local line = f.readLine()
+			repeat
+				printMsg(line,false)
+				line = f.readLine()
+			until not line
+			f.close()
+		end
 	else
-		printMsg("All messages")
+		printMsg("All messages",false)
 	end
 	
   while true do
@@ -173,7 +187,7 @@ local function recMsg()
       if t then
         date = t["date"]
         mesg = "<"..t["from"].."> "..base64.decode(t["message"])
-        printMsg(mesg)
+        printMsg(mesg,true)
       end
     end
   end
