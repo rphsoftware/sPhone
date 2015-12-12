@@ -89,6 +89,7 @@ local function recovery()
 			setfenv(loadstring(http.get("https://raw.githubusercontent.com/Sertex-Team/sPhone/master/src/installer.lua").readAll()),getfenv())()
 		elseif k == 4 then
 			fs.delete("/.sPhone/config")
+			fs.delete("/.sPhone/cache")
 			os.reboot()
 		elseif k == 5 then
 			_G.safemode = false
