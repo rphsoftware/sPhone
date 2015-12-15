@@ -18,6 +18,7 @@ if fs.exists("/startup") then
 end
 
 local files = {
+	["src/init.lua"] = "/.sPhone/init",
 	["src/sPhone.lua"] = "/.sPhone/sPhone",
 	
 	["src/apis/sha256.lua"] = "/.sPhone/apis/sha256",
