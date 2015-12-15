@@ -1,5 +1,5 @@
-if not fs.exists("/.sPhone/sPhone") then
+if not fs.exists("/.sPhone/init") then
   setfenv(loadstring(http.get("https://raw.githubusercontent.com/Sertex-Team/sPhone/master/src/installer.lua").readAll()),getfenv())()
 end
 
-shell.run("/.sPhone/sPhone", "-s")
+shell.run("/.sPhone/init", "-s")
