@@ -21,6 +21,10 @@ local files = {
 	["src/init.lua"] = "/.sPhone/init",
 	["src/sPhone.lua"] = "/.sPhone/sPhone",
 	
+	["install"] = "/.sPhone/update",
+	
+	["LICENSE"] = "/.sPhone/LICENSE",
+	
 	["src/apis/sha256.lua"] = "/.sPhone/apis/sha256",
 	["src/apis/visum.lua"] = "/.sPhone/apis/visum",
 	["src/apis/graphics.lua"] = "/.sPhone/apis/graphics",
