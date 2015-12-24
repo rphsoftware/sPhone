@@ -10,7 +10,7 @@ local aaTypes = {
 }
 
 function version()
- return 1, "Visum Alpha 1"
+ return 1.1, "Visum Alpha 1.1"
 end
 
 function align(aType, text, slow, y)
