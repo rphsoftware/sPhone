@@ -40,7 +40,6 @@ local files = {
 	["src/apps/store.lua"] = "/.sPhone/apps/store",
 	
 	["src/apps/sms.lua"] = "/.sPhone/apps/sms",
-	["src/apps/sms-new.lua"] = "/.sPhone/apps/sms-new",
 	["src/apps/gps.lua"] = "/.sPhone/apps/gps",
 	["src/apps/buddies.lua"] = "/.sPhone/apps/buddies",
 	
