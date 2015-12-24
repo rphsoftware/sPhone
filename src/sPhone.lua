@@ -763,13 +763,10 @@ end
 
 	sPhone.lock = login
 	sPhone.login = login
-	if not sPhone.devMode then
-		local newVersion = http.get("https://raw.githubusercontent.com/Sertex-Team/sPhone/master/src/version").readLine()
-	else
-		local newVersion = "DEV MODE"
-	end
+
+	local newVersion = http.get("https://raw.githubusercontent.com/Sertex-Team/sPhone/master/src/version").readLine()
 	
-	if newVersion ~= sPhone.version and not sPhone.devMode then
+	if newVersion ~= sPhone.version then
 		sPhone.newUpdate = true
 	else
 		sPhone.newUpdate = false
