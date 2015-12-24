@@ -98,7 +98,7 @@ function box(startX,startY,endX,endY,nColour) -- Paintutils API - Made to preven
     end
 end
 
-function buttons(buList)
+function buttons(buList,ignoreEvent)
  if type(buList) ~= "table" then
   error("invalid arg #1 (table expected, got "..tostring(type(buList))..")", 1)
  end
@@ -107,9 +107,14 @@ function buttons(buList)
   box(buList[k][2],buList[k][3],buList[k][4],buList[k][5],buList[k][6])
   term.setCursorPos(buList[k][2],buList[k][3])
   term.setTextColor(buList[k][7])
-  print(buList[k][8])
+	if buList[k][9] then
+		term.setCursorPos(buList[k][2],buList[k][3] + buList[k][9] - 1)
+	else
+		term.setCursorPos(buList[k][2],buList[k][3])
+	end
+  write(buList[k][8])
  end
- while true do
+ while not ignoreEvent do
   e,mk,mx,my = os.pullEvent()
   if e == "mouse_click" or e == "monitor_touch" then
    for k, v in ipairs(buList) do
@@ -121,8 +126,8 @@ function buttons(buList)
  end
 end
 
-function menu()
- 
+local function menu()
+	return nil
 end
 
 --More functions will be added
