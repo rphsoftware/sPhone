@@ -1,7 +1,7 @@
 local function kernel()
 	_G.sPhone = {
-		version = "Alpha 2.11",
-		user = "Run sID",
+		version = "Alpha 2.12",
+		user = "Guest",
 		devMode = false,
 		mainTerm = term.current()
 	}
@@ -108,10 +108,9 @@ local function kernel()
 			clear()
 			w, h = term.getSize()
 			term.setCursorPos( (w/2)- 7, h/2)
-			write("Press CTRL + S")
-			while true do
-				sleep(3600)
-			end
+			write("Shutdown Aborted.")
+			sPhone.winOk("Error","Can not shutdown",colors.lightBlue,colors.red, colors.white, colors.lightBlue)
+			return
 		end
 		sPhone.doneShutdown = true
 		clear()
@@ -131,10 +130,9 @@ local function kernel()
 			clear()
 			w, h = term.getSize()
 			term.setCursorPos( (w/2)- 7, h/2)
-			write("Press CTRL + R")
-			while true do
-				sleep(3600)
-			end
+			write("Reboot Aborted.")
+			sPhone.winOk("Error","Can not reboot",colors.lightBlue,colors.red, colors.white, colors.lightBlue)
+			return
 		end
 		sPhone.doneShutdown = true
 		clear()
@@ -425,8 +423,17 @@ end
 		os.pullEvent = os.oldPullEvent
 		local ok, err = pcall(function() setfenv(loadstring(script),getfenv())() end)
 		if not ok then
-		os.pullEvent = os.pullEventRaw
-			sPhone.winOk("Crash: "..fs.getName(_rApp), err)
+			os.pullEvent = os.pullEventRaw
+			term.setBackgroundColor(colors.white)
+			term.setTextColor(colors.black)
+			term.clear()
+			term.setCursorPos(1,2)
+			visum.align("center","  "..fs.getName(_rApp).." crashed",false,2)
+			term.setCursorPos(1,4)
+			print(err)
+			print("")
+			visum.align("center","  Press Any Key")
+			os.pullEvent("key")
 			return false
 		end
 		os.pullEvent = os.pullEventRaw
@@ -456,7 +463,96 @@ end
 		sleep(1)
 	end
 	
+	local function installedApps()
+		sPhone.winOk("Work In","Progress")
+		local dir = "/.sPhone/apps/storeApps/"
+		if not fs.exists(dir) then
+			fs.makeDir(dir)
+		end
+		
+		local apps = {}
+		local appsName = {}
+		
+		for k, v in pairs(fs.list(dir)) do
+			if fs.isDir(dir..v) then
+				if fs.exists(dir..v.."/sPhone-Main.lua") then
+					local nDir = dir..v.."/sPhone-Main.lua"
+					
+					pDir = dir..v
+					local run = config.read(nDir, "run")
+					local name = config.read(nDir, "name")
+					local author = config.read(nDir, "author")
+					local version = config.read(nDir, "version")
+					
+					appsName[name] = run
+				end
+			end
+		end
+		
+		for k, v in pairs(appsName) do
+			table.insert(apps, v)
+		end
+		local function drawHome()
+			clear()
+			local w, h = term.getSize()
+			paintutils.drawLine(1,1,w,1, colors.blue)
+			term.setTextColor(colors.white)
+			visum.align("right","X",false,1)
+			visum.align("center", "  Apps",false,1)
+			term.setTextColor(colors.black)
+			term.setBackgroundColor(colors.white)
+			term.setCursorPos(1,3)
+			for k, v in pairs(appsName) do
+				print(k)
+			end
+		end	
+		
+		drawHome()
+		
+		local w, h = term.getSize()
+		
+		while true do
+			drawHome()
+			local _,_,x,y = os.pullEvent("mouse_click")
+			if x == w and y == 1 then
+				break
+			elseif y >= 2 then
+				if apps[y-2] then
+					sPhone.run("/.sPhone/apps/storeApps/"..pDir.."/"..apps[y-2])
+				end
+			end
+		end
+	end
+	
 	local function home()
+	
+		local buttonsInHome = {
+			{"sPhone.header",23,1,25,1,colors.blue,colors.white,"vvv"},
+			{"sPhone.appsButton",12,20,14,20,colors.white,colors.blue,"==="},
+			{"sPhone.shell",2,3,8,5,colors.black,colors.yellow," Shell",2},
+			{"sPhone.sID",11,3,15,5,colors.red,colors.white," sID",2},
+			{"sPhone.lock",19,3,24,5,colors.lightGray,colors.black," Lock",2},
+			{"sPhone.buddies",2,7,10,9,colors.brown,colors.white," Buddies",2},
+			{"sPhone.chat",12,7,17,9,colors.black,colors.white," Chat",2},
+			{"sPhone.SMS",19,7,23,9,colors.green,colors.white," SMS",2},
+			{"sPhone.kst",3,11,7,13,colors.green,colors.lime," KST",2},
+			{"sPhone.gps",10,11,14,13,colors.red,colors.black," GPS",2},
+			{"sPhone.info",18,11,23,13,colors.lightGray,colors.black," Info",2},
+			{"sPhone.store",2,15,8,17,colors.orange,colors.white," Store",2},
+		}
+		
+		
+		local appsOnHome = {
+			["sPhone.shell"] = "/.sPhone/apps/shell",
+			["sPhone.sID"] = "/.sPhone/apps/system/sID",
+			["sPhone.buddies"] = "/.sPhone/apps/buddies",
+			["sPhone.SMS"] = "/.sPhone/apps/sms",
+			["sPhone.gps"] = "/.sPhone/apps/gps",
+			["sPhone.kst"] = "/.sPhone/apps/kstwallet",
+			["sPhone.info"] = "/.sPhone/apps/system/info",
+			["sPhone.store"] = "/.sPhone/apps/store",
+		}
+		
 		--if not fs.exists("/.sPhone/config/resetDBNews") then
     			--sPhone.winOk("We wiped sID Database","for security issues")
     			--local f = fs.open("/.sPhone/config/resetDBNews","w")
@@ -488,19 +584,13 @@ end
 			else
 				write(" New Update!")
 			end
-			box(2,3,"Shell",colors.black,colors.yellow)
-			box(19,3,"Lock",colors.lightGray,colors.black)
-			box(11,3,"sID",colors.red,colors.white)
-			box(2,7,"Buddies",colors.brown,colors.white)
-			box(12,7,"Chat", colors.black,colors.white)
-			box(19,7,"SMS",colors.green,colors.white)
-			box(3, 11, "KST", colors.green, colors.lime)
-			box(10, 11, "GPS", colors.red, colors.black)
-			box(18, 11, "Info", colors.lightGray, colors.black)
+			
+			visum.buttons(buttonsInHome,true)
 		end
 		local function footerMenu()
 			sPhone.isFooterMenuOpen = true
 			function redraw()
+				drawHome()
 				local w, h = term.getSize()
 				graphics.box(1,2,w,4,colors.blue)
 				term.setTextColor(colors.white)
@@ -538,41 +628,18 @@ end
 			drawHome()
 			term.setCursorBlink(false)
 			local autoLockTimer = os.startTimer(120)
-			local e,m,x,y = os.pullEvent()
-			if e == "mouse_click" then
-				if y == 1 then
-					if x < 26 and x > 22 then
-						footerMenu()
-					end
-				else
-					if (y > 2 and x > 1) and (y < 6 and x < 9) then
-						os.pullEvent = os.oldPullEvent
-						term.setBackgroundColor(colors.black)
-						term.clear()
-						term.setCursorPos(1,1)
-						term.setTextColor(colors.white)
-						print("Type \"exit\" to close the shell")
-						sPhone.run("/rom/programs/shell")
-					elseif (y > 2 and x > 10) and (y < 7 and x < 16) then
-						sPhone.run("/.sPhone/apps/system/sID")
-					elseif (y > 2 and x > 18) and (y < 6 and x < 25) then
-						login()
-					elseif (y > 6 and x > 1) and (y < 10 and x < 11) then
-						sPhone.run("/.sPhone/apps/buddies")
-					elseif (y > 6 and x > 11) and (y < 10 and x < 18) then
-						lChat()
-					elseif (y > 6 and x > 18) and (y < 10 and x < 24) then
-						sPhone.run("/.sPhone/apps/sms")
-					elseif (y > 10 and x > 2) and (y < 14 and x < 8) then
-						sPhone.run("/.sPhone/apps/kstwallet")
-					elseif (y > 10 and x > 9) and (y < 14 and x < 15) then
-						sPhone.run("/.sPhone/apps/gps")
-					elseif (y > 10 and x > 17) and (y < 14 and x < 24) then
-						sPhone.run("/.sPhone/apps/system/info")
-					end
-				end
-			elseif e == "timer" and m == autoLockTimer then
+			local id = visum.buttons(buttonsInHome)
+			
+			if id == "sPhone.header" then
+				footerMenu()
+			elseif id == "sPhone.appsButton" then
+				installedApps()
+			elseif id == "sPhone.lock" then
 				login()
+			elseif id == "sPhone.chat" then
+				lChat()
+			elseif appsOnHome[id] then
+				sPhone.run(appsOnHome[id])
 			end
 		end
 	end
@@ -665,97 +732,22 @@ end
 				end
 			end
 			
+			sPhone.run("/.sPhone/apps/system/sID")
+			
+			local name
+			
+			if fs.exists("/.sPhone/config/username") then
+				local f = fs.open("/.sPhone/config/username","r")
+				name = f.readLine()
+				f.close()
+			else
+				name = "Guest"
+			end
 			term.setBackgroundColor(colors.white)
 			term.clear()
 			term.setCursorPos(1,1)
-			local w, h = term.getSize()
-			paintutils.drawLine(1,1,w,1,colors.blue)
 			term.setTextColor(colors.black)
-			term.setBackgroundColor(colors.white)
-			visum.align("center","  Setup Sertex ID",false,3)
-			local isDown = http.get("http://sertex.x10.bz/status.php").readAll()
-			if isDown ~= "true" then
-				visum.align("center", "  The server is down",false,5)
-				visum.align("center", "  Run sID on the home",false,6)
-				name = "Run sID"
-				sleep(2)
-			else
-				
-				local choose = sPhone.yesNo("Setup Sertex ID", "Do you have a Sertex ID?", true)
-				if not choose then
-					term.setBackgroundColor(colors.white)
-					term.clear()
-					term.setCursorPos(1,1)
-					local w, h = term.getSize()
-					paintutils.drawLine(1,1,w,1,colors.blue)
-					term.setTextColor(colors.black)
-					term.setBackgroundColor(colors.white)
-					visum.align("center","  Setup Sertex ID",false,3)
-					visum.align("center","  Your Username",false,5)
-					term.setCursorPos(3,8)
-					name = read()
-					while true do
-						visum.align("center", "  Your Password",false,9)
-						term.setCursorPos(3,10)
-						term.clearLine()
-						pw = read("*")
-						visum.align("center", "  Repeat",false,11)
-						term.setCursorPos(3,12)
-						term.clearLine()
-						pwr = read("*")
-						if pw == pwr then
-							break
-						else
-							print("   Wrong Password")
-							sleep(1)
-						end
-					end
-					local rServer = http.post("http://sertex.x10.bz/register.php", "user="..name.."&password="..pw).readAll()
-					if rServer ~= "Success!" then
-						print("Username already exists")
-						print("Retry later in the app sID")
-						sleep(2)
-					else
-						local f = fs.open("/.sPhone/config/username","w")
-						f.write(name)
-						f.close()
-						local pwf = fs.open("/.sPhone/config/.sIDPw", "w")
-						pwf.write(sha256.sha256(pw))
-						pwf.close()
-					end
-				else
-					term.setBackgroundColor(colors.white)
-					term.clear()
-					term.setCursorPos(1,1)
-					local w, h = term.getSize()
-					paintutils.drawLine(1,1,w,1,colors.blue)
-					term.setTextColor(colors.black)
-					term.setBackgroundColor(colors.white)
-					visum.align("center","  Setup Sertex ID",false,3)
-					visum.align("center","  Your Username",false,7)
-					term.setCursorPos(3,8)
-					name = read()
-					visum.align("center", "  Your Password",false,9)
-					term.setCursorPos(3,10)
-					term.clearLine()
-					pw = read("*")
-					visum.align("center", "  Checking...",false,11)
-					rServer = http.post("http://sertex.x10.bz/login.php", "user="..name.."&password="..pw).readAll()
-						if rServer ~= "true" then
-						print("   Wrong Username/Password")
-						print("   Run sID")
-						sleep(2)
-					else
-						f = fs.open("/.sPhone/config/username", "w")
-						f.write(name)
-						f.close()
-						f = fs.open("/.sPhone/config/.sIDpw", "w")
-						f.write(sha256.sha256(pw))
-						f.close()
-					end
-				end
-			end
-			sPhone.user = name
+			_G.sPhone.user = name
 			os.setComputerLabel(sPhone.user.."'s sPhone")
 			term.setCursorPos(1,13)
 			term.clearLine()
@@ -771,9 +763,13 @@ end
 
 	sPhone.lock = login
 	sPhone.login = login
+	if not sPhone.devMode then
+		local newVersion = http.get("https://raw.githubusercontent.com/Sertex-Team/sPhone/master/src/version").readLine()
+	else
+		local newVersion = "DEV MODE"
+	end
 	
-	local newVersion = http.get("https://raw.githubusercontent.com/Sertex-Team/sPhone/master/src/version").readLine()
-	if newVersion ~= sPhone.version then
+	if newVersion ~= sPhone.version and not sPhone.devMode then
 		sPhone.newUpdate = true
 	else
 		sPhone.newUpdate = false
