@@ -543,7 +543,7 @@ end
 		
 		
 		local appsOnHome = {
-			["sPhone.shell"] = "/rom/programs/shell",
+			["sPhone.shell"] = "/.sPhone/apps/shell",
 			["sPhone.sID"] = "/.sPhone/apps/system/sID",
 			["sPhone.buddies"] = "/.sPhone/apps/buddies",
 			["sPhone.SMS"] = "/.sPhone/apps/sms",
