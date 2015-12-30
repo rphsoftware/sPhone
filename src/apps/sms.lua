@@ -175,7 +175,11 @@ local function recMsg()
 	end
 	
   while true do
-    stream = http.post(server.."update.php",head.."&to="..sendTo)
+    if sendTo == "" then
+    	stream = http.post(server.."update.php?new",head)
+    else
+      stream = http.post(server.."update.php",head.."&to="..sendTo)
+    end
     newMessages = {}
     line = stream.readLine()
     repeat
