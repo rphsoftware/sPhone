@@ -38,7 +38,9 @@ local function crash(err)
 	if _LUAJ_VERSION then
 		print("LUAJ Version: ".._LUAJ_VERSION)
 	end
-	print("Contact sPhone devs: GitHub: Sertex-Team/sPhone")
+	print("Contact sPhone devs:")
+	print("GitHub: Sertex-Team/sPhone")
+	print("E-Mail: info@sertex.x10.bz")
 	print("Thanks for using sPhone")
 	print("Press any key")
 	repeat
