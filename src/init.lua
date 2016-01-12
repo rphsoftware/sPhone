@@ -25,6 +25,8 @@ local function crash(err)
 	if _CC_VERSION then
 		print("CC Version: ".._CC_VERSION)
 		print("MC Version: ".._MC_VERSION)
+	elseif _HOST then
+		print("Host: ".._HOST)
 	else
 		print("CC Version: Under 1.74")
 		print("MC Version: Undefined")
@@ -33,7 +35,9 @@ local function crash(err)
 		term.setTextColor(colors.black)
 	end
 	print("LUA Version: ".._VERSION)
-	print("LUAJ Version: ".._LUAJ_VERSION)
+	if _LUAJ_VERSION then
+		print("LUAJ Version: ".._LUAJ_VERSION)
+	end
 	print("Contact sPhone devs: GitHub: Sertex-Team/sPhone")
 	print("Thanks for using sPhone")
 	print("Press any key")
