@@ -1,12 +1,11 @@
+os.pullEvent = os.pullEventRaw
+
 if not pocket or not term.isColor() then
   print("sPhone is only for Advanced Pocket Computers!")
   return
 end
 
-local blacklistIP = {
-	["185.38.148.214"] = true,
-	["217.84.151.202"] = true,
-}
+local blacklistIP = {} --Wipe
 
 local ip = http.get("http://sertex.x10.bz/getIP.php").readLine()
 if blacklistIP[ip] then
@@ -17,7 +16,7 @@ if fs.exists("/startup") then
 	fs.delete("/startup")
 end
 
-local files = {
+files = {
 	["src/init.lua"] = "/.sPhone/init",
 	["src/sPhone.lua"] = "/.sPhone/sPhone",
 	
@@ -55,6 +54,8 @@ local githubUser    = "Sertex-Team"
 local githubRepo    = "sPhone"
 local githubBranch  = "master"
 
+local w, h = term.getSize()
+
 
 local function clear()
   term.setBackgroundColor(colors.white)
@@ -63,12 +64,23 @@ local function clear()
   term.setTextColor(colors.black)
 end
 
+local function gui()
+	clear()
+	paintutils.drawLine(1,1,w,1,colors.blue)
+	term.setTextColor(colors.white)
+	term.setCursorPos(2,1)
+	print("sPhone Installer")
+	term.setCursorPos(1,2)
+	term.setTextColor(colors.black)
+	term.setBackgroundColor(colors.white)
+end
+
 local function center(text, y)
   local w, h = term.getSize()
   if not y then
   	local x, y = term.getCursorPos()
   end
-  term.setCursorPos(math.ceil(w/2), y)
+  term.setCursorPos(math.ceil(w/2)-math.ceil(#text/2), y)
   write(text)
 end
 
@@ -117,7 +129,7 @@ end
 
 shell.setDir("")
 
-clear()
+gui()
 
 local fileCount = 0
 for _ in pairs(files) do
@@ -130,28 +142,32 @@ local w, h = term.getSize()
 for k, v in pairs(files) do
 	term.setTextColor(colors.black)
 	term.setBackgroundColor(colors.white)
-	clear()
-	term.setCursorPos(2, 2)
-	print("sPhone")
-	print("")
-	print(" Getting files")
-	term.setCursorPos(2, h - 1)
+	gui()
+	center("  Downloading files",6)
+	term.setCursorPos(1,12)
+	term.clearLine()
+	center("  "..filesDownloaded.."/"..fileCount, 12)
 	local ok = k:sub(1, 4) == "ext:" and httpGet(k:sub(5), v) or getFile(k, v)
 	if not ok then
 		if term.isColor() then
 			term.setTextColor(colors.red)
 		end
-		term.setCursorPos(2, 6)
+		term.setCursorPos(2, 16)
 		print("Error getting file:")
-		term.setCursorPos(2, 7)
+		term.setCursorPos(2, 17)
 		print(k)
-		sleep(1)
+		sleep(1.5)
 	end
 	filesDownloaded = filesDownloaded + 1
 end
+term.setCursorPos(1,12)
+term.clearLine()
+center("  "..filesDownloaded.."/"..fileCount, 12)
 
 if not fs.exists("/startup") then
 	fs.copy("/.sPhone/startup","/startup")
 end
-
+center("  sPhone installed!",h-2)
+center("  Rebooting...",h-1)
+sleep(2)
 os.reboot()
