@@ -16,7 +16,7 @@ if fs.exists("/startup") then
 	fs.delete("/startup")
 end
 
-files = {
+local files = {
 	["src/init.lua"] = "/.sPhone/init",
 	["src/sPhone.lua"] = "/.sPhone/sPhone",
 	
