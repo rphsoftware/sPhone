@@ -17,20 +17,6 @@ local function clear()
   term.setCursorPos(1,1)
 end
 
-local function header()
-	clear()
-	local w, h = term.getSize()
-	paintutils.drawLine(1,1,w,1, colors.red)
-	term.setTextColor(colors.white)
-	term.setCursorPos(1,1)
-	write(" "..sPhone.user)
-	term.setCursorPos(w,1)
-	write("X")
-	term.setCursorPos(1,2)
-	term.setBackgroundColor(colors.white)
-	term.setTextColor(colors.black)
-end
-
 clear()
 print("Checking Server...")
 isDown = http.get("http://sertex.x10.bz/status.php").readAll()
@@ -142,4 +128,4 @@ while true do
 	end
 end
 
-header()
+sPhone.header()
