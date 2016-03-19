@@ -120,7 +120,7 @@ while true do
 		menu = {
 			"Logout",
 		}
-		 _, id = sPhone.menu(menu, "Sertex ID", true)
+		 _, id = sPhone.menu(menu, "Sertex ID", "X")
 		if id == 1 then
 		 	fs.delete("/.sPhone/config/.sIDpw")
 		elseif id == 0 then
