@@ -140,25 +140,9 @@ local function clearLabel()
 	sPhone.winOk("Computer Label cleared")
 end
 
-local w, h = term.getSize()
-
-local function redraw()
-	clear()
-	local w, h = term.getSize()
-	paintutils.drawLine(1,1,w,1, colors.blue)
-	term.setTextColor(colors.white)
-	term.setCursorPos(2,1)
-	write(sPhone.user)
-	term.setCursorPos(w,1)
-	write("X")
-	term.setCursorPos(1,3)
-	term.setBackgroundColor(colors.white)
-	term.setTextColor(colors.black)
-end
-redraw()
-
 while true do
-	redraw()
+	clear()
+	sPhone.header("","X")
 	local name, id = sPhone.menu(menu, "Settings","X")
 	if id == 0 then
 		return
@@ -172,4 +156,3 @@ while true do
 		clearLabel()
 	end
 end
-
