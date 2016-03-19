@@ -1,6 +1,6 @@
 local function kernel()
 	_G.sPhone = {
-		version = "Alpha 2.12.2",
+		version = "Alpha 2.12.2 DEV",
 		user = "Guest",
 		devMode = false,
 		mainTerm = term.current()
@@ -92,6 +92,10 @@ local function kernel()
 		return "sPhone "..sPhone.version
 	end
 	
+	function sPhone.getSize()
+		return term.getSize()
+	end
+	
 	local function clear()
 		term.setBackgroundColor(colors.white)
 		term.clear()
@@ -103,6 +107,7 @@ local function kernel()
 	sPhone.forceReboot = os.reboot
 	
 	function os.shutdown()
+		sPhone.inHome = false
 		os.pullEvent = os.pullEventRaw
 		if sPhone.doneShutdown then
 			clear()
@@ -125,6 +130,7 @@ local function kernel()
 	end
 	
 	function os.reboot()
+		sPhone.inHome = false
 		os.pullEvent = os.pullEventRaw
 		if sPhone.doneShutdown then
 			clear()
@@ -153,18 +159,23 @@ local function kernel()
         user = "Unknown",
       }
     end
-    
-    local w, h = term.getSize()
+    local function upd()
+			local w, h = term.getSize()
 
-    paintutils.drawLine(1,1,w,1, colors.blue)
-    term.setTextColor(colors.white)
-    term.setCursorPos(1,1)
-    write(" "..sPhone.user)
-    term.setCursorPos(w,1)
-    write("X")
-    term.setBackgroundColor(colors.white)
-    term.setTextColor(colors.black)
-    term.setCursorPos(1,3)
+			paintutils.drawLine(1,1,w,1, colors.blue)
+			term.setTextColor(colors.white)
+			term.setCursorPos(1,1)
+			write("  "..sPhone.user)
+			term.setCursorPos(w,1)
+			if butt then
+				write(butt)
+			end
+			term.setBackgroundColor(colors.white)
+			term.setTextColor(colors.black)
+			term.setCursorPos(1,3)
+		end
+		
+		upd()
   end
   
   function sPhone.menu(items, title, closeButton)
@@ -237,7 +248,7 @@ local function kernel()
 		sPhone.header(closeButton)
 		term.setCursorPos(1,3)
 		if not title then
-			title = "sPhone"
+			title = "  sPhone"
 		end
 		cprint("  "..title)
 		if moreTitle then
@@ -292,10 +303,9 @@ local function kernel()
 		redraw()
 		local eventData = {os.pullEventRaw()}
 		if eventData[1] == 'mouse_click' then
-			if eventData[4] == 1 and eventData[3] == 26 then
+			if eventData[4] == 1 and eventData[3] == termWidth then
 				return false, 0
-			end
-			if eventData[4] > 3 then
+			elseif eventData[4] > 3 then
 				clear()
 				selected = (eventData[4]-6+((page-1)*drawSize))+1
 				if selected then
@@ -420,6 +430,10 @@ end
 		local f = fs.open(_rApp, "r")
 		local script = f.readAll()
 		f.close()
+		if sPhone.inHome then
+			local sPhoneWasInHome = true
+			sPhone.inHome = false
+		end
 		os.pullEvent = os.oldPullEvent
 		local ok, err = pcall(function() setfenv(loadstring(script),getfenv())() end)
 		if not ok then
@@ -434,10 +448,11 @@ end
 			print("")
 			visum.align("center","  Press Any Key")
 			os.pullEvent("key")
-			return false
 		end
 		os.pullEvent = os.pullEventRaw
-		return true
+		if sPhoneWasInHome then
+			sPhone.inHome = true
+		end
 	end
 	
 	local function lChat()
@@ -526,6 +541,8 @@ end
 	
 	local function home()
 	
+		sPhone.inHome = true
+	
 		local buttonsInHome = {
 			{"sPhone.header",23,1,25,1,colors.blue,colors.white,"vvv"},
 			{"sPhone.appsButton",12,20,14,20,colors.white,colors.blue,"==="},
@@ -552,13 +569,6 @@ end
 			["sPhone.info"] = "/.sPhone/apps/system/info",
 			["sPhone.store"] = "/.sPhone/apps/store",
 		}
-		
-		--if not fs.exists("/.sPhone/config/resetDBNews") then
-    			--sPhone.winOk("We wiped sID Database","for security issues")
-    			--local f = fs.open("/.sPhone/config/resetDBNews","w")
-    			--f.write("Ignore me")
-    			--f.close()
-    		--end
     		
     		if not sPhone.locked then
     			sPhone.lock()
@@ -574,18 +584,14 @@ end
 				write(text)
 			end
 			clear()
+			
+			
+			visum.buttons(buttonsInHome,true)
+			
 			local w, h = term.getSize()
 			paintutils.drawLine(1,1,w,1, colors.blue)
 			term.setTextColor(colors.white)
 			visum.align("right","vvv ",false,1)
-			term.setCursorPos(1,1)
-			if not sPhone.newUpdate then
-				write(" "..sPhone.user)
-			else
-				write(" New Update!")
-			end
-			
-			visum.buttons(buttonsInHome,true)
 		end
 		local function footerMenu()
 			sPhone.isFooterMenuOpen = true
@@ -604,6 +610,7 @@ end
 			end
 			while true do
 				term.redirect(sPhone.mainTerm)
+				drawHome()
 				redraw()
 				local _,_,x,y = os.pullEvent("mouse_click")
 				if y == 3 then
@@ -612,7 +619,9 @@ end
 					elseif x > 19 and x < 26 then
 						os.reboot()
 					elseif x > 10 and x < 19 then
-						shell.run("/.sPhone/apps/system/settings")
+						sPhone.inHome = false
+						sPhone.run("/.sPhone/apps/system/settings")
+						sPhone.inHome = true
 						drawHome()
 					end
 				elseif y == 1 then
@@ -623,25 +632,56 @@ end
 				end
 			end
 		end
+		local function buttonHomeLoop()
+			while true do
+				drawHome()
+				term.setCursorBlink(false)
+				local autoLockTimer = os.startTimer(10)
+				local id = visum.buttons(buttonsInHome)
+				
+				if id == "sPhone.header" then
+					footerMenu()
+				elseif id == "sPhone.appsButton" then
+					sPhone.inHome = false
+					installedApps()
+					sPhone.inHome = true
+				elseif id == "sPhone.lock" then
+					sPhone.inHome = false
+					login()
+					sPhone.inHome = true
+				elseif id == "sPhone.chat" then
+					sPhone.inHome = false
+					lChat()
+					sPhone.inHome = true
+				elseif appsOnHome[id] then
+					sPhone.inHome = false
+					sPhone.run(appsOnHome[id])
+					sPhone.inHome = true
+				end
+			end
 		
-		while true do
-			drawHome()
-			term.setCursorBlink(false)
-			local autoLockTimer = os.startTimer(120)
-			local id = visum.buttons(buttonsInHome)
-			
-			if id == "sPhone.header" then
-				footerMenu()
-			elseif id == "sPhone.appsButton" then
-				installedApps()
-			elseif id == "sPhone.lock" then
-				login()
-			elseif id == "sPhone.chat" then
-				lChat()
-			elseif appsOnHome[id] then
-				sPhone.run(appsOnHome[id])
+			sPhone.inHome = false
+		
+		end
+		
+		local function updateClock()
+			while true do
+				if sPhone.inHome then
+					term.setCursorPos(1,1)
+					term.setBackgroundColor(colors.blue)
+					term.setTextColor(colors.white)
+					write("     ")
+					term.setCursorPos(1,1)
+					write(" "..textutils.formatTime(os.time(),true))
+				end
+				sleep(0)
 			end
 		end
+		
+		parallel.waitForAll(buttonHomeLoop, updateClock)
+		
+		sPhone.inHome = false
+		
 	end
 	
 	function login()
@@ -669,16 +709,16 @@ end
         term.clear()
         term.setCursorPos(1,1)
         term.setTextColor(colors.black)
-	local passwordLogin = read("*")
+				local passwordLogin = read("*")
         term.redirect(sPhone.mainTerm)
-	local fpw = fs.open("/.sPhone/config/.password","r")
-	if sha256.sha256(passwordLogin) == fpw.readLine() then
-		sPhone.wrongPassword = false
-		home()
-	else
-		sPhone.wrongPassword = true
-	end
-	end
+				local fpw = fs.open("/.sPhone/config/.password","r")
+				if sha256.sha256(passwordLogin) == fpw.readLine() then
+					sPhone.wrongPassword = false
+					return
+				else
+					sPhone.wrongPassword = true
+				end
+			end
 		else
 			local name
 			local pw
