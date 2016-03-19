@@ -313,7 +313,6 @@ local function kernel()
 				end
 			end
 		end
-		sleep(0)
 	end
 end
 	
