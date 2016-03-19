@@ -131,7 +131,7 @@ while true do
 			"Login",
 			"Register",
 		}
-		_, id = sPhone.menu(menu, "Sertex ID", true)
+		_, id = sPhone.menu(menu, "Sertex ID", "X")
 		if id == 1 then
 			login()
 		elseif id == 2 then
