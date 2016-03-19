@@ -152,30 +152,24 @@ local function kernel()
 		sPhone.forceReboot()
 	end
   
-  function sPhone.header(butt)
-
-    if not sPhone then
-      sPhone = {
-        user = "Unknown",
-      }
-    end
-    local function upd()
-			local w, h = term.getSize()
-
-			paintutils.drawLine(1,1,w,1, colors.blue)
-			term.setTextColor(colors.white)
-			term.setCursorPos(1,1)
-			write("  "..sPhone.user)
-			term.setCursorPos(w,1)
-			if butt then
-				write(butt)
-			end
-			term.setBackgroundColor(colors.white)
-			term.setTextColor(colors.black)
-			term.setCursorPos(1,3)
-		end
+  function sPhone.header(title, butt)
 		
-		upd()
+		if not title then
+			title = "sPhone"
+		end
+
+		local w, h = term.getSize()
+		paintutils.drawLine(1,1,w,1, colors.blue)
+		term.setTextColor(colors.white)
+		term.setCursorPos(1,1)
+		write(" "..title)
+		term.setCursorPos(w,1)
+		if butt then
+			write(butt)
+		end
+		term.setBackgroundColor(colors.white)
+		term.setTextColor(colors.black)
+		term.setCursorPos(1,3)
   end
   
   function sPhone.menu(items, title, closeButton)
@@ -245,7 +239,7 @@ local function kernel()
 		term.setTextColor(colors.black)
 		term.clear()
     term.setCursorPos(1,1)
-		sPhone.header(closeButton)
+		sPhone.header("",closeButton)
 		term.setCursorPos(1,3)
 		if not title then
 			title = "  sPhone"
