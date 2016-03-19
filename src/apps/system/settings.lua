@@ -145,30 +145,31 @@ local w, h = term.getSize()
 local function redraw()
 	clear()
 	local w, h = term.getSize()
-			paintutils.drawLine(1,1,w,1, colors.blue)
-			term.setTextColor(colors.white)
-			term.setCursorPos(2,1)
-			write(sPhone.user)
-			term.setCursorPos(w,1)
-			write("X")
-			term.setCursorPos(1,3)
-			term.setBackgroundColor(colors.white)
-			term.setTextColor(colors.black)
-		end
-		redraw()
-		
-		while true do
-			redraw()
-			local name, id = sPhone.menu(menu, "Settings",true)
-			if id == 0 then
-				return
-			elseif id == 1 then
-				setfenv(loadstring(http.get("https://raw.githubusercontent.com/Sertex-Team/sPhone/master/src/installer.lua").readAll()),getfenv())()
-			elseif id == 2 then
-				changePassword()
-			elseif id == 3 then
-				changeLabel()
-			elseif id == 4 then
-				clearLabel()
-			end
-		end
+	paintutils.drawLine(1,1,w,1, colors.blue)
+	term.setTextColor(colors.white)
+	term.setCursorPos(2,1)
+	write(sPhone.user)
+	term.setCursorPos(w,1)
+	write("X")
+	term.setCursorPos(1,3)
+	term.setBackgroundColor(colors.white)
+	term.setTextColor(colors.black)
+end
+redraw()
+
+while true do
+	redraw()
+	local name, id = sPhone.menu(menu, "Settings","X")
+	if id == 0 then
+		return
+	elseif id == 1 then
+		setfenv(loadstring(http.get("https://raw.githubusercontent.com/Sertex-Team/sPhone/master/src/installer.lua").readAll()),getfenv())()
+	elseif id == 2 then
+		changePassword()
+	elseif id == 3 then
+		changeLabel()
+	elseif id == 4 then
+		clearLabel()
+	end
+end
+
