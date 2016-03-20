@@ -1,10 +1,24 @@
 local function kernel()
 	_G.sPhone = {
-		version = "Alpha 2.12.2 DEV",
+		version = "Alpha 2.13",
 		user = "Guest",
 		devMode = false,
 		mainTerm = term.current()
 	}
+	
+	sPhone.theme = { --Default colors
+		["header"] = colors.blue,
+		["headerText"] = colors.white,
+		["text"] = colors.black,
+		["background"] = "",
+		["backgroundColor"] = colors.white,
+		["window.background"] = colors.lightBlue,
+		["window.side"] = colors.blue,
+		["window.button"] = colors.lightBlue,
+		["window.text"] = colors.white,
+	}
+	
+	sPhone.defaultTheme = sPhone.theme
 	
 	if not fs.exists("/.sPhone/config/newIDSystem") then
 		fs.delete("/.sPhone/config/username")
@@ -88,6 +102,7 @@ local function kernel()
 	end
 	
 	_G.crash = nil
+	
 	function os.version()
 		return "sPhone "..sPhone.version
 	end
@@ -96,11 +111,44 @@ local function kernel()
 		return term.getSize()
 	end
 	
+	local fileTheme = "/.sPhone/config/theme"
+	if fs.exists(fileTheme) then
+		sPhone.theme["header"] = config.read(fileTheme, "header")
+		sPhone.theme["headerText"] = config.read(fileTheme, "headerText")
+		sPhone.theme["text"] = config.read(fileTheme, "text")
+		sPhone.theme["background"] = config.read(fileTheme, "background")
+		sPhone.theme["backgroundColor"] = config.read(fileTheme, "backgroundColor")
+		sPhone.theme["window.background"] = config.read(fileTheme, "window.background")
+		sPhone.theme["window.side"] = config.read(fileTheme, "window.side")
+		sPhone.theme["window.button"] = config.read(fileTheme, "window.button")
+		sPhone.theme["window.text"] = config.read(fileTheme, "window.text")
+	else
+		for k, v in pairs(sPhone.theme) do
+			config.write(fileTheme, k, v)
+		end
+	end
+	
+	function sPhone.applyTheme(id, value)
+		if not value or not id then
+			error("bad arguement: double expected, got nil",2)
+		end
+		sPhone.theme[id] = value
+		config.write(fileTheme, id, value)
+	end
+	
+	function sPhone.getTheme(id)
+		if not id then
+			error("bad arguement: double expected, got nil",2)
+		end
+		local n = config.read(fileTheme, id)
+		return n
+	end
+	
 	local function clear()
-		term.setBackgroundColor(colors.white)
+		term.setBackgroundColor(sPhone.theme["backgroundColor"])
 		term.clear()
 		term.setCursorPos(1,1)
-		term.setTextColor(colors.black)
+		term.setTextColor(sPhone.theme["text"])
 	end
 	
 	sPhone.forceShutdown = os.shutdown
@@ -109,47 +157,53 @@ local function kernel()
 	function os.shutdown()
 		sPhone.inHome = false
 		os.pullEvent = os.pullEventRaw
-		if sPhone.doneShutdown then
+		while true do
+			if sPhone.doneShutdown then
+				clear()
+				w, h = term.getSize()
+				term.setCursorPos( (w/2)- 7, h/2)
+				write("Shutdown Aborted.")
+				sPhone.winOk("Error","Can not shutdown",colors.lightBlue,colors.red, colors.white, colors.lightBlue)
+				return
+			end
+			sPhone.doneShutdown = true
 			clear()
 			w, h = term.getSize()
-			term.setCursorPos( (w/2)- 7, h/2)
-			write("Shutdown Aborted.")
-			sPhone.winOk("Error","Can not shutdown",colors.lightBlue,colors.red, colors.white, colors.lightBlue)
-			return
+			term.setCursorPos( (w / 2) - 1, h / 2)
+			write(" ")
+			for i = 1,3 do
+				sleep(0.3)
+				write(".")
+			end
+			sleep(0.2)
+			sPhone.forceShutdown()
 		end
-		sPhone.doneShutdown = true
-		clear()
-		w, h = term.getSize()
-		term.setCursorPos( (w / 2) - 1, h / 2)
-		for i = 1,3 do
-			sleep(0.3)
-			write(".")
-		end
-		sleep(0.2)
-		sPhone.forceShutdown()
 	end
 	
 	function os.reboot()
 		sPhone.inHome = false
 		os.pullEvent = os.pullEventRaw
-		if sPhone.doneShutdown then
+		while true do
+			if sPhone.doneShutdown then
+				clear()
+				w, h = term.getSize()
+				term.setCursorPos( (w/2)- 7, h/2)
+				write("Reboot Aborted.")
+				sPhone.winOk("Error","Can not reboot",colors.lightBlue,colors.red, colors.white, colors.lightBlue)
+				return
+			end
+			sPhone.doneShutdown = true
 			clear()
 			w, h = term.getSize()
-			term.setCursorPos( (w/2)- 7, h/2)
-			write("Reboot Aborted.")
-			sPhone.winOk("Error","Can not reboot",colors.lightBlue,colors.red, colors.white, colors.lightBlue)
-			return
+			term.setCursorPos( (w / 2) - 1, h / 2)
+			write(" ")
+			for i = 1,3 do
+				sleep(0.3)
+				write(".")
+			end
+			sleep(0.2)
+			sPhone.forceReboot()
 		end
-		sPhone.doneShutdown = true
-		clear()
-		w, h = term.getSize()
-		term.setCursorPos( (w / 2) - 1, h / 2)
-		for i = 1,3 do
-			sleep(0.3)
-			write(".")
-		end
-		sleep(0.2)
-		sPhone.forceReboot()
 	end
   
   function sPhone.header(title, butt)
@@ -159,16 +213,16 @@ local function kernel()
 		end
 
 		local w, h = term.getSize()
-		paintutils.drawLine(1,1,w,1, colors.blue)
-		term.setTextColor(colors.white)
+		paintutils.drawLine(1,1,w,1, sPhone.theme["header"])
+		term.setTextColor(sPhone.theme["headerText"])
 		term.setCursorPos(1,1)
 		write(" "..title)
 		term.setCursorPos(w,1)
 		if butt then
 			write(butt)
 		end
-		term.setBackgroundColor(colors.white)
-		term.setTextColor(colors.black)
+		term.setBackgroundColor(sPhone.theme["backgroundColor"])
+		term.setTextColor(sPhone.theme["text"])
 		term.setCursorPos(1,3)
   end
   
@@ -235,8 +289,8 @@ local function kernel()
 	local page = 1
 	
 	local function redraw()
-		term.setBackgroundColor(colors.white)
-		term.setTextColor(colors.black)
+		term.setBackgroundColor(sPhone.theme["backgroundColor"])
+		term.setTextColor(sPhone.theme["text"])
 		term.clear()
     term.setCursorPos(1,1)
 		sPhone.header("",closeButton)
@@ -262,16 +316,16 @@ local function kernel()
 		end
 		for i = 1, #pagedItems()[page] do
 			if selected == drawSize*(page-1)+i then
-				term.setBackgroundColor(colors.white)
-				term.setTextColor(colors.black)
+				term.setBackgroundColor(sPhone.theme["backgroundColor"])
+				term.setTextColor(sPhone.theme["text"])
 			else
-				term.setBackgroundColor(colors.white)
-				term.setTextColor(colors.black)
+				term.setBackgroundColor(sPhone.theme["backgroundColor"])
+				term.setTextColor(sPhone.theme["text"])
 			end
 			term.clearLine()
 			cprint(iif(selected == drawSize*(page-1)+i,"","").." "..pagedItems()[page][i])
-			term.setBackgroundColor(colors.white)
-			term.setTextColor(colors.black)
+			term.setBackgroundColor(sPhone.theme["backgroundColor"])
+			term.setTextColor(sPhone.theme["text"])
 		end
 	end
 
@@ -312,13 +366,13 @@ end
 	
 	function sPhone.yesNo(title, desc, hideUser)
 		term.setCursorBlink(false)
-		term.setBackgroundColor(colors.white)
+		term.setBackgroundColor(sPhone.theme["backgroundColor"])
 		term.clear()
 		term.setCursorPos(1,1)
-		term.setTextColor(colors.black)
+		term.setTextColor(sPhone.theme["text"])
 		local w, h = term.getSize()
-		paintutils.drawLine(1,1,w,1, colors.blue)
-		term.setTextColor(colors.white)
+		paintutils.drawLine(1,1,w,1, sPhone.theme["header"])
+		term.setTextColor(sPhone.theme["headerText"])
 		term.setCursorPos(1,1)
 		if not hideUser then
 			if not sPhone.user then
@@ -328,8 +382,8 @@ end
 			end
 		end
 		term.setCursorPos(1,3)
-		term.setBackgroundColor(colors.white)
-		term.setTextColor(colors.black)
+		term.setBackgroundColor(sPhone.theme["backgroundColor"])
+		term.setTextColor(sPhone.theme["text"])
 		visum.align("center", "  "..title, false, 3)
 		if desc then
 			visum.align("center", "  "..desc,false,6)
@@ -361,16 +415,16 @@ end
 			smessage = ""
 		end
 		if not bg then
-			bg = colors.lightBlue
+			bg = sPhone.theme["window.background"]
 		end
 		if not text then
-			text = colors.white
+			text = sPhone.theme["window.text"]
 		end
 		if not button then
-			button = colors.lightBlue
+			button = sPhone.theme["window.button"]
 		end
 		if not side then
-			side = colors.blue
+			side = sPhone.theme["window.side"]
 		end
 		term.setCursorBlink(false)
 		if #fmessage >= #smessage then
@@ -414,7 +468,48 @@ end
 			end
 		end
 	end
-
+	
+	function sPhone.colorPicker(message, old) -- From Impulse
+		local current = math.log(old) / math.log(2)
+		-- first line is already code wizardry
+		local function redraw()
+			term.setBackgroundColour(sPhone.theme["backgroundColor"])
+			term.clear()
+			sPhone.header(message)
+			term.setCursorPos(2,5)
+			term.setTextColor(colors.white)
+			term.setBackgroundColor(colors.lime)
+			write(" Ok ")
+			term.setCursorPos(7,5)
+			term.setTextColor(colors.white)
+			term.setBackgroundColor(colors.red)
+			write(" Cancel ")
+			term.setTextColor(colors.black)
+			term.setCursorPos(2, 3)
+			for i = 0, 15 do
+				term.setBackgroundColour(2^i)
+				term.write(i == current and "#" or ":")
+			end
+		end
+		while true do
+			redraw()
+			local ev = {os.pullEvent()}
+			if ev[1] == "key" and ev[2] == keys.enter then
+				return 2^current
+			elseif ev[1] == "mouse_click" then
+				if ev[4] == 3 and ev[3] >= 2 and ev[3] <= 17 then
+					current = ev[3] - 2 % 16
+				elseif ev[4] == 5 and ev[3] >= 2 and ev[3] <= 6 then
+					return 2^current
+				elseif ev[4] == 5 and ev[3] >= 7 and ev[3] <= 14 then
+					return old
+				end
+			end
+		end
+	end
+	
+	sPhone.colourPicker = sPhone.colorPicker -- For UK
+	
 	function sPhone.run(_rApp)
 		if not fs.exists(_rApp) or fs.isDir(_rApp) then
 			sPhone.winOk("App not found")
@@ -450,13 +545,9 @@ end
 	
 	local function lChat()
 		clear()
-		local w, h = term.getSize()
-		paintutils.drawLine(1,1,w,1,colors.blue)
-		term.setCursorBlink(false)
-		term.setTextColor(colors.white)
-		visum.align("center","  Chat",false,1)
-		term.setBackgroundColor(colors.white)
-		term.setTextColor(colors.black)
+		sPhone.header("RedNet Chat")
+		term.setBackgroundColor(sPhone.theme["backgroundColor"])
+		term.setTextColor(sPhone.theme["text"])
 		term.setCursorPos(2, 5)
 		if not peripheral.isPresent("back") or not peripheral.getType("back") == "modem" then
 			print("Modem not found")
@@ -501,14 +592,13 @@ end
 			table.insert(apps, v)
 		end
 		local function drawHome()
-			clear()
-			local w, h = term.getSize()
-			paintutils.drawLine(1,1,w,1, colors.blue)
-			term.setTextColor(colors.white)
-			visum.align("right","X",false,1)
-			visum.align("center", "  Apps",false,1)
-			term.setTextColor(colors.black)
-			term.setBackgroundColor(colors.white)
+			term.setBackgroundColor(sPhone.theme["backgroundColor"])
+			term.clear()
+			term.setTextColor(sPhone.theme["text"])
+			sPhone.header("Apps","X")
+			term.setTextColor(sPhone.theme["backgroundColor"])
+			term.setBackgroundColor(sPhone.theme["text"])
+			
 			term.setCursorPos(1,3)
 			for k, v in pairs(appsName) do
 				print(k)
@@ -537,8 +627,8 @@ end
 		sPhone.inHome = true
 	
 		local buttonsInHome = {
-			{"sPhone.header",23,1,25,1,colors.blue,colors.white,"vvv"},
-			{"sPhone.appsButton",12,20,14,20,colors.white,colors.blue,"==="},
+			{"sPhone.header",23,1,25,1,sPhone.theme["header"],sPhone.theme["headerText"],"vvv"},
+			{"sPhone.appsButton",12,20,14,20,sPhone.theme["backgroundColor"],sPhone.theme["header"],"==="},
 			{"sPhone.shell",2,3,8,5,colors.black,colors.yellow," Shell",2},
 			{"sPhone.sID",11,3,15,5,colors.red,colors.white," sID",2},
 			{"sPhone.lock",19,3,24,5,colors.lightGray,colors.black," Lock",2},
@@ -582,8 +672,8 @@ end
 			visum.buttons(buttonsInHome,true)
 			
 			local w, h = term.getSize()
-			paintutils.drawLine(1,1,w,1, colors.blue)
-			term.setTextColor(colors.white)
+			paintutils.drawLine(1,1,w,1, sPhone.theme["header"])
+			term.setTextColor(sPhone.theme["headerText"])
 			visum.align("right","vvv ",false,1)
 		end
 		local function footerMenu()
@@ -591,9 +681,9 @@ end
 			function redraw()
 				drawHome()
 				local w, h = term.getSize()
-				graphics.box(1,2,w,4,colors.blue)
-				term.setTextColor(colors.white)
-				term.setBackgroundColor(colors.blue)
+				graphics.box(1,2,w,4,sPhone.theme["header"])
+				term.setTextColor(sPhone.theme["headerText"])
+				term.setBackgroundColor(sPhone.theme["header"])
 				visum.align("right","^^^ ",false,1)
 				visum.align("right", "Reboot ",false,3)
 				term.setCursorPos(11,3)
@@ -609,8 +699,10 @@ end
 				if y == 3 then
 					if x > 1 and x < 10 then
 						os.shutdown()
+						sPhone.inHome = true
 					elseif x > 19 and x < 26 then
 						os.reboot()
+						sPhone.inHome = true
 					elseif x > 10 and x < 19 then
 						sPhone.inHome = false
 						sPhone.run("/.sPhone/apps/system/settings")
@@ -661,8 +753,8 @@ end
 			while true do
 				if sPhone.inHome then
 					term.setCursorPos(1,1)
-					term.setBackgroundColor(colors.blue)
-					term.setTextColor(colors.white)
+					term.setBackgroundColor(sPhone.theme["header"])
+					term.setTextColor(sPhone.theme["headerText"])
 					write("     ")
 					term.setCursorPos(1,1)
 					write(" "..textutils.formatTime(os.time(),true))
@@ -681,27 +773,25 @@ end
 		sPhone.locked = true
 		if fs.exists("/.sPhone/config/.password") then
 			while true do
+				term.setBackgroundColor(sPhone.theme["backgroundColor"])
 				term.clear()
 				term.setCursorPos(1,1)
-				paintutils.drawImage(paintutils.loadImage("/.sPhone/interfaces/login"),1,1)
-				term.setTextColor(colors.white)
-				term.setBackgroundColor(colors.blue)
-				term.setCursorPos(1,1)
-				write(" "..sPhone.user)
+				sPhone.header(sPhone.user)
+				paintutils.drawBox(7,9,20,11,sPhone.theme["window.background"])
 				if sPhone.wrongPassword then
 					term.setTextColor(colors.red)
-					term.setBackgroundColor(colors.white)
+					term.setBackgroundColor(sPhone.theme["backgroundColor"])
 					visum.align("center","  Wrong Password",false,13)
 				end
-				term.setTextColor(colors.black)
-				term.setBackgroundColor(colors.white)
+				term.setTextColor(sPhone.theme["text"])
+				term.setBackgroundColor(sPhone.theme["backgroundColor"])
 				visum.align("center","  Insert Password",false,7)
         local loginTerm = window.create(term.native(), 8,10,12,1, true)
         term.redirect(loginTerm)
-        term.setBackgroundColor(colors.white)
+        term.setBackgroundColor(sPhone.theme["backgroundColor"])
         term.clear()
         term.setCursorPos(1,1)
-        term.setTextColor(colors.black)
+        term.setTextColor(sPhone.theme["text"])
 				local passwordLogin = read("*")
         term.redirect(sPhone.mainTerm)
 				local fpw = fs.open("/.sPhone/config/.password","r")
@@ -717,39 +807,42 @@ end
 			local pw
 			local pwr
 			local rServer
+			sPhone.firstBoot = true
 			while true do
+				term.setBackgroundColor(sPhone.theme["backgroundColor"])
 				term.clear()
 				term.setCursorPos(1,1)
-				paintutils.drawImage(paintutils.loadImage("/.sPhone/interfaces/login"),1,1)
+				sPhone.header("Setup")
+				paintutils.drawBox(7,9,20,11,sPhone.theme["window.background"])
 				if sPhone.wrongPassword then
 					term.setTextColor(colors.red)
 					visum.align("center","  Wrong Password",false,13)
 				end
-				term.setTextColor(colors.black)
-				term.setBackgroundColor(colors.white)
-				visum.align("center","  Setup",false,3)
-				visum.align("center","  Insert Password",false,5)
-				local loginTerm = window.create(term.native(), 8,10,12,1, true)
-				term.redirect(loginTerm)
-				term.setBackgroundColor(colors.white)
-				term.clear()
-				term.setCursorPos(1,1)
-				term.setTextColor(colors.black)
+				term.setTextColor(sPhone.theme["text"])
+				term.setBackgroundColor(sPhone.theme["backgroundColor"])
+				visum.align("center","  Insert Password",false,7)
+        local loginTerm = window.create(term.native(), 8,10,12,1, true)
+        term.redirect(loginTerm)
+        term.setBackgroundColor(sPhone.theme["backgroundColor"])
+        term.clear()
+        term.setCursorPos(1,1)
+        term.setTextColor(sPhone.theme["text"])
 				local password1 = read("*")
 				term.redirect(sPhone.mainTerm)
+				term.setBackgroundColor(sPhone.theme["backgroundColor"])
 				term.clear()
 				term.setCursorPos(1,1)
-				paintutils.drawImage(paintutils.loadImage("/.sPhone/interfaces/login"),1,1)
-				term.setTextColor(colors.black)
-				term.setBackgroundColor(colors.white)
-				visum.align("center","  Setup",false,3)
+				sPhone.header("Setup")
+				paintutils.drawBox(7,9,20,11,sPhone.theme["window.background"])
+				term.setTextColor(sPhone.theme["text"])
+				term.setBackgroundColor(sPhone.theme["backgroundColor"])
 				visum.align("center","  Repeat",false,7)
-				local loginTerm = window.create(term.native(), 8,10,12,1, true)
-				term.redirect(loginTerm)
-				term.setBackgroundColor(colors.white)
-				term.clear()
-				term.setCursorPos(1,1)
-				term.setTextColor(colors.black)
+        local loginTerm = window.create(term.native(), 8,10,12,1, true)
+        term.redirect(loginTerm)
+        term.setBackgroundColor(sPhone.theme["backgroundColor"])
+        term.clear()
+        term.setCursorPos(1,1)
+        term.setTextColor(sPhone.theme["text"])
 				local password2 = read("*")
 				term.redirect(sPhone.mainTerm)
 				if password1 == password2 then
@@ -776,20 +869,19 @@ end
 			else
 				name = "Guest"
 			end
-			term.setBackgroundColor(colors.white)
+			term.setBackgroundColor(sPhone.theme["backgroundColor"])
 			term.clear()
+			sPhone.header("Setup")
 			term.setCursorPos(1,1)
-			term.setTextColor(colors.black)
+			term.setTextColor(sPhone.theme["text"])
 			_G.sPhone.user = name
 			os.setComputerLabel(sPhone.user.."'s sPhone")
-			term.setCursorPos(1,13)
-			term.clearLine()
-			visum.align("center","  All Set!",false,13)
-			term.setCursorPos(1,14)
-			term.clearLine()
-			visum.align("center","  Have fun with sPhone",false,14)
+			visum.align("center","  All Set!",false,3)
+			visum.align("center","  Have fun with sPhone",false,5)
 			sleep(2)
 			sPhone.locked = false
+			sPhone.inHome = true
+			sPhone.firstBoot = false
 			return
 		end
 	end
