@@ -11,8 +11,8 @@ if not sPhone then
 end
 
 local function clear()
-  term.setBackgroundColor(colors.white)
-  term.setTextColor(colors.black)
+  term.setBackgroundColor(sPhone.theme["backgroundColor"])
+  term.setTextColor(sPhone.theme["text"])
   term.clear()
   term.setCursorPos(1,1)
 end
@@ -28,11 +28,13 @@ end
 local function login()
 	term.setBackgroundColor(colors.white)
 	term.clear()
-	term.setCursorPos(1,1)
-	local w, h = term.getSize()
-	paintutils.drawLine(1,1,w,1,colors.blue)
-	term.setTextColor(colors.black)
-	term.setBackgroundColor(colors.white)
+	if sPhone.firstBoot then
+		sPhone.header("Setup")
+	else
+		sPhone.header()
+	end
+	term.setTextColor(sPhone.theme["text"])
+	term.setBackgroundColor(sPhone.theme["backgroundColor"])
 	visum.align("center","  Setup Sertex ID",false,3)
 	visum.align("center","  Your Username",false,7)
 	term.setCursorPos(3,8)
@@ -60,11 +62,13 @@ end
 local function register()
 	term.setBackgroundColor(colors.white)
 	term.clear()
-	term.setCursorPos(1,1)
-	local w, h = term.getSize()
-	paintutils.drawLine(1,1,w,1,colors.blue)
-	term.setTextColor(colors.black)
-	term.setBackgroundColor(colors.white)
+	if sPhone.firstBoot then
+		sPhone.header("Setup")
+	else
+		sPhone.header()
+	end
+	term.setTextColor(sPhone.theme["text"])
+	term.setBackgroundColor(sPhone.theme["backgroundColor"])
 	visum.align("center","  Setup Sertex ID",false,3)
 	visum.align("center","  Your Username",false,7)
 	term.setCursorPos(3,8)
