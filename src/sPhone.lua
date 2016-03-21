@@ -755,7 +755,8 @@ end
 					term.setCursorPos(1,1)
 					term.setBackgroundColor(sPhone.theme["header"])
 					term.setTextColor(sPhone.theme["headerText"])
-					write("     ")
+					term.setCursorPos(1,1)
+					write("      ")
 					term.setCursorPos(1,1)
 					write(" "..textutils.formatTime(os.time(),true))
 				end
