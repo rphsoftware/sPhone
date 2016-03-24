@@ -1,6 +1,6 @@
 local function kernel()
 	_G.sPhone = {
-		version = "Alpha 2.13",
+		version = "Alpha 2.13.1",
 		user = "Guest",
 		devMode = false,
 		mainTerm = term.current()
@@ -894,6 +894,7 @@ end
 	
 	if newVersion ~= sPhone.version then
 		sPhone.newUpdate = true
+		sPhone.winOk("New Update!")
 	else
 		sPhone.newUpdate = false
 	end
