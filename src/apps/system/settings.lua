@@ -185,7 +185,7 @@ local function editTheme()
 			local loadTheme = read()
 			if fs.exists(loadTheme) and not fs.isDir(loadTheme) then
 				for k, v in pairs(sPhone.theme) do
-					sPhone.theme[k] = config.read("/.sPhone/config/theme", k)
+					sPhone.theme[k] = config.read(loadTheme, k)
 				end
 				sPhone.winOk("Theme loaded!")
 			else
