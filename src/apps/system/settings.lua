@@ -184,8 +184,11 @@ local function editTheme()
 			term.setCursorPos(2,5)
 			local loadTheme = read()
 			if fs.exists(loadTheme) and not fs.isDir(loadTheme) then
-				for k, v in pairs(sPhone.theme) do
+				for k, v in pairs(sPhone.theme) do -- Load theme
 					sPhone.theme[k] = config.read(loadTheme, k)
+				end
+				for k, v in pairs(sPhone.theme) do -- Overwrite theme config
+					config.write("/.sPhone/config/theme", k, v)
 				end
 				sPhone.winOk("Theme loaded!")
 			else
