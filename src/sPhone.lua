@@ -520,7 +520,7 @@ end
 			sPhone.inHome = false
 		end
 		os.pullEvent = os.oldPullEvent
-		local ok, err = pcall(function() setfenv(loadfile(rApp),getfenv())() end)
+		local ok, err = pcall(function(...) setfenv(loadfile(rApp),getfenv())(...) end, ...)
 		if not ok then
 			os.pullEvent = os.pullEventRaw
 			term.setBackgroundColor(colors.white)
