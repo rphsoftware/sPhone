@@ -112,9 +112,10 @@ end
 
 local function changeLabel()
 	sPhone.header(sPhone.user)
-	visum.align("center", "Set Label",false,3)
+	visum.align("center", "  Set Label",false,3)
 	term.setCursorPos(2,5)
 	local newLabel = read()
+	newLabel = newLabel:gsub("&", string.char(0xc2)..string.char(0xa7)) --yay colors
 	os.setComputerLabel(newLabel)
 	sPhone.winOk("Computer Label set")
 end
