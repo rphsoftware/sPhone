@@ -510,27 +510,24 @@ end
 	
 	sPhone.colourPicker = sPhone.colorPicker -- For UK
 	
-	function sPhone.run(_rApp)
-		if not fs.exists(_rApp) or fs.isDir(_rApp) then
+	function sPhone.run(rApp, ...)
+		if not fs.exists(rApp) or fs.isDir(rApp) then
 			sPhone.winOk("App not found")
-			return
+			return false
 		end
-		local f = fs.open(_rApp, "r")
-		local script = f.readAll()
-		f.close()
 		if sPhone.inHome then
 			local sPhoneWasInHome = true
 			sPhone.inHome = false
 		end
 		os.pullEvent = os.oldPullEvent
-		local ok, err = pcall(function() setfenv(loadstring(script),getfenv())() end)
+		local ok, err = pcall(function() setfenv(loadfile(rApp),getfenv())() end)
 		if not ok then
 			os.pullEvent = os.pullEventRaw
 			term.setBackgroundColor(colors.white)
 			term.setTextColor(colors.black)
 			term.clear()
 			term.setCursorPos(1,2)
-			visum.align("center","  "..fs.getName(_rApp).." crashed",false,2)
+			visum.align("center","  "..fs.getName(rApp).." crashed",false,2)
 			term.setCursorPos(1,4)
 			print(err)
 			print("")
