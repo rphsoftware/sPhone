@@ -872,7 +872,9 @@ end
 			sPhone.header("Setup")
 			term.setCursorPos(1,1)
 			term.setTextColor(sPhone.theme["text"])
-			_G.sPhone.user = name
+			sPhone.user = name
+			local toLabel = sPhone.user.."'s &9sPhone"
+			toLabel = toLabel:gsub("&", string.char(0xc2)..string.char(0xa7))
 			os.setComputerLabel(sPhone.user.."'s sPhone")
 			visum.align("center","  All Set!",false,3)
 			visum.align("center","  Have fun with sPhone",false,5)
