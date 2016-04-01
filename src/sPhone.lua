@@ -1,6 +1,6 @@
 local function kernel()
 	_G.sPhone = {
-		version = "Alpha 2.13.4",
+		version = "Alpha 2.13.5",
 		user = "Guest",
 		devMode = false,
 		mainTerm = term.current()
