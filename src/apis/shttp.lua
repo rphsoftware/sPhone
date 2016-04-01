@@ -14,7 +14,7 @@ function get(url, post, header, timeout)
    if ev[1] == "timer" and ev[2] == timer then
      return false, nil, nil --ikr...
    elseif ev[1] == "http_success" then
-     local source = ev[3].readAll()
+     local source = ev[3]
      ev[3].close()
      return true, source, ev[2]
    elseif ev[1] == "http_failure" then
