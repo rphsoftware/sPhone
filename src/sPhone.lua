@@ -1,6 +1,6 @@
 local function kernel()
 	_G.sPhone = {
-		version = "Alpha 2.13.5",
+		version = "Alpha 2.13.6",
 		user = "Guest",
 		devMode = false,
 		mainTerm = term.current()
@@ -44,6 +44,10 @@ local function kernel()
 			os.loadAPI("/.sPhone/apis/"..v)
 		end
 	end
+
+	local sPath = shell.path()
+	sPath = sPath..":/.sPhone/bin"
+	shell.setPath(sPath)
 	
 	if not fs.exists("/.sPhone/autorun") then
 		fs.makeDir("/.sPhone/autorun")
