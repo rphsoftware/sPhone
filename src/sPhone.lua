@@ -656,6 +656,9 @@ end
     		
     		if not sPhone.locked then
     			sPhone.lock()
+    			if sPhone.newUpdate then
+    				sPhone.winOk("New Update!")
+    			end
     		end
     		if fs.exists("/.sPhone/config/resetDBNews") then
     			fs.delete("/.sPhone/config/resetDBNews")
@@ -897,7 +900,6 @@ end
 	
 	if newVersion ~= sPhone.version then
 		sPhone.newUpdate = true
-		sPhone.winOk("New Update!")
 	else
 		sPhone.newUpdate = false
 	end
