@@ -896,7 +896,7 @@ end
 	sPhone.lock = login
 	sPhone.login = login
 
-	local newVersion = http.get("https://raw.githubusercontent.com/Sertex-Team/sPhone/master/src/version").readLine()
+	local newVersion = http.get("https://raw.githubusercontent.com/BeaconNet/sPhone/master/src/version").readLine()
 	
 	if newVersion ~= sPhone.version then
 		sPhone.newUpdate = true
