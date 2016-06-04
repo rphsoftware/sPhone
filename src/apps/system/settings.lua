@@ -212,7 +212,7 @@ while true do
 	if id == 0 then
 		return
 	elseif id == 1 then
-		setfenv(loadstring(http.get("https://raw.githubusercontent.com/Sertex-Team/sPhone/master/src/installer.lua").readAll()),getfenv())()
+		setfenv(loadstring(http.get("https://raw.githubusercontent.com/BeaconNet/sPhone/master/src/installer.lua").readAll()),getfenv())()
 	elseif id == 2 then
 		editTheme()
 	elseif id == 3 then
