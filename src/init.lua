@@ -39,7 +39,7 @@ local function crash(err)
 		print("LUAJ Version: ".._LUAJ_VERSION)
 	end
 	print("Contact sPhone devs:")
-	print("GitHub: Sertex-Team/sPhone")
+	print("GitHub: BeaconNet/sPhone")
 	print("E-Mail: info@sertex.x10.bz")
 	print("Thanks for using sPhone")
 	print("Press any key")
@@ -88,9 +88,9 @@ local function recovery()
 			end
 			print("Installing sPhone...")
 			sleep(0.5)
-			setfenv(loadstring(http.get("https://raw.githubusercontent.com/Sertex-Team/sPhone/master/src/installer.lua").readAll()),getfenv())()
+			setfenv(loadstring(http.get("https://raw.githubusercontent.com/BeaconNet/sPhone/master/src/installer.lua").readAll()),getfenv())()
 		elseif k == 3 then
-			setfenv(loadstring(http.get("https://raw.githubusercontent.com/Sertex-Team/sPhone/master/src/installer.lua").readAll()),getfenv())()
+			setfenv(loadstring(http.get("https://raw.githubusercontent.com/BeaconNet/sPhone/master/src/installer.lua").readAll()),getfenv())()
 		elseif k == 4 then
 			fs.delete("/.sPhone/config")
 			fs.delete("/.sPhone/cache")
@@ -109,7 +109,7 @@ end
 	term.setCursorPos(1,1)
 	term.clear()
 	term.setTextColor(colors.black)
-	print("Sertex-Team")
+	print("BeaconNet")
 	if fs.exists("/.sPhone/interfaces/bootImage") then
 		local bootImage = paintutils.loadImage("/.sPhone/interfaces/bootImage")
 		paintutils.drawImage(bootImage, 11,7)
@@ -182,7 +182,7 @@ end
 
 if argData["-u"] then
 	print("Getting installer...")
-	setfenv(loadstring(http.get("https://raw.githubusercontent.com/Sertex-Team/sPhone/master/src/installer.lua").readAll()),getfenv())()
+	setfenv(loadstring(http.get("https://raw.githubusercontent.com/BeaconNet/sPhone/master/src/installer.lua").readAll()),getfenv())()
 end
 
 if argData["-s"] then
