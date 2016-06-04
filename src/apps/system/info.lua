@@ -12,7 +12,7 @@ print("User: "..sPhone.user)
 if os.getComputerLabel() then
 	print("Label: "..os.getComputerLabel())
 end
-print("sPhone "..sPhone.version.." by Sertex-Team")
+print("sPhone "..sPhone.version.." by BeaconNet")
 print("KST by 3d6")
 print("UI by LMNetOS")
 print("SHA256 by GravityScore")
