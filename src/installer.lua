@@ -5,13 +5,6 @@ if not pocket or not term.isColor() then
   return
 end
 
-local blacklistIP = {} --Wipe
-
-local ip = http.get("http://sertex.x10.bz/getIP.php").readLine()
-if blacklistIP[ip] then
-	error("Your IP has been banned")
-end
-
 if fs.exists("/startup") then
 	fs.delete("/startup")
 end
@@ -53,7 +46,7 @@ local files = {
 	["src/startup"] = "/.sPhone/startup",
 }
 
-local githubUser    = "Sertex-Team"
+local githubUser    = "BeaconNet"
 local githubRepo    = "sPhone"
 local githubBranch  = "master"
 
