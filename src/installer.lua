@@ -26,7 +26,7 @@ local files = {
 	["src/apis/sertexID.lua"] = "/.sPhone/apis/sertexID",
 	["src/apis/shttp.lua"] = "/.sPhone/apis/shttp",
 	
-	["src/bin/wget.lua"] = "/.sPhone/bin/wget",
+	["src/bin/wget.lua"] = "/bin/wget",
 	
 	["src/apps/system/settings.lua"] = "/.sPhone/apps/system/settings",
 	["src/apps/system/info.lua"] = "/.sPhone/apps/system/info",
