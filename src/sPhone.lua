@@ -46,7 +46,7 @@ local function kernel()
 	end
 
 	local sPath = shell.path()
-	sPath = sPath..":/.sPhone/bin"
+	sPath = sPath..":/bin"
 	shell.setPath(sPath)
 	
 	if not fs.exists("/.sPhone/autorun") then
