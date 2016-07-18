@@ -20,14 +20,6 @@ local function kernel()
 	
 	sPhone.defaultTheme = sPhone.theme
 	
-	if not fs.exists("/.sPhone/config/newIDSystem") then
-		fs.delete("/.sPhone/config/username")
-		fs.delete("/.sPhone/config/.sIDpw")
-		f = fs.open("/.sPhone/config/newIDSystem","w")
-		f.write("Ignore Me. I just check if you use the new Sertex ID system to fix password issues")
-		f.close()
-	end
-	
 	if not fs.exists("/.sPhone/config/newPassword") and fs.exists("/.sPhone/.password") then
 		fs.move("/.sPhone/.password","/.sPhone/config/.password")
 		f = fs.open("/.sPhone/config/newPassword","w")
@@ -861,6 +853,19 @@ end
 			end
 			
 			local name
+			
+			term.setBackgroundColor(sPhone.theme["backgroundColor"])
+			term.clear()
+			sPhone.header("Setup")
+			term.setCursorPos(1,1)
+			term.setTextColor(sPhone.theme["text"])
+			term.setCursorPos(2,3)
+			visum.align("center","Username",false,3)
+			term.setCursorPos(2,5)
+			local newUsername = read()
+			local f = fs.open("/.sPhone/config/username","w")
+			f.write(newUsername)
+			f.close()
 			
 			if fs.exists("/.sPhone/config/username") then
 				local f = fs.open("/.sPhone/config/username","r")
