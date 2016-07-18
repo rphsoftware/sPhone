@@ -1,6 +1,6 @@
 local function kernel()
 	_G.sPhone = {
-		version = "Alpha 2.13.7",
+		version = "Alpha 2.13.8",
 		user = "Guest",
 		devMode = false,
 		mainTerm = term.current()
@@ -631,15 +631,12 @@ end
 			{"sPhone.header",23,1,25,1,sPhone.theme["header"],sPhone.theme["headerText"],"vvv"},
 			{"sPhone.appsButton",12,20,14,20,sPhone.theme["backgroundColor"],sPhone.theme["header"],"==="},
 			{"sPhone.shell",2,3,8,5,colors.black,colors.yellow," Shell",2},
-			{"sPhone.sID",11,3,15,5,colors.red,colors.white," sID",2},
 			{"sPhone.lock",19,3,24,5,colors.lightGray,colors.black," Lock",2},
-			{"sPhone.buddies",2,7,10,9,colors.brown,colors.white," Buddies",2},
-			{"sPhone.chat",12,7,17,9,colors.black,colors.white," Chat",2},
-			{"sPhone.SMS",19,7,23,9,colors.green,colors.white," SMS",2},
-			{"sPhone.kst",3,11,7,13,colors.green,colors.lime," KST",2},
-			{"sPhone.gps",10,11,14,13,colors.red,colors.black," GPS",2},
-			{"sPhone.info",18,11,23,13,colors.lightGray,colors.black," Info",2},
-			{"sPhone.store",2,15,8,17,colors.orange,colors.white," Store",2},
+			{"sPhone.chat",11,3,16,5,colors.black,colors.white," Chat",2},
+			{"sPhone.kst",2,7,8,9,colors.green,colors.white," Krist",2},
+			{"sPhone.gps",11,7,15,9,colors.red,colors.black," GPS",2},
+			{"sPhone.info",18,7,23,9,colors.lightGray,colors.black," Info",2},
+			{"sPhone.store",2,11,8,13,colors.orange,colors.white," Store",2},
 		}
 		
 		
@@ -863,8 +860,6 @@ end
 				end
 			end
 			
-			sPhone.run("/.sPhone/apps/system/sID")
-			
 			local name
 			
 			if fs.exists("/.sPhone/config/username") then
@@ -882,7 +877,7 @@ end
 			sPhone.user = name
 			local toLabel = sPhone.user.."'s &9sPhone"
 			toLabel = toLabel:gsub("&", string.char(0xc2)..string.char(0xa7))
-			os.setComputerLabel(sPhone.user.."'s sPhone")
+			os.setComputerLabel(sPhone.user.."'s &1sPhone")
 			visum.align("center","  All Set!",false,3)
 			visum.align("center","  Have fun with sPhone",false,5)
 			sleep(2)
