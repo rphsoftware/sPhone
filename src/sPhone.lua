@@ -882,7 +882,7 @@ end
 			sPhone.user = name
 			local toLabel = sPhone.user.."'s &9sPhone"
 			toLabel = toLabel:gsub("&", string.char(0xc2)..string.char(0xa7))
-			os.setComputerLabel(sPhone.user.."'s &1sPhone")
+			os.setComputerLabel(toLabel)
 			visum.align("center","  All Set!",false,3)
 			visum.align("center","  Have fun with sPhone",false,5)
 			sleep(2)
