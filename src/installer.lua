@@ -23,7 +23,6 @@ local files = {
 	["src/apis/ui.lua"] = "/.sPhone/apis/ui",
 	["src/apis/base64.lua"] = "/.sPhone/apis/base64",
 	["src/apis/config.lua"] = "/.sPhone/apis/config",
-	["src/apis/sertexID.lua"] = "/.sPhone/apis/sertexID",
 	["src/apis/shttp.lua"] = "/.sPhone/apis/shttp",
 	
 	["src/bin/wget.lua"] = "/bin/wget",
@@ -31,14 +30,11 @@ local files = {
 	
 	["src/apps/system/settings.lua"] = "/.sPhone/apps/system/settings",
 	["src/apps/system/info.lua"] = "/.sPhone/apps/system/info",
-	["src/apps/system/sID.lua"] = "/.sPhone/apps/system/sID",
 	["src/apps/kstwallet.lua"] = "/.sPhone/apps/kstwallet",
 	["src/apps/store.lua"] = "/.sPhone/apps/store",
 	["src/apps/shell.lua"] = "/.sPhone/apps/shell",
 	
-	["src/apps/sms.lua"] = "/.sPhone/apps/sms",
 	["src/apps/gps.lua"] = "/.sPhone/apps/gps",
-	["src/apps/buddies.lua"] = "/.sPhone/apps/buddies",
 	
 	["src/interfaces/login"] = "/.sPhone/interfaces/login",
 	["src/interfaces/bootImage"] = "/.sPhone/interfaces/bootImage",
