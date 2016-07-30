@@ -33,6 +33,7 @@ local files = {
 	["src/apps/kstwallet.lua"] = "/.sPhone/apps/kstwallet",
 	["src/apps/store.lua"] = "/.sPhone/apps/store",
 	["src/apps/shell.lua"] = "/.sPhone/apps/shell",
+	["src/apps/appList.lua"] = "/.sPhone/apps/appList",
 	
 	["src/apps/gps.lua"] = "/.sPhone/apps/gps",
 	
