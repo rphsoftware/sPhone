@@ -1,6 +1,6 @@
 local function kernel()
 	_G.sPhone = {
-		version = "Alpha 2.13.8",
+		version = "Alpha 2.14",
 		user = "Guest",
 		devMode = false,
 		mainTerm = term.current()
@@ -555,66 +555,6 @@ end
 		sleep(1)
 	end
 	
-	local function installedApps()
-		sPhone.winOk("Work In","Progress")
-		local dir = "/.sPhone/apps/storeApps/"
-		if not fs.exists(dir) then
-			fs.makeDir(dir)
-		end
-		
-		local apps = {}
-		local appsName = {}
-		
-		for k, v in pairs(fs.list(dir)) do
-			if fs.isDir(dir..v) then
-				if fs.exists(dir..v.."/sPhone-Main.lua") then
-					local nDir = dir..v.."/sPhone-Main.lua"
-					
-					pDir = dir..v
-					local run = config.read(nDir, "run")
-					local name = config.read(nDir, "name")
-					local author = config.read(nDir, "author")
-					local version = config.read(nDir, "version")
-					
-					appsName[name] = run
-				end
-			end
-		end
-		
-		for k, v in pairs(appsName) do
-			table.insert(apps, v)
-		end
-		local function drawHome()
-			term.setBackgroundColor(sPhone.theme["backgroundColor"])
-			term.clear()
-			term.setTextColor(sPhone.theme["text"])
-			sPhone.header("Apps","X")
-			term.setTextColor(sPhone.theme["backgroundColor"])
-			term.setBackgroundColor(sPhone.theme["text"])
-			
-			term.setCursorPos(1,3)
-			for k, v in pairs(appsName) do
-				print(k)
-			end
-		end	
-		
-		drawHome()
-		
-		local w, h = term.getSize()
-		
-		while true do
-			drawHome()
-			local _,_,x,y = os.pullEvent("mouse_click")
-			if x == w and y == 1 then
-				break
-			elseif y >= 2 then
-				if apps[y-2] then
-					sPhone.run("/.sPhone/apps/storeApps/"..pDir.."/"..apps[y-2])
-				end
-			end
-		end
-	end
-	
 	local function home()
 	
 		sPhone.inHome = true
@@ -641,6 +581,7 @@ end
 			["sPhone.kst"] = "/.sPhone/apps/kstwallet",
 			["sPhone.info"] = "/.sPhone/apps/system/info",
 			["sPhone.store"] = "/.sPhone/apps/store",
+			["sPhone.appsButton"] = "/.sPhone/apps/appList",
 		}
     		
     		if not sPhone.locked then
@@ -719,10 +660,6 @@ end
 				
 				if id == "sPhone.header" then
 					footerMenu()
-				elseif id == "sPhone.appsButton" then
-					sPhone.inHome = false
-					installedApps()
-					sPhone.inHome = true
 				elseif id == "sPhone.lock" then
 					sPhone.inHome = false
 					login()
