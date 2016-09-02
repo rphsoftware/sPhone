@@ -12,10 +12,12 @@ print("User: "..sPhone.user)
 if os.getComputerLabel() then
 	print("Label: "..os.getComputerLabel())
 end
-print("sPhone "..sPhone.version.." by BeaconNet")
-print("KST by 3d6")
-print("UI by LMNetOS")
+print("Version: "..sPhone.version)
+print("")
+print("sPhone made by BeaconNet")
+print("Krist by 3d6")
 print("SHA256 by GravityScore")
+print("Compress by Creator")
 print("And thanks to dan200 for this mod!")
 
 while true do
