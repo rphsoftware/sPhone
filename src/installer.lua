@@ -28,6 +28,7 @@ local files = {
 	
 	["src/bin/wget.lua"] = "/bin/wget",
 	["src/bin/halt.lua"] = "/bin/halt",
+	["src/bin/echo.lua"] = "/bin/echo",
 	
 	["src/apps/system/settings.lua"] = "/.sPhone/apps/system/settings",
 	["src/apps/system/info.lua"] = "/.sPhone/apps/system/info",
