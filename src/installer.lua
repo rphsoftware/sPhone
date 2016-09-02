@@ -24,6 +24,7 @@ local files = {
 	["src/apis/base64.lua"] = "/.sPhone/apis/base64",
 	["src/apis/config.lua"] = "/.sPhone/apis/config",
 	["src/apis/shttp.lua"] = "/.sPhone/apis/shttp",
+	["src/apis/compress.lua"] = "/.sPhone/apis/compress",
 	
 	["src/bin/wget.lua"] = "/bin/wget",
 	["src/bin/halt.lua"] = "/bin/halt",
@@ -34,6 +35,8 @@ local files = {
 	["src/apps/store.lua"] = "/.sPhone/apps/store",
 	["src/apps/shell.lua"] = "/.sPhone/apps/shell",
 	["src/apps/appList.lua"] = "/.sPhone/apps/appList",
+	["src/apps/home.lua"] = "/.sPhone/apps/home",
+	["src/apps/chat.lua"] = "/.sPhone/apps/chat",
 	
 	["src/apps/gps.lua"] = "/.sPhone/apps/gps",
 	
