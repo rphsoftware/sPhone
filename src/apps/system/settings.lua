@@ -7,6 +7,7 @@ local menu = {
 	"Change Password",
 	"Set Label",
 	"Clear Label",
+	"Default Apps",
 }
 
 local function clear()
@@ -205,6 +206,42 @@ local function editTheme()
 	end
 end
 
+local function defaultApps()
+	local defaultMenu = {
+		"Home",
+	}
+	local name, id = sPhone.menu(defaultMenu,"Default Apps","X")
+	
+	if id == 0 then
+		return
+	elseif id == 1 then
+		
+		while true do
+			clear()
+			sPhone.header("Default Apps: Home")
+			visum.align("center","Set default home app",false,3)
+			term.setCursorPos(2,5)
+			print("Leave blank for default")
+			write(" Path: /")
+			local defaultHome = read()
+			
+			if defaultHome == "" then
+				sPhone.setDefaultApp("home","/.sPhone/apps/home")
+				sPhone.winOk("Done!","Reboot to apply")
+				break
+			else
+				if fs.exists("/"..defaultHome) and not fs.isDir("/"..defaultHome) then
+					sPhone.setDefaultApp("home","/"..defaultHome)
+					sPhone.winOk("Done!","Reboot to apply")
+					break
+				else
+					sPhone.winOk("App not found")
+				end
+			end
+		end
+	end
+end
+
 while true do
 	clear()
 	sPhone.header("","X")
@@ -221,5 +258,7 @@ while true do
 		changeLabel()
 	elseif id == 5 then
 		clearLabel()
+	elseif id == 6 then
+		defaultApps()
 	end
 end
