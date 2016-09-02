@@ -1,9 +1,19 @@
 local function kernel()
 	_G.sPhone = {
-		version = "Alpha 2.14",
+		version = "Alpha 3",
 		user = "Guest",
 		devMode = false,
-		mainTerm = term.current()
+		mainTerm = term.current(),
+		safeMode = false,
+	}
+	
+	if safemode then
+		sPhone.safeMode = true
+		_G.safemode = nil
+	end
+	
+	sPhone.defaultApps = {
+		["home"] = "/.sPhone/apps/home",
 	}
 	
 	sPhone.theme = { --Default colors
@@ -19,13 +29,6 @@ local function kernel()
 	}
 	
 	sPhone.defaultTheme = sPhone.theme
-	
-	if not fs.exists("/.sPhone/config/newPassword") and fs.exists("/.sPhone/.password") then
-		fs.move("/.sPhone/.password","/.sPhone/config/.password")
-		f = fs.open("/.sPhone/config/newPassword","w")
-		f.write("Ignore Me. I just check if the password is moved to the config folder")
-		f.close()
-	end
 	
 	if not fs.exists("/.sPhone/apis") then
 		fs.makeDir("/.sPhone/apis")
@@ -51,7 +54,7 @@ local function kernel()
 	for k, v in pairs(fs.list("/.sPhone/autorun")) do
 		term.setTextColor(colors.black)
 		if not fs.isDir("/.sPhone/autorun/"..v) then
-			if not safemode then
+			if not sPhone.safemode then
 				local f = fs.open("/.sPhone/autorun/"..v,"r")
 				local script = f.readAll()
 				f.close()
@@ -71,10 +74,6 @@ local function kernel()
 				sleep(0)
 			end
 		end
-	end
-
-	if safemode then
-		_G.safemode = nil
 	end
 	
 	if runningOnStartup then
@@ -140,6 +139,28 @@ local function kernel()
 		return n
 	end
 	
+	function sPhone.setDefaultApp(app, path)
+		if not path then
+			error("got nil",2)
+		end
+		
+		sPhone.defaultApps[app] = path
+		config.write("/.sPhone/config/defaultApps",app,path)
+	end
+	
+	function sPhone.getDefaultApp(app)
+		if not app then
+			error("got nil",2)
+		end
+		
+		local n = config.read("/.sPhone/config/defaultApps",app)
+		return n
+	end
+	
+	if not fs.exists("/.sPhone/config/defaultApps") then
+		sPhone.setDefaultApp("home","/.sPhone/apps/home")
+	end
+	
 	local function clear()
 		term.setBackgroundColor(sPhone.theme["backgroundColor"])
 		term.clear()
@@ -166,7 +187,6 @@ local function kernel()
 			clear()
 			w, h = term.getSize()
 			term.setCursorPos( (w / 2) - 1, h / 2)
-			write(" ")
 			for i = 1,3 do
 				sleep(0.3)
 				write(".")
@@ -192,7 +212,6 @@ local function kernel()
 			clear()
 			w, h = term.getSize()
 			term.setCursorPos( (w / 2) - 1, h / 2)
-			write(" ")
 			for i = 1,3 do
 				sleep(0.3)
 				write(".")
@@ -536,168 +555,26 @@ end
 		end
 	end
 	
-	local function lChat()
-		clear()
-		sPhone.header("RedNet Chat")
-		term.setBackgroundColor(sPhone.theme["backgroundColor"])
-		term.setTextColor(sPhone.theme["text"])
-		term.setCursorPos(2, 5)
-		if not peripheral.isPresent("back") or not peripheral.getType("back") == "modem" then
-			print("Modem not found")
-			print(" Press any key")
-			os.pullEvent("key")
-			return
-		end
-		write("Host: ")
-		local h = read()
-		term.setCursorPos(2,6)
-		shell.run("/rom/programs/rednet/chat", "join", h, sPhone.user)
-		sleep(1)
-	end
-	
 	local function home()
-	
 		sPhone.inHome = true
-	
-		local buttonsInHome = {
-			{"sPhone.header",23,1,25,1,sPhone.theme["header"],sPhone.theme["headerText"],"vvv"},
-			{"sPhone.appsButton",12,20,14,20,sPhone.theme["backgroundColor"],sPhone.theme["header"],"==="},
-			{"sPhone.shell",2,3,8,5,colors.black,colors.yellow," Shell",2},
-			{"sPhone.lock",19,3,24,5,colors.lightGray,colors.black," Lock",2},
-			{"sPhone.chat",11,3,16,5,colors.black,colors.white," Chat",2},
-			{"sPhone.kst",2,7,8,9,colors.green,colors.white," Krist",2},
-			{"sPhone.gps",11,7,15,9,colors.red,colors.black," GPS",2},
-			{"sPhone.info",18,7,23,9,colors.lightGray,colors.black," Info",2},
-			{"sPhone.store",2,11,8,13,colors.orange,colors.white," Store",2},
-		}
-		
-		
-		local appsOnHome = {
-			["sPhone.shell"] = "/.sPhone/apps/shell",
-			["sPhone.sID"] = "/.sPhone/apps/system/sID",
-			["sPhone.buddies"] = "/.sPhone/apps/buddies",
-			["sPhone.SMS"] = "/.sPhone/apps/sms",
-			["sPhone.gps"] = "/.sPhone/apps/gps",
-			["sPhone.kst"] = "/.sPhone/apps/kstwallet",
-			["sPhone.info"] = "/.sPhone/apps/system/info",
-			["sPhone.store"] = "/.sPhone/apps/store",
-			["sPhone.appsButton"] = "/.sPhone/apps/appList",
-		}
-    		
-    		if not sPhone.locked then
-    			sPhone.lock()
-    			if sPhone.newUpdate then
-    				sPhone.winOk("New Update!")
-    			end
-    		end
-    		if fs.exists("/.sPhone/config/resetDBNews") then
-    			fs.delete("/.sPhone/config/resetDBNews")
-    		end
-		local function drawHome()
-			local function box(x,y,text,bg,colorText,page)
-				graphics.box(x,y,x+1+#text,y+2,bg)
-				term.setCursorPos(x+1,y+1)
-				term.setTextColor(colorText)
-				write(text)
-			end
-			clear()
+		while true do
+			os.pullEvent = os.oldPullEvent
+			term.setBackgroundColor(colors.black)
+			term.setTextColor(colors.white)
+			term.clear()
+			term.setCursorPos(1,1)
 			
-			
-			visum.buttons(buttonsInHome,true)
-			
-			local w, h = term.getSize()
-			paintutils.drawLine(1,1,w,1, sPhone.theme["header"])
-			term.setTextColor(sPhone.theme["headerText"])
-			visum.align("right","vvv ",false,1)
-		end
-		local function footerMenu()
-			sPhone.isFooterMenuOpen = true
-			function redraw()
-				drawHome()
-				local w, h = term.getSize()
-				graphics.box(1,2,w,4,sPhone.theme["header"])
-				term.setTextColor(sPhone.theme["headerText"])
-				term.setBackgroundColor(sPhone.theme["header"])
-				visum.align("right","^^^ ",false,1)
-				visum.align("right", "Reboot ",false,3)
-				term.setCursorPos(11,3)
-				write("Settings")
-				term.setCursorPos(2,3)
-				write("Shutdown")
-			end
-			while true do
-				term.redirect(sPhone.mainTerm)
-				drawHome()
-				redraw()
-				local _,_,x,y = os.pullEvent("mouse_click")
-				if y == 3 then
-					if x > 1 and x < 10 then
-						os.shutdown()
-						sPhone.inHome = true
-					elseif x > 19 and x < 26 then
-						os.reboot()
-						sPhone.inHome = true
-					elseif x > 10 and x < 19 then
-						sPhone.inHome = false
-						sPhone.run("/.sPhone/apps/system/settings")
-						sPhone.inHome = true
-						drawHome()
-					end
-				elseif y == 1 then
-					if x < 26 and x > 22 then
-						sPhone.isFooterMenuOpen = false
-						return
-					end
+			if not sPhone.safeMode then
+				if fs.exists(sPhone.getDefaultApp("home")) then
+					shell.run(sPhone.getDefaultApp("home"))
+				else
+					shell.run("/.sPhone/apps/home")
 				end
+			else
+				shell.run("/.sPhone/apps/home")
 			end
 		end
-		local function buttonHomeLoop()
-			while true do
-				drawHome()
-				term.setCursorBlink(false)
-				local autoLockTimer = os.startTimer(10)
-				local id = visum.buttons(buttonsInHome)
-				
-				if id == "sPhone.header" then
-					footerMenu()
-				elseif id == "sPhone.lock" then
-					sPhone.inHome = false
-					login()
-					sPhone.inHome = true
-				elseif id == "sPhone.chat" then
-					sPhone.inHome = false
-					lChat()
-					sPhone.inHome = true
-				elseif appsOnHome[id] then
-					sPhone.inHome = false
-					sPhone.run(appsOnHome[id])
-					sPhone.inHome = true
-				end
-			end
-		
-			sPhone.inHome = false
-		
-		end
-		
-		local function updateClock()
-			while true do
-				if sPhone.inHome then
-					term.setCursorPos(1,1)
-					term.setBackgroundColor(sPhone.theme["header"])
-					term.setTextColor(sPhone.theme["headerText"])
-					term.setCursorPos(1,1)
-					write("      ")
-					term.setCursorPos(1,1)
-					write(" "..textutils.formatTime(os.time(),true))
-				end
-				sleep(0)
-			end
-		end
-		
-		parallel.waitForAll(buttonHomeLoop, updateClock)
-		
 		sPhone.inHome = false
-		
 	end
 	
 	function login()
@@ -817,9 +694,7 @@ end
 			term.setCursorPos(1,1)
 			term.setTextColor(sPhone.theme["text"])
 			sPhone.user = name
-			local toLabel = sPhone.user.."'s &9sPhone"
-			toLabel = toLabel:gsub("&", string.char(0xc2)..string.char(0xa7))
-			os.setComputerLabel(toLabel)
+			os.setComputerLabel(sPhone.user.."'s sPhone")
 			visum.align("center","  All Set!",false,3)
 			visum.align("center","  Have fun with sPhone",false,5)
 			sleep(2)
@@ -841,6 +716,10 @@ end
 		sPhone.newUpdate = false
 	end
 	
+	login()
+	if sPhone.newUpdate then
+		sPhone.winOk("New Update!")
+	end
 	home()
 
 end
