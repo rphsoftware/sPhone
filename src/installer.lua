@@ -50,37 +50,8 @@ local files = {
 
 local githubUser    = "BeaconNet"
 local githubRepo    = "sPhone"
-local githubBranch  = "master"
+local githubBranch  = "dev"
 
-local w, h = term.getSize()
-
-
-local function clear()
-  term.setBackgroundColor(colors.white)
-  term.clear()
-  term.setCursorPos(1, 1)
-  term.setTextColor(colors.black)
-end
-
-local function gui()
-	clear()
-	paintutils.drawLine(1,1,w,1,colors.blue)
-	term.setTextColor(colors.white)
-	term.setCursorPos(2,1)
-	print("sPhone Installer")
-	term.setCursorPos(1,2)
-	term.setTextColor(colors.black)
-	term.setBackgroundColor(colors.white)
-end
-
-local function center(text, y)
-  local w, h = term.getSize()
-  if not y then
-  	local x, y = term.getCursorPos()
-  end
-  term.setCursorPos(math.ceil(w/2)-math.ceil(#text/2), y)
-  write(text)
-end
 
 local function httpGet(url, save)
 	if not url then
@@ -127,45 +98,26 @@ end
 
 shell.setDir("")
 
-gui()
+term.setBackgroundColor(colors.black)
+term.setTextColor(colors.white)
 
-local fileCount = 0
-for _ in pairs(files) do
-	fileCount = fileCount + 1
-end
-local filesDownloaded = 0
-
-local w, h = term.getSize()
-
+print("sPhone Developing Installer")
 for k, v in pairs(files) do
-	term.setTextColor(colors.black)
-	term.setBackgroundColor(colors.white)
-	gui()
-	center("  Downloading files",6)
-	term.setCursorPos(1,12)
-	term.clearLine()
-	center("  "..filesDownloaded.."/"..fileCount, 12)
+	print(v)
 	local ok = k:sub(1, 4) == "ext:" and httpGet(k:sub(5), v) or getFile(k, v)
 	if not ok then
 		if term.isColor() then
 			term.setTextColor(colors.red)
 		end
-		term.setCursorPos(2, 16)
 		print("Error getting file:")
-		term.setCursorPos(2, 17)
 		print(k)
+		term.setTextColor(colors.white)
 		sleep(1.5)
 	end
-	filesDownloaded = filesDownloaded + 1
 end
-term.setCursorPos(1,12)
-term.clearLine()
-center("  "..filesDownloaded.."/"..fileCount, 12)
 
 if not fs.exists("/startup") then
 	fs.copy("/.sPhone/startup","/startup")
 end
-center("  sPhone installed!",h-2)
-center("  Rebooting...",h-1)
-sleep(2)
-os.reboot()
+print("sPhone installed!")
+print("Reboot needed")
