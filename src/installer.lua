@@ -4,6 +4,22 @@ if not pocket or not term.isColor() then
   print("sPhone is only for Advanced Pocket Computers!")
   return
 end
+term.setBackgroundColor(colors.black)
+term.setTextColor(colors.white)
+term.clear()
+term.setCursorPos(1,1)
+print("sPhone installed - BeaconNet")
+print("This project is not developed anymore!")
+print("Press enter to start installation")
+print("Press backspace to cancel")
+while true do
+	local _,k = os.pullEvent("key")
+	if k == 28 then
+		break
+	elseif k == 14 then
+		return
+	end
+end
 
 if fs.exists("/startup") then
 	fs.delete("/startup")
