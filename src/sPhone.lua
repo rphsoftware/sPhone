@@ -136,7 +136,10 @@ local function kernel()
 			error("bad arguement: double expected, got nil",2)
 		end
 		local n = config.read(fileTheme, id)
-		return n
+		if n then
+			return n
+		end
+		return sPhone.defaultTheme[id]
 	end
 	
 	function sPhone.setDefaultApp(app, path)
