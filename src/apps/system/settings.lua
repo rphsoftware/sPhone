@@ -4,6 +4,7 @@ local pwChangeRep
 local menu = {
 	"Update",
 	"Edit Theme",
+	"Change Username",
 	"Change Password",
 	"Set Label",
 	"Clear Label",
@@ -17,88 +18,105 @@ local function clear()
 	term.setCursorPos(1,1)
 end
 
+local function changeUsername()
+	term.setBackgroundColor(sPhone.theme["backgroundColor"])
+	term.clear()
+	term.setCursorPos(1,1)
+	sPhone.header(sPhone.user)
+	term.setTextColor(sPhone.theme["text"])
+	visum.align("center","  New Username",false,3)
+	term.setCursorPos(2,5)
+	write("Username: ")
+	local newUsername = read()
+	sPhone.user = newUsername
+	f = fs.open("/.sPhone/config/username","w")
+	f.write(sPhone.user)
+	f.close()
+	sPhone.winOk("Username","Changed")
+end
+
 local function changePassword()
 	while true do
-	term.setBackgroundColor(sPhone.theme["backgroundColor"])
-	term.clear()
-	term.setCursorPos(1,1)
-	sPhone.header(sPhone.user)
-	paintutils.drawBox(7,9,20,11,sPhone.theme["window.background"])
-	term.setBackgroundColor(sPhone.theme["backgroundColor"])
-	if sPhone.wrongPassword then
-		term.setTextColor(colors.red)
 		term.setBackgroundColor(sPhone.theme["backgroundColor"])
-		visum.align("center","  Wrong Password",false,13)
-	end
-	term.setTextColor(sPhone.theme["text"])
-	term.setBackgroundColor(sPhone.theme["backgroundColor"])
-	visum.align("center","  Current Password",false,7)
-	local loginTerm = window.create(term.native(), 8,10,12,1, true)
-  term.redirect(loginTerm)
-  term.setBackgroundColor(sPhone.theme["backgroundColor"])
-  term.clear()
-  term.setCursorPos(1,1)
-  term.setTextColor(sPhone.theme["text"])
-	local password = read("*")
-  term.redirect(sPhone.mainTerm)
-	local fpw = fs.open("/.sPhone/config/.password","r")
-	if sha256.sha256(password) ~= fpw.readLine() then
-		sPhone.wrongPassword = true
-	else
-		sPhone.wrongPassword = false
-		fpw.close()
-		break
-	end
+		term.clear()
+		term.setCursorPos(1,1)
+		sPhone.header(sPhone.user)
+		paintutils.drawBox(7,9,20,11,sPhone.theme["window.background"])
+		term.setBackgroundColor(sPhone.theme["backgroundColor"])
+		if sPhone.wrongPassword then
+			term.setTextColor(colors.red)
+			term.setBackgroundColor(sPhone.theme["backgroundColor"])
+			visum.align("center","  Wrong Password",false,13)
+		end
+		term.setTextColor(sPhone.theme["text"])
+		term.setBackgroundColor(sPhone.theme["backgroundColor"])
+		visum.align("center","  Current Password",false,7)
+		local loginTerm = window.create(term.native(), 8,10,12,1, true)
+		term.redirect(loginTerm)
+		term.setBackgroundColor(sPhone.theme["backgroundColor"])
+		term.clear()
+		term.setCursorPos(1,1)
+		term.setTextColor(sPhone.theme["text"])
+		local password = read("*")
+		term.redirect(sPhone.mainTerm)
+		local fpw = fs.open("/.sPhone/config/.password","r")
+		if sha256.sha256(password) ~= fpw.readLine() then
+			sPhone.wrongPassword = true
+		else
+			sPhone.wrongPassword = false
+			fpw.close()
+			break
+		end
 	end
 	
 	
 	while true do
-	term.setBackgroundColor(sPhone.theme["backgroundColor"])
-	term.clear()
-	term.setCursorPos(1,1)
-	sPhone.header(sPhone.user)
-	paintutils.drawBox(7,9,20,11,sPhone.theme["window.background"])
-	term.setBackgroundColor(sPhone.theme["backgroundColor"])
-	if sPhone.wrongPassword then
-		term.setTextColor(colors.red)
 		term.setBackgroundColor(sPhone.theme["backgroundColor"])
-		visum.align("center","  Wrong Password",false,13)
-	end
-	term.setTextColor(sPhone.theme["text"])
-	term.setBackgroundColor(sPhone.theme["backgroundColor"])
-	visum.align("center","  New Password",false,7)
-	local loginTerm = window.create(term.native(), 8,10,12,1, true)
-  term.redirect(loginTerm)
-  term.setBackgroundColor(sPhone.theme["backgroundColor"])
-  term.clear()
-  term.setCursorPos(1,1)
-  term.setTextColor(sPhone.theme["text"])
-	pwChange = read("*")
-  term.redirect(sPhone.mainTerm)
+		term.clear()
+		term.setCursorPos(1,1)
+		sPhone.header(sPhone.user)
+		paintutils.drawBox(7,9,20,11,sPhone.theme["window.background"])
+		term.setBackgroundColor(sPhone.theme["backgroundColor"])
+		if sPhone.wrongPassword then
+			term.setTextColor(colors.red)
+			term.setBackgroundColor(sPhone.theme["backgroundColor"])
+			visum.align("center","  Wrong Password",false,13)
+		end
+		term.setTextColor(sPhone.theme["text"])
+		term.setBackgroundColor(sPhone.theme["backgroundColor"])
+		visum.align("center","  New Password",false,7)
+		local loginTerm = window.create(term.native(), 8,10,12,1, true)
+		term.redirect(loginTerm)
+		term.setBackgroundColor(sPhone.theme["backgroundColor"])
+		term.clear()
+		term.setCursorPos(1,1)
+		term.setTextColor(sPhone.theme["text"])
+		pwChange = read("*")
+		term.redirect(sPhone.mainTerm)
 
-	term.setBackgroundColor(sPhone.theme["backgroundColor"])
-	term.clear()
-	term.setCursorPos(1,1)
-	sPhone.header(sPhone.user)
-	paintutils.drawBox(7,9,20,11,sPhone.theme["window.background"])
-	term.setBackgroundColor(sPhone.theme["backgroundColor"])
-	term.setTextColor(sPhone.theme["text"])
-	visum.align("center","  Repeat Password",false,7)
-	local loginTerm = window.create(term.native(), 8,10,12,1, true)
-  term.redirect(loginTerm)
-  term.setBackgroundColor(sPhone.theme["backgroundColor"])
-  term.clear()
-  term.setCursorPos(1,1)
-  term.setTextColor(sPhone.theme["text"])
-	pwChangeRep = read("*")
-  term.redirect(sPhone.mainTerm)
-	if sha256.sha256(pwChange) ~= sha256.sha256(pwChangeRep) then
-		sPhone.wrongPassword = true
-		
-	else
-		sPhone.wrongPassword = false
-		break
-	end
+		term.setBackgroundColor(sPhone.theme["backgroundColor"])
+		term.clear()
+		term.setCursorPos(1,1)
+		sPhone.header(sPhone.user)
+		paintutils.drawBox(7,9,20,11,sPhone.theme["window.background"])
+		term.setBackgroundColor(sPhone.theme["backgroundColor"])
+		term.setTextColor(sPhone.theme["text"])
+		visum.align("center","  Repeat Password",false,7)
+		local loginTerm = window.create(term.native(), 8,10,12,1, true)
+		term.redirect(loginTerm)
+		term.setBackgroundColor(sPhone.theme["backgroundColor"])
+		term.clear()
+		term.setCursorPos(1,1)
+		term.setTextColor(sPhone.theme["text"])
+		pwChangeRep = read("*")
+		term.redirect(sPhone.mainTerm)
+		if sha256.sha256(pwChange) ~= sha256.sha256(pwChangeRep) then
+			sPhone.wrongPassword = true
+			
+		else
+			sPhone.wrongPassword = false
+			break
+		end
 	end
 	if not sPhone.wrongPassword then
 		local f = fs.open("/.sPhone/config/.password","w")
@@ -181,25 +199,22 @@ local function editTheme()
 			fs.copy("/.sPhone/config/theme", saveTheme)
 			sPhone.winOk("Theme saved!")
 		elseif id == 7 then
-			sPhone.header()
-			visum.align("center", "Load Theme",false,3)
-			term.setCursorPos(2,5)
-			local loadTheme = read()
-			if fs.exists(loadTheme) and not fs.isDir(loadTheme) then
-				for k, v in pairs(sPhone.theme) do -- Load theme
-					sPhone.theme[k] = config.read(loadTheme, k)
+			local loadTheme = sPhone.list()
+			if loadTheme then
+				if fs.exists(loadTheme) and not fs.isDir(loadTheme) then
+					for k, v in pairs(sPhone.theme) do -- Load theme
+						sPhone.theme[k] = config.read(loadTheme, k)
+					end
+					for k, v in pairs(sPhone.theme) do -- Overwrite theme config
+						config.write("/.sPhone/config/theme", k, v)
+					end
+					sPhone.winOk("Theme loaded!")
+				else
+					sPhone.winOk("Theme not found!")
 				end
-				for k, v in pairs(sPhone.theme) do -- Overwrite theme config
-					config.write("/.sPhone/config/theme", k, v)
-				end
-				sPhone.winOk("Theme loaded!")
-			else
-				sPhone.winok("Theme not found!")
 			end
 		elseif id == 8 then
-			for k, v in pairs(sPhone.defaultTheme) do
-				config.write("/.sPhone/config/theme", k, v)
-			end
+			fs.delete("/.sPhone/config/theme")
 			sPhone.theme = sPhone.defaultTheme
 			sPhone.winOk("Removed Theme")
 		end
@@ -217,15 +232,9 @@ local function defaultApps()
 	elseif id == 1 then
 		
 		while true do
-			clear()
-			sPhone.header("Default Apps: Home")
-			visum.align("center","Set default home app",false,3)
-			term.setCursorPos(2,5)
-			print("Leave blank for default")
-			write(" Path: /")
-			local defaultHome = read()
+			local defaultHome = sPhone.list()
 			
-			if defaultHome == "" then
+			if not defaultHome then
 				sPhone.setDefaultApp("home","/.sPhone/apps/home")
 				sPhone.winOk("Done!","Reboot to apply")
 				break
@@ -253,12 +262,14 @@ while true do
 	elseif id == 2 then
 		editTheme()
 	elseif id == 3 then
-		changePassword()
+		changeUsername()
 	elseif id == 4 then
-		changeLabel()
+		changePassword()
 	elseif id == 5 then
-		clearLabel()
+		changeLabel()
 	elseif id == 6 then
+		clearLabel()
+	elseif id == 7 then
 		defaultApps()
 	end
 end
