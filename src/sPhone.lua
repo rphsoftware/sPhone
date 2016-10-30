@@ -164,6 +164,136 @@ local function kernel()
 		sPhone.setDefaultApp("home","/.sPhone/apps/home")
 	end
 	
+	function sPhone.list(path, opt)
+		opt = opt or {}
+		opt.bg1 = opt.bg1 or sPhone.getTheme("backgroundColor")
+		opt.fg1 = opt.fg1 or sPhone.getTheme("text")
+		opt.fg1b = opt.fg1b or colors.lime
+		opt.bg2 = opt.bg2 or sPhone.getTheme("header")
+		opt.fg2 = opt.fg2 or sPhone.getTheme("headerText")
+		opt.bg3 = opt.bg3 or colors.red
+		opt.fg3 = opt.fg3 or sPhone.getTheme("headerText")
+		opt.output = opt.output or true
+		opt.list = opt.list or false
+		if not path then
+			path = ""
+		end
+		if not fs.isDir(path) and not opt.list then
+			error("Invalid path")
+		end
+		local scroll = 0
+		local items
+		local w, h
+		local function rebuild()
+			local files, dirs = {}, {}
+			items = {}
+			local flist
+			if not opt.list then
+				flist = fs.list(path)
+			else
+				flist = opt.list
+			end
+			for i, v in ipairs(flist) do
+				if fs.isDir(fs.combine(path, v)) then
+					table.insert(dirs, v)
+				else
+					table.insert(files, v)
+				end
+			end
+			table.sort(files)
+			table.sort(dirs)
+			for i, v in ipairs(dirs) do
+				table.insert(items, v)
+			end
+			for i, v in ipairs(files) do
+				table.insert(items, v)
+			end
+			scroll = 0
+		end
+		rebuild()
+		local setVisible = term.current().setVisible
+			or function()end
+		local function redraw()
+			w, h = term.getSize()
+			setVisible(false)
+			term.setBackgroundColor(opt.bg1)
+			term.clear()
+			for i = scroll + 1, h + scroll - 1 do
+				local str = items[i]
+				if str then
+					term.setCursorPos(2, 1 + i - scroll)
+					local isDir = fs.isDir(fs.combine(path, str))
+					term.setTextColor(isDir and opt.fg1b or opt.fg1)
+					local _w = w - (isDir and 2 or 1)
+					if #str > _w then
+						str = str:sub(1, _w - 2) .. ".."
+					end
+					if isDir then
+						str = str .. "/"
+					end
+					term.write(str)
+				end
+			end
+			term.setBackgroundColor(opt.bg2)
+			term.setTextColor(opt.fg2)
+			term.setCursorPos(1, 1)
+			term.clearLine()
+			local _path = path .. "/"
+			if #_path > w - 2 then
+				_path = ".." .. _path:sub(-w + 4)
+			end
+			term.write(_path)
+			term.setBackgroundColor(opt.bg3)
+			term.setTextColor(opt.fg3)
+			term.setCursorPos(w, 1)
+			term.write("X")
+			term.setCursorPos(w, 2)
+			term.write("^")
+			term.setCursorPos(w, h)
+			term.write("v")
+			setVisible(true)
+		end
+		while true do
+			redraw()
+			local ev = {os.pullEventRaw()}
+			if ev[1] == "terminate" then
+				return nil
+			elseif ev[1] == "mouse_scroll" and ev[4] > 1 then
+				scroll = scroll + ev[2]
+			elseif ev[1] == "mouse_click" and ev[2] == 1 then
+				if ev[3] == w then
+					if ev[4] == 1 then
+						return nil
+					elseif ev[4] == 2 then
+						scroll = scroll - 1
+					elseif ev[4] == h then
+						scroll = scroll + 1
+					end
+				elseif ev[3] < w and ev[4] == 1 then
+					path = fs.getDir(path)
+					if path == ".." then
+						path = ""
+					end
+					rebuild()
+				elseif ev[3] < w and ev[4] > 1 then
+					local item = items[ev[4] + scroll - 1]
+					if item then
+						local fullPath = fs.combine(path, item)
+						if fs.isDir(fullPath) then
+							path = fullPath
+							rebuild()
+						else
+							if opt.output then
+								return fullPath
+							end
+						end
+					end
+				end
+			end
+			scroll = math.min(math.max(0, scroll), math.max(0, #items - h + 1))
+		end
+	end
+	
 	local function clear()
 		term.setBackgroundColor(sPhone.theme["backgroundColor"])
 		term.clear()
