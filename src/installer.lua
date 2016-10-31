@@ -1,13 +1,23 @@
-os.pullEvent = os.pullEventRaw
+
 
 if not pocket or not term.isColor() then
   print("sPhone is only for Advanced Pocket Computers!")
   return
 end
 
+local old = os.pullEvent
+os.pullEvent = os.pullEventRaw
+
 if fs.exists("/startup") then
 	fs.delete("/startup")
 end
+
+local license = [[
+The MIT License (MIT)
+Copyright (c) 2016 BeaconNet
+
+Read full license here:
+https://raw.github.com/BeaconNet/sPhone/master/LICENSE]]
 
 local files = {
 	["src/init.lua"] = "/.sPhone/init",
@@ -139,6 +149,43 @@ end
 local filesDownloaded = 0
 
 local w, h = term.getSize()
+
+term.setBackgroundColor(colors.white)
+term.setTextColor(colors.black)
+term.clear()
+term.setCursorPos(1,1)
+gui()
+term.setCursorPos(2,3)
+print("License\n")
+printError("You must accept the license to install sPhone\n")
+print(license)
+
+paintutils.drawFilledBox(2,17,9,19,colors.lime)
+term.setCursorPos(3,18)
+term.setTextColor(colors.white)
+print("Accept")
+
+paintutils.drawFilledBox(18,17,25,19,colors.red)
+term.setCursorPos(20,18)
+term.setTextColor(colors.white)
+print("Deny")
+
+while true do
+	local e = {os.pullEvent()}
+	if e[1] == "mouse_click" then
+		local x,y = e[3],e[4]
+		if (x >= 2 and y >= 17 ) and (x <= 9 and y <= 19 ) then
+			break
+		elseif (x >= 18 and y >= 17) and (x <= 25 and y <= 19) then
+			os.pullEvent = old
+			return
+		end
+	elseif e[1] == "terminate" then
+		os.pullEvent = old
+		print("Terminated")
+		return
+	end
+end
 
 for k, v in pairs(files) do
 	term.setTextColor(colors.black)
