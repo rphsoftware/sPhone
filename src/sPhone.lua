@@ -305,53 +305,49 @@ local function kernel()
 	sPhone.forceReboot = os.reboot
 	
 	function os.shutdown()
+		local w, h = term.getSize()
+		local text = "Shutting down"
+		local x = math.ceil(w/2)-math.ceil(#text/2)+1
+		local y = math.ceil(h/2)
 		sPhone.inHome = false
 		os.pullEvent = os.pullEventRaw
-		while true do
-			if sPhone.doneShutdown then
-				clear()
-				w, h = term.getSize()
-				term.setCursorPos( (w/2)- 7, h/2)
-				write("Shutdown Aborted.")
-				sPhone.winOk("Error","Can not shutdown",colors.lightBlue,colors.red, colors.white, colors.lightBlue)
-				return
-			end
-			sPhone.doneShutdown = true
-			clear()
-			w, h = term.getSize()
-			term.setCursorPos( (w / 2) - 1, h / 2)
-			for i = 1,3 do
-				sleep(0.3)
-				write(".")
-			end
-			sleep(0.2)
-			sPhone.forceShutdown()
+		local function printMsg(color)
+			term.setBackgroundColor(color)
+			term.setTextColor(colors.white)
+			term.clear()
+			term.setCursorPos(x,y)
+			print(text)
+			sleep(0.1)
 		end
+		printMsg(colors.white)
+		printMsg(colors.lightGray)
+		printMsg(colors.gray)
+		printMsg(colors.black)
+		sleep(0.6)
+		sPhone.forceShutdown()
 	end
 	
 	function os.reboot()
+		local w, h = term.getSize()
+		local text = "Shutting down"
+		local x = math.ceil(w/2)-math.ceil(#text/2)+1
+		local y = math.ceil(h/2)
 		sPhone.inHome = false
 		os.pullEvent = os.pullEventRaw
-		while true do
-			if sPhone.doneShutdown then
-				clear()
-				w, h = term.getSize()
-				term.setCursorPos( (w/2)- 7, h/2)
-				write("Reboot Aborted.")
-				sPhone.winOk("Error","Can not reboot",colors.lightBlue,colors.red, colors.white, colors.lightBlue)
-				return
-			end
-			sPhone.doneShutdown = true
-			clear()
-			w, h = term.getSize()
-			term.setCursorPos( (w / 2) - 1, h / 2)
-			for i = 1,3 do
-				sleep(0.3)
-				write(".")
-			end
-			sleep(0.2)
-			sPhone.forceReboot()
+		local function printMsg(color)
+			term.setBackgroundColor(color)
+			term.setTextColor(colors.white)
+			term.clear()
+			term.setCursorPos(x,y)
+			print(text)
+			sleep(0.1)
 		end
+		printMsg(colors.white)
+		printMsg(colors.lightGray)
+		printMsg(colors.gray)
+		printMsg(colors.black)
+		sleep(0.6)
+		sPhone.forceReboot()
 	end
   
   function sPhone.header(title, butt)
