@@ -329,7 +329,7 @@ local function kernel()
 	
 	function os.reboot()
 		local w, h = term.getSize()
-		local text = "Shutting down"
+		local text = "Rebooting"
 		local x = math.ceil(w/2)-math.ceil(#text/2)+1
 		local y = math.ceil(h/2)
 		sPhone.inHome = false
