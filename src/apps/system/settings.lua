@@ -146,6 +146,8 @@ end
 
 local function editTheme()
 	local themeOptions = {
+		"Theme List",
+		"",
 		"Header Color",
 		"Header Text Color",
 		"Text Color",
@@ -166,14 +168,18 @@ local function editTheme()
 		if id == 0 then
 			return
 		elseif id == 1 then
-			sPhone.applyTheme("header", sPhone.colorPicker("Header",sPhone.getTheme("header")))
+			shell.run("/.sPhone/apps/themes")
 		elseif id == 2 then
-			sPhone.applyTheme("headerText", sPhone.colorPicker("Header Text",sPhone.getTheme("headerText")))
+			--separator?
 		elseif id == 3 then
-			sPhone.applyTheme("text", sPhone.colorPicker("Text",sPhone.getTheme("text")))
+			sPhone.applyTheme("header", sPhone.colorPicker("Header",sPhone.getTheme("header")))
 		elseif id == 4 then
-			sPhone.applyTheme("backgroundColor", sPhone.colorPicker("Background Color",sPhone.getTheme("backgroundColor")))
+			sPhone.applyTheme("headerText", sPhone.colorPicker("Header Text",sPhone.getTheme("headerText")))
 		elseif id == 5 then
+			sPhone.applyTheme("text", sPhone.colorPicker("Text",sPhone.getTheme("text")))
+		elseif id == 6 then
+			sPhone.applyTheme("backgroundColor", sPhone.colorPicker("Background Color",sPhone.getTheme("backgroundColor")))
+		elseif id == 7 then
 			while true do
 				local _, id = sPhone.menu(themeOptionsWindow,"Window Theme","X")
 				if id == 0 then
@@ -188,7 +194,7 @@ local function editTheme()
 					sPhone.applyTheme("window.text", sPhone.colorPicker("Text",sPhone.getTheme("window.text")))
 				end
 			end
-		elseif id == 6 then
+		elseif id == 8 then
 			sPhone.header()
 			visum.align("center", "Save Theme",false,3)
 			term.setCursorPos(2,5)
@@ -198,7 +204,7 @@ local function editTheme()
 			end
 			fs.copy("/.sPhone/config/theme", saveTheme)
 			sPhone.winOk("Theme saved!")
-		elseif id == 7 then
+		elseif id == 9 then
 			local loadTheme = sPhone.list()
 			if loadTheme then
 				if fs.exists(loadTheme) and not fs.isDir(loadTheme) then
@@ -213,7 +219,7 @@ local function editTheme()
 					sPhone.winOk("Theme not found!")
 				end
 			end
-		elseif id == 8 then
+		elseif id == 10 then
 			fs.delete("/.sPhone/config/theme")
 			sPhone.theme = sPhone.defaultTheme
 			sPhone.winOk("Removed Theme")
