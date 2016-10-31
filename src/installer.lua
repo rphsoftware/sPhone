@@ -34,6 +34,7 @@ local files = {
 	
 	["src/apps/system/settings.lua"] = "/.sPhone/apps/system/settings",
 	["src/apps/system/info.lua"] = "/.sPhone/apps/system/info",
+	["src/apps/themes.lua"] = "/.sPhone/apps/themes",
 	["src/apps/kstwallet.lua"] = "/.sPhone/apps/kstwallet",
 	["src/apps/store.lua"] = "/.sPhone/apps/store",
 	["src/apps/shell.lua"] = "/.sPhone/apps/shell",
