@@ -77,7 +77,7 @@
 						sPhone.inHome = true
 					elseif x > 10 and x < 19 then
 						sPhone.inHome = false
-						sPhone.run("/.sPhone/apps/system/settings")
+						shell.run("/.sPhone/apps/system/settings")
 						sPhone.inHome = true
 						drawHome()
 					end
