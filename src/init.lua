@@ -1,5 +1,6 @@
-local old = os.pullEvent
+os.oldPullEvent = os.pullEvent
 os.pullEvent = os.pullEventRaw
+
 local function crash(err)
 	if not sPhone then
 		sPhone = {
@@ -165,9 +166,6 @@ end
 
 local tArgs = {...}
 
-os.oldPullEvent = os.pullEvent
-os.pullEvent = os.pullEventRaw
-
 local argData = {
 	["-u"] = false,
 	["-s"] = false,
@@ -191,7 +189,7 @@ if argData["-s"] then
 	runningOnStartup = true
 end
 
-os.pullEvent = old
+os.pullEvent = os.oldPullEvent
 
 local ok, err = pcall(function() setfenv(loadstring(script),getfenv())() end)
 	
