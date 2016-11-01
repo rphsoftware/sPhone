@@ -685,6 +685,11 @@ end
 	sPhone.colourPicker = sPhone.colorPicker -- For UK
 	
 	function sPhone.install(spk)
+		if not fs.exists("/.sPhone/config/spklist") then
+			local f = fs.open("/.sPhone/config/spklist","w")
+			f.write("{}")
+			f.close()
+		end
 		if string.getExtension(spk) == "spk" then
 			if fs.exists(spk) and not fs.isDir(spk) then
 				local f = fs.open(spk,"r")
