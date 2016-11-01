@@ -806,16 +806,18 @@ end
 			term.setTextColor(colors.white)
 			term.clear()
 			term.setCursorPos(1,1)
-			
+			local homePath = sPhone.getDefaultApp("home")
 			if not sPhone.safeMode then
-				if fs.exists(sPhone.getDefaultApp("home")) then
-					shell.run(sPhone.getDefaultApp("home"))
-				else
-					shell.run("/.sPhone/apps/home")
+				if not fs.exists(homePath) then
+					homePath = "/.sPhone/apps/home"
 				end
 			else
-				shell.run("/.sPhone/apps/home")
+				homePath = "/.sPhone/apps/home"
 			end
+			
+			temp.set("homePID",task.add(function() shell.run(homePath) end))
+			task.run()
+			
 		end
 		sPhone.inHome = false
 	end
