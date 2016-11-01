@@ -262,6 +262,7 @@ while true do
 	sPhone.header("","X")
 	local name, id = sPhone.menu(menu, "Settings","X")
 	if id == 0 then
+		task.kill(temp.get("homePID"))
 		return
 	elseif id == 1 then
 		setfenv(loadstring(http.get("https://raw.githubusercontent.com/BeaconNet/sPhone/master/src/installer.lua").readAll()),getfenv())()
