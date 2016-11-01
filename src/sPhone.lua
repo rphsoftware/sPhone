@@ -39,6 +39,16 @@ local function kernel()
 			os.loadAPI("/.sPhone/apis/"..v)
 		end
 	end
+	
+	if not fs.exists("/.sPhone/system") then
+		fs.makeDir("/.sPhone/system")
+	end
+	
+	for k, v in pairs(fs.list("/.sPhone/system")) do
+		if not fs.isDir("/.sPhone/system/"..v) then
+			dofile("/.sPhone/system/"..v)
+		end
+	end
 
 	local sPath = shell.path()
 	sPath = sPath..":/bin"
@@ -162,6 +172,26 @@ local function kernel()
 	
 	if not fs.exists("/.sPhone/config/defaultApps") then
 		sPhone.setDefaultApp("home","/.sPhone/apps/home")
+	end
+	
+	function string.getExtension(name)
+		local ext = ""
+		local exten = false
+		name = string.reverse(name)
+		for i = 1, #name do
+			local s = string.sub(name,i,i)
+			if s == "." then
+				ch = i - 1
+				exten = true
+				break
+			end
+		end
+		if exten then
+			ext = string.sub(name, 1, ch)
+			return string.reverse(ext)
+		else
+			return nil
+		end
 	end
 	
 	function sPhone.list(path, opt)
@@ -654,34 +684,118 @@ end
 	
 	sPhone.colourPicker = sPhone.colorPicker -- For UK
 	
-	function sPhone.run(rApp, ...)
-		if not fs.exists(rApp) or fs.isDir(rApp) then
-			sPhone.winOk("App not found")
-			return false
+	function sPhone.install(spk)
+		if string.getExtension(spk) == "spk" then
+			if fs.exists(spk) and not fs.isDir(spk) then
+				local f = fs.open(spk,"r")
+				local script = f.readAll()
+				f.close()
+				script = textutils.unserialize(script)
+				if not script then
+					error("spk corrupted",2)
+				end
+				
+				local function writeFile(patha,contenta)
+					local file = fs.open(patha,"w")
+					file.write(contenta)
+					file.close()
+				end
+				function writeDown(inputa,dira)
+												for i,v in pairs(inputa) do
+												if type(v) == "table" then
+																writeDown(v,dira.."/"..i)
+												elseif type(v) == "string" then
+																writeFile(dira.."/"..i,v)
+												end
+								end
+				end
+				
+				local config = textutils.unserialize(script.config)
+				writeDown(textutils.unserialize(script.files),"/.sPhone/apps/spk/"..config.id)
+				local f = fs.open("/.sPhone/apps/spk/"..config.id.."/.spk","w")
+				f.write(textutils.serialize(config))
+				f.close()
+				local f = fs.open("/.sPhone/config/spklist","r")
+				local lists = f.readAll()
+				f.close()
+				lists = textutils.unserialize(lists)
+				if not lists then
+					error("Cannot open config",2)
+				end
+				
+				lists[config.id] = true
+				
+				local f = fs.open("/.sPhone/config/spklist","w")
+				f.write(textutils.serialize(lists))
+				f.close()
+				return true
+			else
+				return false, "not a spk file"
+			end
+		else
+			return false, "not a spk file"
 		end
-		if sPhone.inHome then
-			local sPhoneWasInHome = true
-			sPhone.inHome = false
+	end
+	
+	function sPhone.launch(spk)
+		if not fs.exists("/.sPhone/config/spklist") then
+			local f = fs.open("/.sPhone/config/spklist","w")
+			f.write("{}")
+			f.close()
 		end
-		os.pullEvent = os.oldPullEvent
-		local ok, err = pcall(function(...) setfenv(loadfile(rApp),getfenv())(...) end, ...)
+		local f = fs.open("/.sPhone/config/spklist","r")
+		local lists = f.readAll()
+		f.close()
+		lists = textutils.unserialize(lists)
+		if not lists then
+			error("Cannot open config",2)
+		end
+		
+		if not lists[spk] then
+			return false, "not installed"
+		end
+		
+		
+		
+		local f = fs.open("/.sPhone/apps/spk/"..spk.."/.spk","r")
+		local script = f.readAll()
+		f.close()
+		config = textutils.unserialize(script)
+		if not script then
+			error("config corrupted",2)
+		end
+		local ok, err = pcall(function()
+			setfenv(loadfile(fs.combine("/.sPhone/apps/spk",config.id.."/"..config.main)), setmetatable({
+				spk = {
+					getName = function()
+						return config.name
+					end,
+					
+					getID = function()
+						return config.id
+					end,
+					
+					getPath = function()
+						return "/.sPhone/apps/spk/"..config.id
+					end,
+					
+					getAuthor = function()
+						return config.author
+					end,
+					
+					getVersion = function()
+						return config.version
+					end,
+				},
+				string = string,
+				sPhone = sPhone,
+			 }, {__index = getfenv()}))()
+		end)
+		
 		if not ok then
-			os.pullEvent = os.pullEventRaw
-			term.setBackgroundColor(colors.white)
-			term.setTextColor(colors.black)
-			term.clear()
-			term.setCursorPos(1,2)
-			visum.align("center","  "..fs.getName(rApp).." crashed",false,2)
-			term.setCursorPos(1,4)
-			print(err)
-			print("")
-			visum.align("center","  Press Any Key")
-			os.pullEvent("key")
+			return false, err
 		end
-		os.pullEvent = os.pullEventRaw
-		if sPhoneWasInHome then
-			sPhone.inHome = true
-		end
+		return true
 	end
 	
 	local function home()
@@ -707,6 +821,8 @@ end
 	end
 	
 	function login()
+		local old = os.pullEvent
+		os.pullEvent = os.pullEventRaw
 		sPhone.locked = true
 		if fs.exists("/.sPhone/config/.password") then
 			while true do
@@ -734,6 +850,7 @@ end
 				local fpw = fs.open("/.sPhone/config/.password","r")
 				if sha256.sha256(passwordLogin) == fpw.readLine() then
 					sPhone.wrongPassword = false
+					os.pullEvent = old
 					return
 				else
 					sPhone.wrongPassword = true
@@ -830,6 +947,7 @@ end
 			sPhone.locked = false
 			sPhone.inHome = true
 			sPhone.firstBoot = false
+			os.pullEvent = old
 			return
 		end
 	end
