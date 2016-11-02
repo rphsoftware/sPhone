@@ -1,6 +1,6 @@
 local function kernel()
 	_G.sPhone = {
-		version = "Alpha 3.4",
+		version = "Alpha 3.5",
 		user = "Guest",
 		devMode = false,
 		mainTerm = term.current(),
@@ -90,10 +90,8 @@ local function kernel()
 		fs.open("/startup","r")
 	end
 	
-	if fs.exists("/.sPhone/config/username") then
-		local u = fs.open("/.sPhone/config/username","r")
-		sPhone.user = u.readLine()
-		u.close()
+	if config.read("/.sPhone/config/sPhone","username") then
+		sPhone.user = config.read("/.sPhone/config/sPhone","username")
 	end
 	
 	if not fs.exists("/.sPhone/config/sPhone") then
@@ -560,7 +558,8 @@ end
 		term.setTextColor(sPhone.theme["text"])
 		visum.align("center", "  "..title, false, 3)
 		if desc then
-			visum.align("center", "  "..desc,false,6)
+			term.setCursorPos(2,6)
+			print(desc)
 		end
 		paintutils.drawFilledBox(3, 16, 9, 18, colors.green)
 		paintutils.drawFilledBox(18, 16, 24, 18, colors.red)
@@ -831,7 +830,16 @@ end
 		local old = os.pullEvent
 		os.pullEvent = os.pullEventRaw
 		sPhone.locked = true
-		if fs.exists("/.sPhone/config/.password") then
+		if not config.write("/.sPhone/config/sPhone","newConfigFormat",true) then
+			local c = sPhone.yesNo("Config Format","We updated the config\n format\n\n All configs will be\n erased",true)
+			if not c then
+				os.shutdown()
+			else
+				fs.delete("/.sPhone/config")
+				os.reboot()
+			end
+		end
+		if config.read("/.sPhone/config/sPhone","password") then
 			while true do
 				term.setBackgroundColor(sPhone.theme["backgroundColor"])
 				term.clear()
@@ -854,8 +862,8 @@ end
         term.setTextColor(sPhone.theme["text"])
 				local passwordLogin = read("*")
         term.redirect(sPhone.mainTerm)
-				local fpw = fs.open("/.sPhone/config/.password","r")
-				if sha256.sha256(passwordLogin) == fpw.readLine() then
+				local fpw = config.read("/.sPhone/config/sPhone","password")
+				if sha256.sha256(passwordLogin) == fpw then
 					sPhone.wrongPassword = false
 					os.pullEvent = old
 					return
@@ -907,9 +915,7 @@ end
 				local password2 = read("*")
 				term.redirect(sPhone.mainTerm)
 				if password1 == password2 then
-					local f = fs.open("/.sPhone/config/.password", "w")
-					f.write(sha256.sha256(password1))
-					f.close()
+					config.write("/.sPhone/config/sPhone", "password",sha256.sha256(password1))
 					term.setTextColor(colors.lime)
 					visum.align("center","  Password set!",false,13)
 					sleep(2)
@@ -930,14 +936,10 @@ end
 			visum.align("center","Username",false,3)
 			term.setCursorPos(2,5)
 			local newUsername = read()
-			local f = fs.open("/.sPhone/config/username","w")
-			f.write(newUsername)
-			f.close()
+			config.write("/.sPhone/config/sPhone","username",newUsername)
 			
-			if fs.exists("/.sPhone/config/username") then
-				local f = fs.open("/.sPhone/config/username","r")
-				name = f.readLine()
-				f.close()
+			if fs.exists("/.sPhone/config/sPhone") then
+				name = config.read("/.sPhone/config/sPhone","username")
 			else
 				name = "Guest"
 			end
