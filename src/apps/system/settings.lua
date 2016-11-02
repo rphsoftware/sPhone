@@ -29,9 +29,7 @@ local function changeUsername()
 	write("Username: ")
 	local newUsername = read()
 	sPhone.user = newUsername
-	f = fs.open("/.sPhone/config/username","w")
-	f.write(sPhone.user)
-	f.close()
+	config.write("/.sPhone/config/sPhone","username",newUsername)
 	sPhone.winOk("Username","Changed")
 end
 
@@ -59,8 +57,8 @@ local function changePassword()
 		term.setTextColor(sPhone.theme["text"])
 		local password = read("*")
 		term.redirect(sPhone.mainTerm)
-		local fpw = fs.open("/.sPhone/config/.password","r")
-		if sha256.sha256(password) ~= fpw.readLine() then
+		local fpw = config.read("/.sPhone/config/sPhone","password")
+		if sha256.sha256(password) ~= fpw then
 			sPhone.wrongPassword = true
 		else
 			sPhone.wrongPassword = false
@@ -119,9 +117,7 @@ local function changePassword()
 		end
 	end
 	if not sPhone.wrongPassword then
-		local f = fs.open("/.sPhone/config/.password","w")
-		f.write(sha256.sha256(pwChangeRep))
-		f.close()
+		config.write("/.sPhone/config/sPhone","password",sha256.sha256(pwChangeRep))
 	end
 	sPhone.header(sPhone.user)
 	visum.align("center", "All Set!", false, 3)
