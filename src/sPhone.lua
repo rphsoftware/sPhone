@@ -40,6 +40,37 @@ local function kernel()
 		end
 	end
 	
+	if not config.write("/.sPhone/config/sPhone","newConfigFormat",true) then
+		os.pullEvent = os.pullEventRaw
+		term.setBackgroundColor(colors.white)
+		term.setTextColor(colors.black)
+		term.clear()
+		term.setCursorPos(1,1)
+		print("sPhone")
+		printError("WARNING")
+		print("Config Format Changed")
+		print("")
+		print("We adopted a new format for all config files.")
+		print("To continue using sPhone all config data (.sPhone/config) will be deleted")
+		print("Y/N")
+		while true do
+			local _,k = os.pullEvent("char")
+			if string.lower(k) == "y" then
+				fs.delete("/.sPhone/config")
+				print("Config deleted")
+				print("Rebooting...")
+				sleep(1)
+				os.reboot()
+			elseif string.lower(k) == "n" then
+				print("Cannot delete config without user authorization")
+				print("Delete aborted")
+				print("Shuttind down...")
+				sleep(1)
+				os.shutdown()
+			end
+		end
+	end
+	
 	if not fs.exists("/.sPhone/system") then
 		fs.makeDir("/.sPhone/system")
 	end
@@ -830,15 +861,6 @@ end
 		local old = os.pullEvent
 		os.pullEvent = os.pullEventRaw
 		sPhone.locked = true
-		if not config.write("/.sPhone/config/sPhone","newConfigFormat",true) then
-			local c = sPhone.yesNo("Config Format","We updated the config\n format\n\n All configs will be\n erased",true)
-			if not c then
-				os.shutdown()
-			else
-				fs.delete("/.sPhone/config")
-				os.reboot()
-			end
-		end
 		if config.read("/.sPhone/config/sPhone","password") then
 			while true do
 				term.setBackgroundColor(sPhone.theme["backgroundColor"])
