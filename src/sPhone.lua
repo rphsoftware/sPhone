@@ -1,6 +1,6 @@
 local function kernel()
 	_G.sPhone = {
-		version = "Alpha 3.5",
+		version = "Alpha 3.6",
 		user = "Guest",
 		devMode = false,
 		mainTerm = term.current(),
@@ -746,6 +746,12 @@ end
 				end
 				
 				local config = textutils.unserialize(script.config)
+				if not config.id then
+					error("SPK: id not found",2)
+				end
+				if not config.main then
+					error("SPK: main not found",2)
+				end
 				writeDown(textutils.unserialize(script.files),"/.sPhone/apps/spk/"..config.id)
 				local f = fs.open("/.sPhone/apps/spk/"..config.id.."/.spk","w")
 				f.write(textutils.serialize(config))
@@ -758,7 +764,11 @@ end
 					error("Cannot open config",2)
 				end
 				
-				lists[config.id] = true
+				if not config.name then
+					config.name = config.id
+				end
+				
+				lists[config.id] = config.name
 				
 				local f = fs.open("/.sPhone/config/spklist","w")
 				f.write(textutils.serialize(lists))
@@ -803,11 +813,11 @@ end
 			setfenv(loadfile(fs.combine("/.sPhone/apps/spk",config.id.."/"..config.main)), setmetatable({
 				spk = {
 					getName = function()
-						return config.name
+						return (config.name or nil)
 					end,
 					
 					getID = function()
-						return config.id
+						return (config.id or nil)
 					end,
 					
 					getPath = function()
@@ -815,11 +825,11 @@ end
 					end,
 					
 					getAuthor = function()
-						return config.author
+						return (config.author or nil)
 					end,
 					
 					getVersion = function()
-						return config.version
+						return (config.version or nil)
 					end,
 				},
 				string = string,
