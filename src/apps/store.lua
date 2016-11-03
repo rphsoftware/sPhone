@@ -1,8 +1,6 @@
 local host = "https://raw.github.com/Sertex-Team/sPhone-Store/master/"
 local index = host.."index.lua"
 local apps = host.."apps/"
-local save = "/.sPhone/apps/storeApps/"
-local db = "/.sPhone/apps/storeData/database"
 local appsL = {}
 local w, h = term.getSize()
 local function redrawM()
@@ -29,14 +27,13 @@ local c = http.get(index).readAll()
 
 local appsIndex = textutils.unserialize(c)
 
-for k, v in pairs(appsIndex) do
-	local aa = http.get(apps..v.."/sPhone-Main.lua").readAll()
-	local a = textutils.unserialize(aa)
-	table.insert(appsL,a)
-end
 function redrawA()
-	for i = 1, #appsL do
-		print(appsL[i].name)
+	for k,v in pairs(appsIndex) do
+		print(v)
+		table.insert(appsL, {
+			path = k,
+			id = v,
+		})
 	end
 end
 
@@ -59,13 +56,15 @@ while true do
 	end
 	
 	if appsL[y-2] then
-		local data = http.get("https://raw.github.com/Sertex-Team/sPhone-Store/master/apps/"..appsL[y-2].storePath.."/"..appsL[y-2].main).readAll()
-		local f = fs.open("/.sPhone/apps/storeApps/"..appsL[y-2].name.."/"..appsL[y-2].main,"w")
+		local data = http.get("https://raw.github.com/Sertex-Team/sPhone-Store/master/apps/"..appsL[y-2].path).readAll()
+		local f = fs.open("/tmp/sPhoneStore/"..appsL[y-2].id..".spk","w")
 		f.write(data)
 		f.close()
-		local f = fs.open("/.sPhone/apps/storeApps/"..appsL[y-2].name.."/sPhone-Main.lua","w")
-		f.write(textutils.serialize(appsL[y-2]))
-		f.close()
-		sPhone.winOk("Installed")
+		local status = sPhone.install("/tmp/sPhoneStore/"..appsL[y-2].id..".spk")
+		if status then
+			sPhone.winOk("Installed")
+		else
+			sPhone.winOk("Error while installing")
+		end
 	end
 end
