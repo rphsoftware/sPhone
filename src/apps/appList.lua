@@ -1,4 +1,3 @@
-sPhone.winOk("Work In","Progress")
 local spkList = "/.sPhone/config/spklist"
 local dir = "/.sPhone/spk/"
 if not fs.exists(spkList) then
@@ -55,6 +54,7 @@ end
 			elseif y >= 2 then
 				if apps[y-2] then
 					sPhone.launch(apps[y-2].id)
+					return
 				end
 			end
 		end
