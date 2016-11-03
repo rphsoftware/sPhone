@@ -1,34 +1,34 @@
 sPhone.winOk("Work In","Progress")
-		local dir = "/.sPhone/apps/storeApps/"
-		if not fs.exists(dir) then
-			fs.makeDir(dir)
-		end
+local spkList = "/.sPhone/config/spklist"
+local dir = "/.sPhone/spk/"
+if not fs.exists(spkList) then
+	config.list("/.sPhone/config/spklist")
+end
+		
+		local list = config.list("/.sPhone/config/spklist")
 		
 		local apps = {}
-		local appsName = {}
 		
-		for k, v in pairs(fs.list(dir)) do
-			if fs.isDir(dir..v) then
-				if fs.exists(dir..v.."/sPhone-Main.lua") then
-					local nDir = dir..v.."/sPhone-Main.lua"
-					local f = fs.open(nDir,"r")
-					local sPhone_Main = f.readAll()
-					f.close()
-					sPhone_Main = textutils.unserialize(sPhone_Main)
-					pDir = dir..v
-					local run = sPhone_Main.main
-					local name = sPhone_Main.name
-					local author = sPhone_Main.author
-					local version = sPhone_Main.version
-					
-					appsName[name] = dir..v.."/"..run
+		for k, v in pairs(list) do
+			if fs.isDir("/.sPhone/spk/"..k) then
+				if fs.exists(dir..k.."/.spk") then
+					local nDir = dir..k.."/.spk"
+					pDir = dir..k.."/.spk"
+					local name = config.read(pDir,"name")
+					local author = config.read(pDir,"author")
+					local version = config.read(pDir,"version")
+					local id = k
 				end
 			end
 		end
 		
-		for k, v in pairs(appsName) do
-			table.insert(apps, v)
+		for k,v in pairs(config.list(spkList)) do
+			table.insert(apps,{
+				id = k,
+				name = v,
+			})
 		end
+		
 		local function drawHome()
 			term.setBackgroundColor(sPhone.theme["backgroundColor"])
 			term.clear()
@@ -38,8 +38,8 @@ sPhone.winOk("Work In","Progress")
 			term.setTextColor(sPhone.theme["text"])
 			
 			term.setCursorPos(1,3)
-			for k, v in pairs(appsName) do
-				print(k)
+			for k, v in pairs(apps) do
+				print(v.name)
 			end
 		end	
 		
@@ -54,7 +54,7 @@ sPhone.winOk("Work In","Progress")
 				break
 			elseif y >= 2 then
 				if apps[y-2] then
-					sPhone.run("/.sPhone/apps/storeApps/"..apps[y-2])
+					sPhone.launch(apps[y-2].id)
 				end
 			end
 		end
