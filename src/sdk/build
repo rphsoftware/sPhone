@@ -19,9 +19,9 @@ end
 
 
 local f = fs.open(dir.."/config","r")
-local config = textutils.unserialize(f.readAll())
+local _config = textutils.unserialize(f.readAll())
 f.close()
-if not config then
+if not _config then
 	print("Config file is corrupted")
 	return
 end
@@ -59,10 +59,10 @@ end
 local result = {}
 
 
-print("Name:",config.name)
-print("Author:",config.author)
-print("Version:",config.version)
-print("ID:",config.id)
+print("Name:",_config.name)
+print("Author:",_config.author)
+print("Version:",_config.version)
+print("ID:",_config.id)
 
 if string.getExtension(output) ~= "spk" then
 	printError("TIP: Use .spk extension")
@@ -72,7 +72,7 @@ print("Building...")
 
 local filesystem = explore(args[1].."/main")
 result["files"] = textutils.serialize(filesystem)
-result["config"] = textutils.serialize(config)
+result["config"] = textutils.serialize(_config)
 
 
 local newResult = textutils.serialize(result)
