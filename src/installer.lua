@@ -43,7 +43,9 @@ local files = {
 	["src/bin/halt.lua"] = "/bin/halt",
 	["src/bin/echo.lua"] = "/bin/echo",
 	
-	["src/sdk/build"] = "/bin/build",
+	["src/sdk/build.lua"] = "/bin/build",
+	
+	["src/system/vsf.lua"] = "/.sPhone/system/vfs",
 	
 	["src/apps/system/settings.lua"] = "/.sPhone/apps/system/settings",
 	["src/apps/system/info.lua"] = "/.sPhone/apps/system/info",
