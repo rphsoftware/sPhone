@@ -4,11 +4,11 @@ if not fs.exists(spkList) then
 	config.list("/.sPhone/config/spklist")
 end
 		
-		local list = config.list("/.sPhone/config/spklist")
+		local _list = config.list("/.sPhone/config/spklist")
 		
 		local apps = {}
 		
-		for k, v in pairs(list) do
+		for k, v in pairs(_list) do
 			if fs.isDir("/.sPhone/spk/"..k) then
 				if fs.exists(dir..k.."/.spk") then
 					local nDir = dir..k.."/.spk"
