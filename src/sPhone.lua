@@ -745,16 +745,16 @@ end
 								end
 				end
 				
-				local config = textutils.unserialize(script.config)
-				if not config.id then
+				local _config = textutils.unserialize(script.config)
+				if not _config.id then
 					error("SPK: id not found",2)
 				end
-				if not config.main then
+				if not _config.main then
 					error("SPK: main not found",2)
 				end
-				writeDown(textutils.unserialize(script.files),"/.sPhone/apps/spk/"..config.id)
-				local f = fs.open("/.sPhone/apps/spk/"..config.id.."/.spk","w")
-				f.write(textutils.serialize(config))
+				writeDown(textutils.unserialize(script.files),"/.sPhone/apps/spk/".._config.id)
+				local f = fs.open("/.sPhone/apps/spk/".._config.id.."/.spk","w")
+				f.write(textutils.serialize(_config))
 				f.close()
 				local f = fs.open("/.sPhone/config/spklist","r")
 				local lists = f.readAll()
@@ -764,11 +764,11 @@ end
 					error("Cannot open config",2)
 				end
 				
-				if not config.name then
-					config.name = config.id
+				if not _config.name then
+					_config.name = _config.id
 				end
 				
-				lists[config.id] = config.name
+				lists[_config.id] = _config.name
 				
 				local f = fs.open("/.sPhone/config/spklist","w")
 				f.write(textutils.serialize(lists))
@@ -805,31 +805,31 @@ end
 		local f = fs.open("/.sPhone/apps/spk/"..spk.."/.spk","r")
 		local script = f.readAll()
 		f.close()
-		config = textutils.unserialize(script)
+		_config = textutils.unserialize(script)
 		if not script then
 			error("config corrupted",2)
 		end
 		local ok, err = pcall(function()
-			setfenv(loadfile(fs.combine("/.sPhone/apps/spk",config.id.."/"..config.main)), setmetatable({
+			setfenv(loadfile(fs.combine("/.sPhone/apps/spk",_config.id.."/".._config.main)), setmetatable({
 				spk = {
 					getName = function()
-						return (config.name or nil)
+						return (_config.name or nil)
 					end,
 					
 					getID = function()
-						return (config.id or nil)
+						return (_config.id or nil)
 					end,
 					
 					getPath = function()
-						return "/.sPhone/apps/spk/"..config.id
+						return "/.sPhone/apps/spk/".._config.id
 					end,
 					
 					getAuthor = function()
-						return (config.author or nil)
+						return (_config.author or nil)
 					end,
 					
 					getVersion = function()
-						return (config.version or nil)
+						return (_config.version or nil)
 					end,
 				},
 				string = string,
