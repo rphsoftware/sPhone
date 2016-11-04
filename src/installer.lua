@@ -45,7 +45,7 @@ local files = {
 	
 	["src/sdk/build.lua"] = "/bin/build",
 	
-	["src/system/vsf.lua"] = "/.sPhone/system/vfs",
+	["src/system/vfs.lua"] = "/.sPhone/system/vfs",
 	
 	["src/apps/system/settings.lua"] = "/.sPhone/apps/system/settings",
 	["src/apps/system/info.lua"] = "/.sPhone/apps/system/info",
