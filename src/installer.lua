@@ -38,6 +38,7 @@ local files = {
 	["src/apis/task.lua"] = "/.sPhone/apis/task",
 	["src/apis/proc.lua"] = "/.sPhone/apis/proc",
 	["src/apis/temp.lua"] = "/.sPhone/apis/temp",
+	["src/apis/aes.lua"] = "/.sPhone/apis/aes",
 	
 	["src/bin/wget.lua"] = "/bin/wget",
 	["src/bin/halt.lua"] = "/bin/halt",
