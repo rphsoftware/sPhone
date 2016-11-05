@@ -2,7 +2,6 @@ jdk:
   - oraclejdk8
 env:
   - CC_VERSION=1.79 CC_URL=https://addons-origin.cursecdn.com/files/2291/384/ComputerCraft1.79.jar
-  - CC_VERSION=1.75 CC_URL=https://addons-origin.cursecdn.com/files/2269/339/ComputerCraft1.75.jar
 install:
   - mkdir -p $HOME/.cc-jars
   - wget -O howlci.jar https://dl.bintray.com/squiddev/maven/org/squiddev/howl.ci/0.1.9/howl.ci-0.1.9.jar
