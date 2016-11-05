@@ -26,6 +26,12 @@ local function kernel()
 		["window.side"] = colors.blue,
 		["window.button"] = colors.lightBlue,
 		["window.text"] = colors.white,
+		["lock.background"] = colors.white,
+		["lock.text"] = colors.black,
+		["lock.inputBackground"] = colors.white,
+		["lock.inputText"] = colors.black,
+		["lock.inputSide"] = colors.lightBlue,
+		["lock.error"] = colors.red,
 	}
 	
 	sPhone.defaultTheme = sPhone.theme
@@ -147,15 +153,21 @@ local function kernel()
 	
 	local fileTheme = "/.sPhone/config/theme"
 	if fs.exists(fileTheme) then
-		sPhone.theme["header"] = config.read(fileTheme, "header")
-		sPhone.theme["headerText"] = config.read(fileTheme, "headerText")
-		sPhone.theme["text"] = config.read(fileTheme, "text")
-		sPhone.theme["background"] = config.read(fileTheme, "background")
-		sPhone.theme["backgroundColor"] = config.read(fileTheme, "backgroundColor")
-		sPhone.theme["window.background"] = config.read(fileTheme, "window.background")
-		sPhone.theme["window.side"] = config.read(fileTheme, "window.side")
-		sPhone.theme["window.button"] = config.read(fileTheme, "window.button")
-		sPhone.theme["window.text"] = config.read(fileTheme, "window.text")
+		sPhone.theme["header"] = (config.read(fileTheme, "header") or sPhone.theme["header"])
+		sPhone.theme["headerText"] = (config.read(fileTheme, "headerText") or sPhone.theme["headerText"])
+		sPhone.theme["text"] = (config.read(fileTheme, "text") or sPhone.theme["text"]) 
+		sPhone.theme["background"] = (config.read(fileTheme, "background") or sPhone.theme["background"])
+		sPhone.theme["backgroundColor"] = (config.read(fileTheme, "backgroundColor") or sPhone.theme["backgroundColor"])
+		sPhone.theme["window.background"] = (config.read(fileTheme, "window.background") or sPhone.theme["window.background"])
+		sPhone.theme["window.side"] = (config.read(fileTheme, "window.side") or sPhone.theme["window.side"])
+		sPhone.theme["window.button"] = (config.read(fileTheme, "window.button") or sPhone.theme["window.button"])
+		sPhone.theme["window.text"] = (config.read(fileTheme, "window.text") or sPhone.theme["window.text"])
+		sPhone.theme["lock.background"] = (config.read(fileTheme, "lock.background") or sPhone.theme["lock.background"])
+		sPhone.theme["lock.text"] = (config.read(fileTheme, "lock.text") or sPhone.theme["lock.text"])
+		sPhone.theme["lock.inputBackground"] = (config.read(fileTheme, "lock.inputBackground") or sPhone.theme["lock.inputBackground"])
+		sPhone.theme["lock.inputText"] = (config.read(fileTheme, "lock.inputText") or sPhone.theme["lock.inputText"])
+		sPhone.theme["lock.inputSide"] = (config.read(fileTheme, "lock.inputSide") or sPhone.theme["lock.inputSide"])
+		sPhone.theme["lock.error"] = (config.read(fileTheme, "lock.error") or sPhone.theme["lock.error"])
 	else
 		for k, v in pairs(sPhone.theme) do
 			config.write(fileTheme, k, v)
@@ -873,25 +885,25 @@ end
 		sPhone.locked = true
 		if config.read("/.sPhone/config/sPhone","password") then
 			while true do
-				term.setBackgroundColor(sPhone.theme["backgroundColor"])
+				term.setBackgroundColor(sPhone.theme["lock.background"])
 				term.clear()
 				term.setCursorPos(1,1)
 				sPhone.header(sPhone.user)
-				paintutils.drawBox(7,9,20,11,sPhone.theme["window.background"])
+				paintutils.drawBox(7,9,20,11,sPhone.theme["lock.inputSide"])
 				if sPhone.wrongPassword then
-					term.setTextColor(colors.red)
-					term.setBackgroundColor(sPhone.theme["backgroundColor"])
+					term.setTextColor(sPhone.theme["lock.error"])
+					term.setBackgroundColor(sPhone.theme["lock.background"])
 					visum.align("center","  Wrong Password",false,13)
 				end
-				term.setTextColor(sPhone.theme["text"])
-				term.setBackgroundColor(sPhone.theme["backgroundColor"])
+				term.setTextColor(sPhone.theme["lock.text"])
+				term.setBackgroundColor(sPhone.theme["lock.background"])
 				visum.align("center","  Insert Password",false,7)
         local loginTerm = window.create(term.native(), 8,10,12,1, true)
         term.redirect(loginTerm)
-        term.setBackgroundColor(sPhone.theme["backgroundColor"])
+        term.setBackgroundColor(sPhone.theme["lock.inputBackground"])
         term.clear()
         term.setCursorPos(1,1)
-        term.setTextColor(sPhone.theme["text"])
+        term.setTextColor(sPhone.theme["lock.inputText"])
 				local passwordLogin = read("*")
         term.redirect(sPhone.mainTerm)
 				local fpw = config.read("/.sPhone/config/sPhone","password")
@@ -910,40 +922,41 @@ end
 			local rServer
 			sPhone.firstBoot = true
 			while true do
-				term.setBackgroundColor(sPhone.theme["backgroundColor"])
+				term.setBackgroundColor(sPhone.theme["lock.background"])
 				term.clear()
 				term.setCursorPos(1,1)
 				sPhone.header("Setup")
-				paintutils.drawBox(7,9,20,11,sPhone.theme["window.background"])
+				paintutils.drawBox(7,9,20,11,sPhone.theme["lock.inputSide"])
 				if sPhone.wrongPassword then
-					term.setTextColor(colors.red)
+					term.setTextColor(sPhone.theme["lock.error"])
+					term.setBackgroundColor(sPhone.theme["lock.background"])
 					visum.align("center","  Wrong Password",false,13)
 				end
-				term.setTextColor(sPhone.theme["text"])
-				term.setBackgroundColor(sPhone.theme["backgroundColor"])
+				term.setTextColor(sPhone.theme["lock.text"])
+				term.setBackgroundColor(sPhone.theme["lock.background"])
 				visum.align("center","  Insert Password",false,7)
         local loginTerm = window.create(term.native(), 8,10,12,1, true)
         term.redirect(loginTerm)
-        term.setBackgroundColor(sPhone.theme["backgroundColor"])
+        term.setBackgroundColor(sPhone.theme["lock.inputBackground"])
         term.clear()
         term.setCursorPos(1,1)
-        term.setTextColor(sPhone.theme["text"])
+        term.setTextColor(sPhone.theme["lock.inputText"])
 				local password1 = read("*")
 				term.redirect(sPhone.mainTerm)
-				term.setBackgroundColor(sPhone.theme["backgroundColor"])
+				term.setBackgroundColor(sPhone.theme["lock.background"])
 				term.clear()
 				term.setCursorPos(1,1)
 				sPhone.header("Setup")
-				paintutils.drawBox(7,9,20,11,sPhone.theme["window.background"])
-				term.setTextColor(sPhone.theme["text"])
-				term.setBackgroundColor(sPhone.theme["backgroundColor"])
+				paintutils.drawBox(7,9,20,11,sPhone.theme["lock.inputSide"])
+				term.setTextColor(sPhone.theme["lock.text"])
+				term.setBackgroundColor(sPhone.theme["lock.background"])
 				visum.align("center","  Repeat",false,7)
         local loginTerm = window.create(term.native(), 8,10,12,1, true)
         term.redirect(loginTerm)
-        term.setBackgroundColor(sPhone.theme["backgroundColor"])
+        term.setBackgroundColor(sPhone.theme["lock.inputBackground"])
         term.clear()
         term.setCursorPos(1,1)
-        term.setTextColor(sPhone.theme["text"])
+        term.setTextColor(sPhone.theme["lock.inputText"])
 				local password2 = read("*")
 				term.redirect(sPhone.mainTerm)
 				if password1 == password2 then
