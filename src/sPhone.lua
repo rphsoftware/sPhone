@@ -1,6 +1,6 @@
 local function kernel()
 	_G.sPhone = {
-		version = "Alpha 3.9.1",
+		version = "Alpha 3.10",
 		user = "Guest",
 		devMode = false,
 		mainTerm = term.current(),
@@ -764,7 +764,7 @@ end
 				if not _config.main then
 					error("SPK: main not found",2)
 				end
-				writeDown(textutils.unserialize(script.files),"/.sPhone/apps/spk/".._config.id)
+				writeDown(textutils.unserialize(script.files),"/.sPhone/apps/spk/".._config.id.."/files")
 				local f = fs.open("/.sPhone/apps/spk/".._config.id.."/.spk","w")
 				f.write(textutils.serialize(_config))
 				f.close()
@@ -785,7 +785,7 @@ end
 				local f = fs.open("/.sPhone/config/spklist","w")
 				f.write(textutils.serialize(lists))
 				f.close()
-				return true
+				return true, _config.id
 			else
 				return false, "not a spk file"
 			end
@@ -812,7 +812,9 @@ end
 			return false, "not installed"
 		end
 		
-		
+		if not fs.exists("/.sPhone/apps/spk/"..spk.."/.spk") then
+			error("Invalid SPK, .spk not found",2)
+		end
 		
 		local f = fs.open("/.sPhone/apps/spk/"..spk.."/.spk","r")
 		local script = f.readAll()
@@ -822,7 +824,7 @@ end
 			error("config corrupted",2)
 		end
 		local ok, err = pcall(function()
-			setfenv(loadfile(fs.combine("/.sPhone/apps/spk",_config.id.."/".._config.main)), setmetatable({
+			setfenv(loadfile(fs.combine("/.sPhone/apps/spk",_config.id.."/files/".._config.main)), setmetatable({
 				spk = {
 					getName = function()
 						return (_config.name or nil)
@@ -836,12 +838,20 @@ end
 						return "/.sPhone/apps/spk/".._config.id
 					end,
 					
+					getDataPath = function()
+						return "/.sPhone/apps/spk/".._config.id.."/data"
+					end,
+					
 					getAuthor = function()
 						return (_config.author or nil)
 					end,
 					
 					getVersion = function()
 						return (_config.version or nil)
+					end,
+					
+					open = function(file, mode)
+						return fs.open("/.sPhone/apps/spk/".._config.id.."/data/"..file,mode)
 					end,
 				},
 				string = string,
