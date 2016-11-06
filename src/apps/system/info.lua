@@ -1,6 +1,6 @@
 local function clear()
-  term.setBackgroundColor(colors.white)
-  term.setTextColor(colors.black)
+  term.setBackgroundColor(sPhone.getTheme("backgroundColor"))
+  term.setTextColor(sPhone.getTheme("text"))
   term.clear()
   term.setCursorPos(1,1)
 end
