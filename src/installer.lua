@@ -8,10 +8,6 @@ end
 local old = os.pullEvent
 os.pullEvent = os.pullEventRaw
 
-if fs.exists("/startup") then
-	fs.delete("/startup")
-end
-
 local license = [[
 The MIT License (MIT)
 Copyright (c) 2016 BeaconNet
@@ -191,6 +187,10 @@ while true do
 		print("Terminated")
 		return
 	end
+end
+
+if fs.exists("/startup") then
+	fs.delete("/startup")
 end
 
 for k, v in pairs(files) do
