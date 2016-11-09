@@ -1,5 +1,8 @@
-local pwChange
+local pwChange,mouse,x,y
 local pwChangeRep
+local skipped = false
+local w,h = term.getSize()
+local password
 
 local menu = {
 	"Update",
@@ -19,26 +22,50 @@ local function clear()
 end
 
 local function changeUsername()
+	local newUsername
 	term.setBackgroundColor(sPhone.theme["backgroundColor"])
 	term.clear()
 	term.setCursorPos(1,1)
 	sPhone.header(sPhone.user)
+	term.setCursorPos(w,1)
+	term.setBackgroundColor(sPhone.theme["header"])
+	term.setTextColor(sPhone.theme["headerText"])
+	write("X")
+	term.setBackgroundColor(sPhone.theme["backgroundColor"])
 	term.setTextColor(sPhone.theme["text"])
 	visum.align("center","  New Username",false,3)
 	term.setCursorPos(2,5)
 	write("Username: ")
-	local newUsername = read()
+	while true do
+		newUsername,mouse,x,y = sPhone.read(nil,nil,nil,true)
+		if mouse then
+			if y == 1 and x == w then
+				return
+			end
+		end
+		break
+	end
 	sPhone.user = newUsername
 	config.write("/.sPhone/config/sPhone","username",newUsername)
 	sPhone.winOk("Username","Changed")
 end
 
 local function changePassword()
+	skipped = false
+	sPhone.wrongPassword = false
 	while true do
+		local usingPW = config.read("/.sPhone/config/sPhone","lockEnabled")
+		if not usingPW then
+			break
+		end
 		term.setBackgroundColor(sPhone.theme["lock.background"])
 		term.clear()
 		term.setCursorPos(1,1)
 		sPhone.header(sPhone.user)
+		term.setCursorPos(w,1)
+		term.setBackgroundColor(sPhone.theme["header"])
+		term.setTextColor(sPhone.theme["headerText"])
+		write("X")
 		paintutils.drawBox(7,9,20,11,sPhone.theme["lock.inputSide"])
 		term.setBackgroundColor(sPhone.theme["lock.inputBackground"])
 		if sPhone.wrongPassword then
@@ -55,7 +82,16 @@ local function changePassword()
 		term.clear()
 		term.setCursorPos(1,1)
 		term.setTextColor(sPhone.theme["lock.inputText"])
-		local password = read("*")
+		while true do
+			password,mouse,x,y = sPhone.read("*",nil,nil,true)
+			if mouse then
+				if y == 1 and x == w then
+					term.redirect(sPhone.mainTerm)
+					return
+				end
+			end
+			break
+		end
 		term.redirect(sPhone.mainTerm)
 		local fpw = config.read("/.sPhone/config/sPhone","password")
 		if sha256.sha256(password) ~= fpw then
@@ -82,55 +118,80 @@ local function changePassword()
 		term.setTextColor(sPhone.theme["lock.text"])
 		term.setBackgroundColor(sPhone.theme["lock.background"])
 		visum.align("center","  New Password",false,7)
+		local t = "Disable Password"
+		term.setCursorPos(w-#t+1,h)
+		write(t)
 		local loginTerm = window.create(term.native(), 8,10,12,1, true)
 		term.redirect(loginTerm)
 		term.setBackgroundColor(sPhone.theme["lock.inputBackground"])
 		term.clear()
 		term.setCursorPos(1,1)
 		term.setTextColor(sPhone.theme["lock.inputText"])
-		pwChange = read("*")
-		term.redirect(sPhone.mainTerm)
-
-		term.setBackgroundColor(sPhone.theme["lock.background"])
-		term.clear()
-		term.setCursorPos(1,1)
-		sPhone.header(sPhone.user)
-		paintutils.drawBox(7,9,20,11,sPhone.theme["lock.inputSide"])
-		term.setBackgroundColor(sPhone.theme["lock.background"])
-		term.setTextColor(sPhone.theme["lock.text"])
-		visum.align("center","  Repeat Password",false,7)
-		local loginTerm = window.create(term.native(), 8,10,12,1, true)
-		term.redirect(loginTerm)
-		term.setBackgroundColor(sPhone.theme["lock.inputBackground"])
-		term.clear()
-		term.setCursorPos(1,1)
-		term.setTextColor(sPhone.theme["lock.inputText"])
-		pwChangeRep = read("*")
-		term.redirect(sPhone.mainTerm)
-		if sha256.sha256(pwChange) ~= sha256.sha256(pwChangeRep) then
-			sPhone.wrongPassword = true
-			
-		else
-			sPhone.wrongPassword = false
+		while true do
+			pwChange,mouse,x,y = sPhone.read("*",nil,nil,true)
+			if mouse then
+				if y == h and (x >= 10 and x <= w) then
+					skipped = true
+					config.write("/.sPhone/config/sPhone","lockEnabled",false)
+				end
+			end
 			break
 		end
+		term.redirect(sPhone.mainTerm)
+		if not skipped then
+			term.setBackgroundColor(sPhone.theme["lock.background"])
+			term.clear()
+			term.setCursorPos(1,1)
+			sPhone.header(sPhone.user)
+			paintutils.drawBox(7,9,20,11,sPhone.theme["lock.inputSide"])
+			term.setBackgroundColor(sPhone.theme["lock.background"])
+			term.setTextColor(sPhone.theme["lock.text"])
+			visum.align("center","  Repeat Password",false,7)
+			local loginTerm = window.create(term.native(), 8,10,12,1, true)
+			term.redirect(loginTerm)
+			term.setBackgroundColor(sPhone.theme["lock.inputBackground"])
+			term.clear()
+			term.setCursorPos(1,1)
+			term.setTextColor(sPhone.theme["lock.inputText"])
+			pwChangeRep = read("*")
+			term.redirect(sPhone.mainTerm)
+			if sha256.sha256(pwChange) == sha256.sha256(pwChangeRep) then
+				sPhone.wrongPassword = false
+				config.write("/.sPhone/config/sPhone","password",sha256.sha256(pwChangeRep))
+				config.write("/.sPhone/config/sPhone","lockEnabled",true)
+				sPhone.winOk("Password","changed")
+				return
+			else
+				sPhone.wrongPassword = true
+			end
+		else
+			config.write("/.sPhone/config/sPhone","lockEnabled",false)
+			sPhone.winOk("Password","disabled")
+			return
+		end
 	end
-	if not sPhone.wrongPassword then
-		config.write("/.sPhone/config/sPhone","password",sha256.sha256(pwChangeRep))
-	end
-	sPhone.header(sPhone.user)
-	term.setTextColor(sPhone.theme["lock.text"])
-	term.setBackgroundColor(sPhone.theme["lock.background"])
-	visum.align("center", "All Set!", false, 3)
-	sleep(2)
-	return
 end
 
 local function changeLabel()
+	local newLabel
 	sPhone.header(sPhone.user)
 	visum.align("center", "  Set Label",false,3)
+	term.setCursorPos(w,1)
+	term.setBackgroundColor(sPhone.theme["header"])
+	term.setTextColor(sPhone.theme["headerText"])
+	write("X")
+	term.setBackgroundColor(sPhone.theme["backgroundColor"])
+	term.setTextColor(sPhone.theme["text"])
 	term.setCursorPos(2,5)
-	local newLabel = read()
+	while true do
+		newLabel,mouse,x,y = sPhone.read(nil,nil,nil,true)
+		if mouse then
+			if y == 1 and x == w then
+				return
+			end
+		end
+		break
+	end
 	newLabel = newLabel:gsub("&", string.char(0xc2)..string.char(0xa7)) --yay colors
 	os.setComputerLabel(newLabel)
 	sPhone.winOk("Computer Label set")
