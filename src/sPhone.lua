@@ -1158,6 +1158,9 @@ end
 	end
 	
 	function login()
+		if config.read("/.sPhone/config/sPhone","lockEnabled") == nil then
+			config.write("/.sPhone/config/sPhone","lockEnabled",true)
+		end
 		local usingPW = config.read("/.sPhone/config/sPhone","lockEnabled")
 		if not usingPW then
 			return
