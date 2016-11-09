@@ -1,6 +1,6 @@
 local function kernel()
 	_G.sPhone = {
-		version = "Alpha 3.10",
+		version = "Alpha 3.11",
 		user = "Guest",
 		devMode = false,
 		mainTerm = term.current(),
@@ -363,6 +363,274 @@ local function kernel()
 			end
 			scroll = math.min(math.max(0, scroll), math.max(0, #items - h + 1))
 		end
+	end
+	
+	function sPhone.read( _sReplaceChar, _tHistory, _fnComplete, _MouseEvent )
+    term.setCursorBlink( true )
+
+    local sLine = ""
+    local nHistoryPos
+		local _MouseX
+		local _MouseY
+		local param
+		local sEvent
+		local usedMouse = false
+    local nPos = 0
+    if _sReplaceChar then
+        _sReplaceChar = string.sub( _sReplaceChar, 1, 1 )
+    end
+
+    local tCompletions
+    local nCompletion
+    local function recomplete()
+        if _fnComplete and nPos == string.len(sLine) then
+            tCompletions = _fnComplete( sLine )
+            if tCompletions and #tCompletions > 0 then
+                nCompletion = 1
+            else
+                nCompletion = nil
+            end
+        else
+            tCompletions = nil
+            nCompletion = nil
+        end
+    end
+
+    local function uncomplete()
+        tCompletions = nil
+        nCompletion = nil
+    end
+
+    local w = term.getSize()
+    local sx = term.getCursorPos()
+
+    local function redraw( _bClear )
+        local nScroll = 0
+        if sx + nPos >= w then
+            nScroll = (sx + nPos) - w
+        end
+
+        local cx,cy = term.getCursorPos()
+        term.setCursorPos( sx, cy )
+        local sReplace = (_bClear and " ") or _sReplaceChar
+        if sReplace then
+            term.write( string.rep( sReplace, math.max( string.len(sLine) - nScroll, 0 ) ) )
+        else
+            term.write( string.sub( sLine, nScroll + 1 ) )
+        end
+
+        if nCompletion then
+            local sCompletion = tCompletions[ nCompletion ]
+            local oldText, oldBg
+            if not _bClear then
+                oldText = term.getTextColor()
+                oldBg = term.getBackgroundColor()
+                term.setTextColor( colors.white )
+                term.setBackgroundColor( colors.gray )
+            end
+            if sReplace then
+                term.write( string.rep( sReplace, string.len( sCompletion ) ) )
+            else
+                term.write( sCompletion )
+            end
+            if not _bClear then
+                term.setTextColor( oldText )
+                term.setBackgroundColor( oldBg )
+            end
+        end
+
+        term.setCursorPos( sx + nPos - nScroll, cy )
+    end
+    
+    local function clear()
+        redraw( true )
+    end
+
+    recomplete()
+    redraw()
+
+    local function acceptCompletion()
+        if nCompletion then
+            -- Clear
+            clear()
+
+            -- Find the common prefix of all the other suggestions which start with the same letter as the current one
+            local sCompletion = tCompletions[ nCompletion ]
+            sLine = sLine .. sCompletion
+            nPos = string.len( sLine )
+
+            -- Redraw
+            recomplete()
+            redraw()
+        end
+    end
+    while true do
+        sEvent, param,_MouseX,_MouseY = os.pullEvent()
+        if sEvent == "char" then
+            -- Typed key
+            clear()
+            sLine = string.sub( sLine, 1, nPos ) .. param .. string.sub( sLine, nPos + 1 )
+            nPos = nPos + 1
+            recomplete()
+            redraw()
+
+        elseif sEvent == "paste" then
+            -- Pasted text
+            clear()
+            sLine = string.sub( sLine, 1, nPos ) .. param .. string.sub( sLine, nPos + 1 )
+            nPos = nPos + string.len( param )
+            recomplete()
+            redraw()
+
+        elseif sEvent == "key" then
+            if param == keys.enter then
+                -- Enter
+                if nCompletion then
+                    clear()
+                    uncomplete()
+                    redraw()
+                end
+                break
+                
+            elseif param == keys.left then
+                -- Left
+                if nPos > 0 then
+                    clear()
+                    nPos = nPos - 1
+                    recomplete()
+                    redraw()
+                end
+                
+            elseif param == keys.right then
+                -- Right                
+                if nPos < string.len(sLine) then
+                    -- Move right
+                    clear()
+                    nPos = nPos + 1
+                    recomplete()
+                    redraw()
+                else
+                    -- Accept autocomplete
+                    acceptCompletion()
+                end
+
+            elseif param == keys.up or param == keys.down then
+                -- Up or down
+                if nCompletion then
+                    -- Cycle completions
+                    clear()
+                    if param == keys.up then
+                        nCompletion = nCompletion - 1
+                        if nCompletion < 1 then
+                            nCompletion = #tCompletions
+                        end
+                    elseif param == keys.down then
+                        nCompletion = nCompletion + 1
+                        if nCompletion > #tCompletions then
+                            nCompletion = 1
+                        end
+                    end
+                    redraw()
+
+                elseif _tHistory then
+                    -- Cycle history
+                    clear()
+                    if param == keys.up then
+                        -- Up
+                        if nHistoryPos == nil then
+                            if #_tHistory > 0 then
+                                nHistoryPos = #_tHistory
+                            end
+                        elseif nHistoryPos > 1 then
+                            nHistoryPos = nHistoryPos - 1
+                        end
+                    else
+                        -- Down
+                        if nHistoryPos == #_tHistory then
+                            nHistoryPos = nil
+                        elseif nHistoryPos ~= nil then
+                            nHistoryPos = nHistoryPos + 1
+                        end                        
+                    end
+                    if nHistoryPos then
+                        sLine = _tHistory[nHistoryPos]
+                        nPos = string.len( sLine ) 
+                    else
+                        sLine = ""
+                        nPos = 0
+                    end
+                    uncomplete()
+                    redraw()
+
+                end
+
+            elseif param == keys.backspace then
+                -- Backspace
+                if nPos > 0 then
+                    clear()
+                    sLine = string.sub( sLine, 1, nPos - 1 ) .. string.sub( sLine, nPos + 1 )
+                    nPos = nPos - 1
+                    recomplete()
+                    redraw()
+                end
+
+            elseif param == keys.home then
+                -- Home
+                if nPos > 0 then
+                    clear()
+                    nPos = 0
+                    recomplete()
+                    redraw()
+                end
+
+            elseif param == keys.delete then
+                -- Delete
+                if nPos < string.len(sLine) then
+                    clear()
+                    sLine = string.sub( sLine, 1, nPos ) .. string.sub( sLine, nPos + 2 )                
+                    recomplete()
+                    redraw()
+                end
+
+            elseif param == keys["end"] then
+                -- End
+                if nPos < string.len(sLine ) then
+                    clear()
+                    nPos = string.len(sLine)
+                    recomplete()
+                    redraw()
+                end
+
+            elseif param == keys.tab then
+                -- Tab (accept autocomplete)
+                acceptCompletion()
+
+            end
+
+        elseif sEvent == "term_resize" then
+            -- Terminal resized
+            w = term.getSize()
+            redraw()
+				
+				elseif sEvent == "mouse_click" and _MouseEvent then
+					if nCompletion then
+            clear()
+            uncomplete()
+            redraw()
+          end
+					usedMouse = true
+					break
+        end
+    end
+
+    local cx, cy = term.getCursorPos()
+    term.setCursorBlink( false )
+    term.setCursorPos( w + 1, cy )
+    print()
+		if sEvent == "mouse_click" then
+			return sLine, param, _MouseX, _MouseY
+		end
+    return sLine
 	end
 	
 	local function clear()
@@ -890,6 +1158,10 @@ end
 	end
 	
 	function login()
+		local usingPW = config.read("/.sPhone/config/sPhone","lockEnabled")
+		if not usingPW then
+			return
+		end
 		local old = os.pullEvent
 		os.pullEvent = os.pullEventRaw
 		sPhone.locked = true
@@ -930,8 +1202,12 @@ end
 			local pw
 			local pwr
 			local rServer
+			local password1,mouse,x,y
+			local w, h = term.getSize()
+			local skipped = false
 			sPhone.firstBoot = true
-			while true do
+			while not skipped do
+				
 				term.setBackgroundColor(sPhone.theme["lock.background"])
 				term.clear()
 				term.setCursorPos(1,1)
@@ -945,38 +1221,52 @@ end
 				term.setTextColor(sPhone.theme["lock.text"])
 				term.setBackgroundColor(sPhone.theme["lock.background"])
 				visum.align("center","  Insert Password",false,7)
+				local t = "Skip"
+				term.setCursorPos(w-#t+1,h)
+				write(t)
         local loginTerm = window.create(term.native(), 8,10,12,1, true)
         term.redirect(loginTerm)
         term.setBackgroundColor(sPhone.theme["lock.inputBackground"])
         term.clear()
         term.setCursorPos(1,1)
         term.setTextColor(sPhone.theme["lock.inputText"])
-				local password1 = read("*")
-				term.redirect(sPhone.mainTerm)
-				term.setBackgroundColor(sPhone.theme["lock.background"])
-				term.clear()
-				term.setCursorPos(1,1)
-				sPhone.header("Setup")
-				paintutils.drawBox(7,9,20,11,sPhone.theme["lock.inputSide"])
-				term.setTextColor(sPhone.theme["lock.text"])
-				term.setBackgroundColor(sPhone.theme["lock.background"])
-				visum.align("center","  Repeat",false,7)
-        local loginTerm = window.create(term.native(), 8,10,12,1, true)
-        term.redirect(loginTerm)
-        term.setBackgroundColor(sPhone.theme["lock.inputBackground"])
-        term.clear()
-        term.setCursorPos(1,1)
-        term.setTextColor(sPhone.theme["lock.inputText"])
-				local password2 = read("*")
-				term.redirect(sPhone.mainTerm)
-				if password1 == password2 then
-					config.write("/.sPhone/config/sPhone", "password",sha256.sha256(password1))
-					term.setTextColor(colors.lime)
-					visum.align("center","  Password set!",false,13)
-					sleep(2)
+				while true do
+					password1,mouse,x,y = sPhone.read("*",nil,nil,true)
+					if mouse then
+						if y == h and (x >= 23 and x <= w) then
+							skipped = true
+							config.write("/.sPhone/config/sPhone","lockEnabled",false)
+						end
+					end
 					break
-				else
-					sPhone.wrongPassword = true
+				end
+				term.redirect(sPhone.mainTerm)
+				if not skipped then
+					term.setBackgroundColor(sPhone.theme["lock.background"])
+					term.clear()
+					term.setCursorPos(1,1)
+					sPhone.header("Setup")
+					paintutils.drawBox(7,9,20,11,sPhone.theme["lock.inputSide"])
+					term.setTextColor(sPhone.theme["lock.text"])
+					term.setBackgroundColor(sPhone.theme["lock.background"])
+					visum.align("center","  Repeat",false,7)
+					local loginTerm = window.create(term.native(), 8,10,12,1, true)
+					term.redirect(loginTerm)
+					term.setBackgroundColor(sPhone.theme["lock.inputBackground"])
+					term.clear()
+					term.setCursorPos(1,1)
+					term.setTextColor(sPhone.theme["lock.inputText"])
+					local password2 = read("*")
+					term.redirect(sPhone.mainTerm)
+					if password1 == password2 then
+						config.write("/.sPhone/config/sPhone", "password",sha256.sha256(password1))
+						term.setTextColor(colors.lime)
+						visum.align("center","  Password set!",false,13)
+						sleep(2)
+						break
+					else
+						sPhone.wrongPassword = true
+					end
 				end
 			end
 			
