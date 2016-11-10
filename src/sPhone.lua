@@ -1,6 +1,6 @@
 local function kernel()
 	_G.sPhone = {
-		version = "Alpha 3.11",
+		version = "Alpha 3.11.1",
 		user = "Guest",
 		devMode = false,
 		mainTerm = term.current(),
@@ -365,17 +365,21 @@ local function kernel()
 		end
 	end
 	
-	function sPhone.read( _sReplaceChar, _tHistory, _fnComplete, _MouseEvent )
+	function sPhone.read( _sReplaceChar, _tHistory, _fnComplete, _MouseEvent, _presetInput )
     term.setCursorBlink( true )
 
-    local sLine = ""
+    local sLine = _presetInput
+		
+		if type(sLine) ~= "string" then
+			sLine = ""
+		end
+		local nPos = #sLine
     local nHistoryPos
 		local _MouseX
 		local _MouseY
 		local param
 		local sEvent
 		local usedMouse = false
-    local nPos = 0
     if _sReplaceChar then
         _sReplaceChar = string.sub( _sReplaceChar, 1, 1 )
     end
@@ -1239,9 +1243,11 @@ end
 						if y == h and (x >= 23 and x <= w) then
 							skipped = true
 							config.write("/.sPhone/config/sPhone","lockEnabled",false)
+							break
 						end
+					else
+						break
 					end
-					break
 				end
 				term.redirect(sPhone.mainTerm)
 				if not skipped then
