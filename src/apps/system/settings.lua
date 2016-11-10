@@ -37,13 +37,14 @@ local function changeUsername()
 	term.setCursorPos(2,5)
 	write("Username: ")
 	while true do
-		newUsername,mouse,x,y = sPhone.read(nil,nil,nil,true)
+		newUsername,mouse,x,y = sPhone.read(nil,nil,nil,true,newUsername)
 		if mouse then
 			if y == 1 and x == w then
 				return
 			end
+		else
+			break
 		end
-		break
 	end
 	sPhone.user = newUsername
 	config.write("/.sPhone/config/sPhone","username",newUsername)
@@ -83,14 +84,15 @@ local function changePassword()
 		term.setCursorPos(1,1)
 		term.setTextColor(sPhone.theme["lock.inputText"])
 		while true do
-			password,mouse,x,y = sPhone.read("*",nil,nil,true)
+			password,mouse,x,y = sPhone.read("*",nil,nil,true,password)
 			if mouse then
 				if y == 1 and x == w then
 					term.redirect(sPhone.mainTerm)
 					return
 				end
+			else
+				break
 			end
-			break
 		end
 		term.redirect(sPhone.mainTerm)
 		local fpw = config.read("/.sPhone/config/sPhone","password")
@@ -128,14 +130,16 @@ local function changePassword()
 		term.setCursorPos(1,1)
 		term.setTextColor(sPhone.theme["lock.inputText"])
 		while true do
-			pwChange,mouse,x,y = sPhone.read("*",nil,nil,true)
+			pwChange,mouse,x,y = sPhone.read("*",nil,nil,true,pwChange)
 			if mouse then
 				if y == h and (x >= 10 and x <= w) then
 					skipped = true
 					config.write("/.sPhone/config/sPhone","lockEnabled",false)
+					break
 				end
+			else
+				break
 			end
-			break
 		end
 		term.redirect(sPhone.mainTerm)
 		if not skipped then
@@ -184,13 +188,16 @@ local function changeLabel()
 	term.setTextColor(sPhone.theme["text"])
 	term.setCursorPos(2,5)
 	while true do
-		newLabel,mouse,x,y = sPhone.read(nil,nil,nil,true)
+		term.setCursorPos(2,5)
+		term.clearLine()
+		newLabel,mouse,x,y = sPhone.read(nil,nil,nil,true,newLabel)
 		if mouse then
 			if y == 1 and x == w then
 				return
 			end
+		else
+			break
 		end
-		break
 	end
 	newLabel = newLabel:gsub("&", string.char(0xc2)..string.char(0xa7)) --yay colors
 	os.setComputerLabel(newLabel)
@@ -281,10 +288,27 @@ local function editTheme()
 				end
 			end
 		elseif id == 9 then
-			sPhone.header()
+			local saveTheme
+			sPhone.header(sPhone.user)
+			term.setCursorPos(w,1)
+			term.setBackgroundColor(sPhone.theme["header"])
+			term.setTextColor(sPhone.theme["headerText"])
+			write("X")
+			term.setBackgroundColor(sPhone.theme["backgroundColor"])
+			term.setTextColor(sPhone.theme["text"])
 			visum.align("center", "Save Theme",false,3)
-			term.setCursorPos(2,5)
-			local saveTheme = read()
+			while true do
+				term.setCursorPos(2,5)
+				term.clearLine()
+				saveTheme,mouse,x,y = sPhone.read(nil,nil,nil,true,saveTheme)
+				if mouse then
+					if y == 1 and x == w then
+						return
+					end
+				else
+					break
+				end
+			end
 			if fs.exists(saveTheme) then
 				fs.delete(saveTheme)
 			end
