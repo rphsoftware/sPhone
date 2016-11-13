@@ -1,6 +1,6 @@
-local function kernel()
+local function kernel(...)
 	_G.sPhone = {
-		version = "Alpha 3.11.1",
+		version = "Alpha 3.12",
 		user = "Guest",
 		devMode = false,
 		mainTerm = term.current(),
@@ -48,16 +48,15 @@ local function kernel()
 	
 	if not config.write("/.sPhone/config/sPhone","newConfigFormat",true) then
 		os.pullEvent = os.pullEventRaw
-		term.setBackgroundColor(colors.white)
-		term.setTextColor(colors.black)
+		term.setBackgroundColor(colors.black)
+		term.setTextColor(colors.white)
 		term.clear()
 		term.setCursorPos(1,1)
-		print("sPhone")
 		printError("WARNING")
-		print("Config Format Changed")
 		print("")
-		print("We adopted a new format for all config files.")
-		print("To continue using sPhone all config data (.sPhone/config) will be deleted")
+		print("sPhone cannot load config file: corrupted")
+		print("To continue using sPhone all config data (.sPhone/config) will be erased")
+		printError("This action is irreversible!")
 		print("Y/N")
 		while true do
 			local _,k = os.pullEvent("char")
@@ -65,14 +64,13 @@ local function kernel()
 				fs.delete("/.sPhone/config")
 				print("Config deleted")
 				print("Rebooting...")
-				sleep(1)
+				sleep(3)
 				os.reboot()
 			elseif string.lower(k) == "n" then
 				print("Cannot delete config without user authorization")
 				print("Delete aborted")
 				print("Shuttind down...")
-				sleep(1)
-				os.shutdown()
+				error("Config corrupted",0)
 			end
 		end
 	end
@@ -101,12 +99,11 @@ local function kernel()
 	for k, v in pairs(fs.list("/.sPhone/autorun")) do
 		term.setTextColor(colors.black)
 		if not fs.isDir("/.sPhone/autorun/"..v) then
-			if not sPhone.safemode then
+			if not sPhone.safeMode then
 				local f = fs.open("/.sPhone/autorun/"..v,"r")
 				local script = f.readAll()
 				f.close()
 				print("Loading script "..v)
-				sleep(0)
 				local ok, err = pcall(function() setfenv(loadstring(script),getfenv())() end)
 				if not ok then
 					term.setTextColor(colors.red)
@@ -114,11 +111,9 @@ local function kernel()
 					fs.move("/.sPhone/autorun/"..v, "/.sPhone/autorun/disabled/"..v)
 					term.setTextColor(colors.blue)
 					print(v.." disabled to prevent errors")
-					sleep(0.5)
 				end
 			else
 				print("Script "..v.." not loaded because Safe Mode")
-				sleep(0)
 			end
 		end
 	end
@@ -242,7 +237,7 @@ local function kernel()
 		opt.fg1b = opt.fg1b or colors.lime
 		opt.bg2 = opt.bg2 or sPhone.getTheme("header")
 		opt.fg2 = opt.fg2 or sPhone.getTheme("headerText")
-		opt.bg3 = opt.bg3 or colors.red
+		opt.bg3 = opt.bg3 or sPhone.getTheme("header")
 		opt.fg3 = opt.fg3 or sPhone.getTheme("headerText")
 		opt.output = opt.output or true
 		opt.list = opt.list or false
@@ -1167,6 +1162,32 @@ end
 		end
 		local usingPW = config.read("/.sPhone/config/sPhone","lockEnabled")
 		if not usingPW then
+			local old = os.pullEvent
+			os.pullEvent = os.pullEventRaw
+			local fEvents = {
+				["mouse_drag"] = true,
+				["mouse_click"] = true,
+				["key"] = false,
+			}
+			while true do
+				local w,h = term.getSize()
+				local clockS = textutils.formatTime(os.time(),true)
+				term.setBackgroundColor(sPhone.theme["lock.background"])
+				term.clear()
+				term.setCursorPos(1,1)
+				sPhone.header(sPhone.user)
+				term.setBackgroundColor(sPhone.theme["lock.background"])
+				term.setTextColor(sPhone.theme["lock.text"])
+				term.setCursorPos(6,4)
+				bigfont.bigPrint(clockS)
+				visum.align("center"," Slide to unlock",false,h)
+				local clockUpdate = os.startTimer(0.3)
+				local e = {os.pullEvent()}
+				if fEvents[e[1]] then
+					os.pullEvent = old
+					break					
+				end
+			end
 			return
 		end
 		local old = os.pullEvent
@@ -1318,7 +1339,20 @@ end
 	sPhone.lock = login
 	sPhone.login = login
 
-	local newVersion = http.get("https://raw.githubusercontent.com/BeaconNet/sPhone/master/src/version").readLine()
+	http.request("https://raw.githubusercontent.com/BeaconNet/sPhone/master/src/version")
+	local newVersion
+	local timeout = os.startTimer(2)
+	while true do
+		local event,url, sourceText = os.pullEvent()
+		if event == "http_success" then
+			newVersion = sourceText.readLine()
+			sourceText.close()
+			break
+		elseif event == "http_failure" then
+			newVersion = sPhone.version
+			break
+		end
+	end
 	
 	if newVersion ~= sPhone.version then
 		sPhone.newUpdate = true
@@ -1334,7 +1368,7 @@ end
 
 end
 if not sPhone then
-	kernel(...)
+	kernel({...})
 else
 	print("sPhone already started")
 end
