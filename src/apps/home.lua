@@ -6,10 +6,9 @@
 			{"sPhone.shell",2,3,8,5,colors.black,colors.yellow," Shell",2},
 			{"sPhone.lock",19,3,24,5,colors.lightGray,colors.black," Lock",2},
 			{"sPhone.chat",11,3,16,5,colors.black,colors.white," Chat",2},
-			{"sPhone.kst",2,7,8,9,colors.green,colors.white," Krist",2},
 			{"sPhone.gps",11,7,15,9,colors.red,colors.black," GPS",2},
 			{"sPhone.info",18,7,23,9,colors.lightGray,colors.black," Info",2},
-			{"sPhone.store",2,11,8,13,colors.orange,colors.white," Store",2},
+			{"sPhone.store",2,7,8,9,colors.orange,colors.white," Store",2},
 		}
 		
 		
@@ -17,7 +16,6 @@
 			["sPhone.shell"] = "/.sPhone/apps/shell",
 			["sPhone.chat"] = "/.sPhone/apps/chat",
 			["sPhone.gps"] = "/.sPhone/apps/gps",
-			["sPhone.kst"] = "/.sPhone/apps/kstwallet",
 			["sPhone.info"] = "/.sPhone/apps/system/info",
 			["sPhone.store"] = "/.sPhone/apps/store",
 			["sPhone.appsButton"] = "/.sPhone/apps/appList",
