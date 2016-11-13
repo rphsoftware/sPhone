@@ -25,16 +25,12 @@ local files = {
 	
 	["src/apis/sha256.lua"] = "/.sPhone/apis/sha256",
 	["src/apis/visum.lua"] = "/.sPhone/apis/visum",
-	["src/apis/graphics.lua"] = "/.sPhone/apis/graphics",
-	["src/apis/ui.lua"] = "/.sPhone/apis/ui",
 	["src/apis/base64.lua"] = "/.sPhone/apis/base64",
 	["src/apis/config.lua"] = "/.sPhone/apis/config",
-	["src/apis/shttp.lua"] = "/.sPhone/apis/shttp",
-	["src/apis/compress.lua"] = "/.sPhone/apis/compress",
 	["src/apis/task.lua"] = "/.sPhone/apis/task",
-	["src/apis/proc.lua"] = "/.sPhone/apis/proc",
 	["src/apis/temp.lua"] = "/.sPhone/apis/temp",
 	["src/apis/aes.lua"] = "/.sPhone/apis/aes",
+	["src/apis/bigfont.lua"] = "/.sPhone/apis/bigfont",
 	
 	["src/bin/wget.lua"] = "/bin/wget",
 	["src/bin/halt.lua"] = "/bin/halt",
@@ -47,13 +43,11 @@ local files = {
 	["src/apps/system/settings.lua"] = "/.sPhone/apps/system/settings",
 	["src/apps/system/info.lua"] = "/.sPhone/apps/system/info",
 	["src/apps/themes.lua"] = "/.sPhone/apps/themes",
-	["src/apps/kstwallet.lua"] = "/.sPhone/apps/kstwallet",
 	["src/apps/store.lua"] = "/.sPhone/apps/store",
 	["src/apps/shell.lua"] = "/.sPhone/apps/shell",
 	["src/apps/appList.lua"] = "/.sPhone/apps/appList",
 	["src/apps/home.lua"] = "/.sPhone/apps/home",
 	["src/apps/chat.lua"] = "/.sPhone/apps/chat",
-	
 	["src/apps/gps.lua"] = "/.sPhone/apps/gps",
 	
 	["src/interfaces/login"] = "/.sPhone/interfaces/login",
