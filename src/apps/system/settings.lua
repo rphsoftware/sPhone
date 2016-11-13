@@ -22,21 +22,23 @@ local function clear()
 end
 
 local function changeUsername()
-	local newUsername
+	local newUsername = sPhone.user
 	term.setBackgroundColor(sPhone.theme["backgroundColor"])
 	term.clear()
 	term.setCursorPos(1,1)
-	sPhone.header(sPhone.user)
+	sPhone.header("New username")
 	term.setCursorPos(w,1)
 	term.setBackgroundColor(sPhone.theme["header"])
 	term.setTextColor(sPhone.theme["headerText"])
 	write("X")
 	term.setBackgroundColor(sPhone.theme["backgroundColor"])
 	term.setTextColor(sPhone.theme["text"])
-	visum.align("center","  New Username",false,3)
-	term.setCursorPos(2,5)
-	write("Username: ")
+	term.setCursorPos(2,7)
+	print("Change your username.")
+	print(" It affects chat app.")
 	while true do
+		term.setCursorPos(2,4)
+		term.clearLine()
 		newUsername,mouse,x,y = sPhone.read(nil,nil,nil,true,newUsername)
 		if mouse then
 			if y == 1 and x == w then
@@ -48,7 +50,7 @@ local function changeUsername()
 	end
 	sPhone.user = newUsername
 	config.write("/.sPhone/config/sPhone","username",newUsername)
-	sPhone.winOk("Username","Changed")
+	sPhone.winOk("Username","changed")
 end
 
 local function changePassword()
@@ -177,18 +179,20 @@ local function changePassword()
 end
 
 local function changeLabel()
-	local newLabel
-	sPhone.header(sPhone.user)
-	visum.align("center", "  Set Label",false,3)
+	local newLabel = os.getComputerLabel()
+	sPhone.header("New Label")
 	term.setCursorPos(w,1)
 	term.setBackgroundColor(sPhone.theme["header"])
 	term.setTextColor(sPhone.theme["headerText"])
 	write("X")
 	term.setBackgroundColor(sPhone.theme["backgroundColor"])
 	term.setTextColor(sPhone.theme["text"])
-	term.setCursorPos(2,5)
+	term.setCursorPos(2,7)
+	print("Change computer label")
+	print(" to be identified")
+	print(" in your inventory.")
 	while true do
-		term.setCursorPos(2,5)
+		term.setCursorPos(2,4)
 		term.clearLine()
 		newLabel,mouse,x,y = sPhone.read(nil,nil,nil,true,newLabel)
 		if mouse then
@@ -205,7 +209,12 @@ local function changeLabel()
 end
 
 local function clearLabel()
-	os.setComputerLabel(nil)
+	local ok, err = pcall(function() os.setComputerLabel(nil) end)
+	if not ok then
+		os.setComputerLabel(err)
+		sPhone.winOk("Error")
+		return
+	end
 	sPhone.winOk("Computer Label cleared")
 end
 
