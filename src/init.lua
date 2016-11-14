@@ -43,7 +43,6 @@ local function crash(err)
 	end
 	print("Contact sPhone devs:")
 	print("GitHub: BeaconNet/sPhone")
-	print("E-Mail: info@sertex.x10.bz")
 	print("Thanks for using sPhone")
 	print("Press any key")
 	repeat
