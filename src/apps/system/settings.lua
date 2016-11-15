@@ -357,20 +357,34 @@ local function defaultApps()
 	elseif id == 1 then
 		
 		while true do
-			local defaultHome = sPhone.list()
+			local hList = {
+				["sphone.home"] = "sPhone Home",
+			}
+			
+			for k,v in pairs(config.list("/.sPhone/config/spklist")) do
+				local f = fs.open("/.sPhone/apps/spk/"..k.."/.spk","r")
+				local data = f.readAll()
+				f.close()
+				data = textutils.unserialise(data)
+				if data.type == "home" then
+					hList[k] = v
+				end
+			end
+			
+			local defaultHome = sPhone.list(nil,{
+				list = hList,
+				pairs = true,
+				title = " Default Home",
+			})
 			
 			if not defaultHome then
-				sPhone.setDefaultApp("home","/.sPhone/apps/home")
+				sPhone.setDefaultApp("home","sphone.home")
 				sPhone.winOk("Done!","Reboot to apply")
 				break
 			else
-				if fs.exists("/"..defaultHome) and not fs.isDir("/"..defaultHome) then
-					sPhone.setDefaultApp("home","/"..defaultHome)
-					sPhone.winOk("Done!","Reboot to apply")
-					break
-				else
-					sPhone.winOk("App not found")
-				end
+				sPhone.setDefaultApp("home",defaultHome)
+				sPhone.winOk("Done!","Reboot to apply")
+				break
 			end
 		end
 	end
