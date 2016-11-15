@@ -1164,6 +1164,10 @@ end
 			local homeSPKs = {
 				"sphone.home",
 			}
+			
+			if not config.read("/.sPhone/config/spklist","sphone.home") then
+				sPhone.install("/.sPhone/apps/home.spk")
+			end
 			os.pullEvent = os.oldPullEvent
 			term.setBackgroundColor(colors.black)
 			term.setTextColor(colors.white)
