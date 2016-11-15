@@ -11,7 +11,7 @@ end
 local dir = args[1]
 local output = args[2]
 local final = {}
-local builderVersion = 1.1
+local builderVersion = 1.2
 
 if not fs.exists(dir) or not fs.isDir(dir) then
 	print("Input must be a folder")
@@ -59,12 +59,21 @@ end
 
 local result = {}
 
+_config.type = (_config.type or "app")
+local hidden = false
+
+if _config.hidden then
+	hidden = "true"
+end
 
 print("Name:",_config.name)
 print("Author:",_config.author)
 print("Version:",_config.version)
+print("Type:",_config.type)
 print("ID:",_config.id)
 print("Main:",_config.main)
+print("Type:",_config.type)
+print("Hidden:",hidden)
 
 
 if not _config.id then
@@ -78,6 +87,11 @@ if not _config.main then
 	print("Build aborted")
 	return
 end
+
+if not _config.type then
+	_config.type = "app"
+end
+
 
 if string.getExtension(output) ~= "spk" then
 	output = output..".spk"
