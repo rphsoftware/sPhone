@@ -6,7 +6,6 @@ local function clear()
 end
 clear()
 sPhone.header("Info", "X")
-print("")
 print("ID: "..os.getComputerID())
 print("User: "..sPhone.user)
 if os.getComputerLabel() then
@@ -26,5 +25,4 @@ while true do
   if y == 1 and x == w then
     return
   end
-  sleep(0)
 end
