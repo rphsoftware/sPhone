@@ -1,31 +1,23 @@
 local spkList = "/.sPhone/config/spklist"
-local dir = "/.sPhone/spk/"
+local dir = "/.sPhone/apps/spk/"
 if not fs.exists(spkList) then
 	config.list("/.sPhone/config/spklist")
 end
 		
-		local _list = config.list("/.sPhone/config/spklist")
-		
 		local apps = {}
-		
-		for k, v in pairs(_list) do
-			if fs.isDir("/.sPhone/spk/"..k) then
-				if fs.exists(dir..k.."/.spk") then
-					local nDir = dir..k.."/.spk"
-					pDir = dir..k.."/.spk"
-					local name = config.read(pDir,"name")
-					local author = config.read(pDir,"author")
-					local version = config.read(pDir,"version")
-					local id = k
-				end
-			end
-		end
 		
 		for k,v in pairs(config.list(spkList)) do
 			table.insert(apps,{
 				id = k,
 				name = v,
 			})
+		end
+		
+		for k,v in ipairs(apps) do
+			local hid = config.read(dir..v.id.."/.spk","hidden")
+			if hid then
+				table.remove(apps,k)
+			end
 		end
 		
 		local function drawHome()
