@@ -109,7 +109,7 @@ while true do
 			
 			while true do
 				local _,_,mx,my = os.pullEvent("mouse_click")
-				if my == 1 and x == mw then
+				if my == 1 and mx == w then
 					break
 				elseif (mx >= 19 and mx <= 25) and my == 4 then
 					if config.read("/.sPhone/config/spklist",_conf.id) then
