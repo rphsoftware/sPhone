@@ -118,10 +118,6 @@ local function kernel(...)
 		end
 	end
 	
-	if runningOnStartup then
-		fs.open("/startup","r")
-	end
-	
 	if config.read("/.sPhone/config/sPhone","username") then
 		sPhone.user = config.read("/.sPhone/config/sPhone","username")
 	end
