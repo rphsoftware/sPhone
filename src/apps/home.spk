@@ -1,6 +1,6 @@
 --
 -- sPhone Application Package
--- Built with SPK builder 1.1
+-- Built with SPK builder 1.2
 --
 {
   files = "{\
@@ -138,11 +138,12 @@
 \",\
 }",
   config = "{\
-  type = \"home\",\
-  author = \"BeaconNet\",\
-  name = \"sPhone Home\",\
-  id = \"sphone.home\",\
-  version = 1,\
   main = \"home.lua\",\
+  id = \"sphone.home\",\
+  name = \"sPhone Home\",\
+  hidden = true,\
+  author = \"BeaconNet\",\
+  version = 1,\
+  type = \"home\",\
 }",
 }
