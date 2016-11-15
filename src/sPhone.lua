@@ -1,6 +1,6 @@
 local function kernel(...)
 	_G.sPhone = {
-		version = "Alpha 3.12",
+		version = "Alpha 3.13",
 		user = "Guest",
 		devMode = false,
 		mainTerm = term.current(),
@@ -9,7 +9,7 @@ local function kernel(...)
 	
 	if safemode then
 		sPhone.safeMode = true
-		_G.safemode = nil
+		safemode = nil
 	end
 	
 	sPhone.defaultApps = {
@@ -69,7 +69,7 @@ local function kernel(...)
 			elseif string.lower(k) == "n" then
 				print("Cannot delete config without user authorization")
 				print("Delete aborted")
-				print("Shuttind down...")
+				print("Shutting down...")
 				error("Config corrupted",0)
 			end
 		end
@@ -136,7 +136,7 @@ local function kernel(...)
 		sPhone.crash = crash
 	end
 	
-	_G.crash = nil
+	crash = nil
 	
 	function os.version()
 		return "sPhone "..sPhone.version
@@ -241,6 +241,8 @@ local function kernel(...)
 		opt.fg3 = opt.fg3 or sPhone.getTheme("headerText")
 		opt.output = opt.output or true
 		opt.list = opt.list or false
+		opt.pairs = opt.pairs or false
+		opt.title = opt.title or false
 		if not path then
 			path = ""
 		end
@@ -249,6 +251,7 @@ local function kernel(...)
 		end
 		local scroll = 0
 		local items
+		local cho = {}
 		local w, h
 		local function rebuild()
 			local files, dirs = {}, {}
@@ -259,7 +262,15 @@ local function kernel(...)
 			else
 				flist = opt.list
 			end
-			for i, v in ipairs(flist) do
+			
+			local function pair(tab)
+				if opt.pairs then
+					return pairs(tab)
+				end
+				return ipairs(tab)
+			end
+			
+			for i, v in pair(flist) do
 				if fs.isDir(fs.combine(path, v)) then
 					table.insert(dirs, v)
 				else
@@ -268,11 +279,17 @@ local function kernel(...)
 			end
 			table.sort(files)
 			table.sort(dirs)
-			for i, v in ipairs(dirs) do
+			for i, v in pair(dirs) do
 				table.insert(items, v)
 			end
-			for i, v in ipairs(files) do
+			for i, v in pair(files) do
 				table.insert(items, v)
+			end
+			
+			if opt.pairs then
+				for k, v in pairs(flist) do
+					cho[v] = k
+				end
 			end
 			scroll = 0
 		end
@@ -307,6 +324,9 @@ local function kernel(...)
 			local _path = path .. "/"
 			if #_path > w - 2 then
 				_path = ".." .. _path:sub(-w + 4)
+			end
+			if opt.title then
+				_path = opt.title
 			end
 			term.write(_path)
 			term.setBackgroundColor(opt.bg3)
@@ -350,6 +370,9 @@ local function kernel(...)
 							rebuild()
 						else
 							if opt.output then
+								if opt.pairs then
+									return cho[fullPath], fullPath
+								end
 								return fullPath
 							end
 						end
@@ -728,7 +751,7 @@ local function kernel(...)
     end
 	
     local termWidth, termHeight = term.getSize()
-    local drawSize = termHeight - 6
+    local drawSize = termHeight - 2
 	
     local function maxPages()
     local itemCount = #items
@@ -775,16 +798,15 @@ local function kernel(...)
 		term.setTextColor(sPhone.theme["text"])
 		term.clear()
     term.setCursorPos(1,1)
-		sPhone.header("",closeButton)
-		term.setCursorPos(1,3)
 		if not title then
-			title = "  sPhone"
+			title = ""
 		end
-		cprint("  "..title)
+		sPhone.header(title,closeButton)
+		term.setCursorPos(1,3)
 		if moreTitle then
 			head = moreTitle
 		else
-			head = {"\n",}
+			head = {}
 			if not allowNil or allowNil == true then
 				--head[3] = 'Terminate to cancel.'
 			end
@@ -835,9 +857,9 @@ local function kernel(...)
 		if eventData[1] == 'mouse_click' then
 			if eventData[4] == 1 and eventData[3] == termWidth then
 				return false, 0
-			elseif eventData[4] > 3 then
+			elseif eventData[4] > 2 then
 				clear()
-				selected = (eventData[4]-6+((page-1)*drawSize))+1
+				selected = (eventData[4]-3+((page-1)*drawSize))+1
 				if selected then
 					return items[selected], selected
 				end
@@ -1117,6 +1139,10 @@ end
 						return (_config.version or nil)
 					end,
 					
+					getType = function()
+						return (_config.type or nil)
+					end,
+					
 					open = function(file, mode)
 						return fs.open("/.sPhone/apps/spk/".._config.id.."/data/"..file,mode)
 					end,
@@ -1135,21 +1161,24 @@ end
 	local function home()
 		sPhone.inHome = true
 		while true do
+			local homeSPKs = {
+				"sphone.home",
+			}
 			os.pullEvent = os.oldPullEvent
 			term.setBackgroundColor(colors.black)
 			term.setTextColor(colors.white)
 			term.clear()
 			term.setCursorPos(1,1)
-			local homePath = sPhone.getDefaultApp("home")
+			local homeID = sPhone.getDefaultApp("home")
 			if not sPhone.safeMode then
-				if not fs.exists(homePath) then
-					homePath = "/.sPhone/apps/home"
+				if not config.list("/.sPhone/config/spklist")[homeID] then
+					homeID = "sphone.home"
 				end
 			else
-				homePath = "/.sPhone/apps/home"
+				homeID = "sphone.home"
 			end
 			
-			temp.set("homePID",task.add(function() shell.run(homePath) end))
+			temp.set("homePID",task.add(function() sPhone.launch(homeID) end))
 			task.run()
 			
 		end
@@ -1171,7 +1200,7 @@ end
 			}
 			while true do
 				local w,h = term.getSize()
-				local clockS = textutils.formatTime(os.time(),true)
+				local clockS = textutils.formatTime(os.time(), not config.read("/.sPhone/config/sPhone","format12time"))
 				term.setBackgroundColor(sPhone.theme["lock.background"])
 				term.clear()
 				term.setCursorPos(1,1)
@@ -1181,7 +1210,7 @@ end
 				term.setCursorPos(6,4)
 				bigfont.bigPrint(clockS)
 				visum.align("center"," Slide to unlock",false,h)
-				local clockUpdate = os.startTimer(0.3)
+				local clockUpdate = os.startTimer(1)
 				local e = {os.pullEvent()}
 				if fEvents[e[1]] then
 					os.pullEvent = old
@@ -1234,6 +1263,9 @@ end
 			local w, h = term.getSize()
 			local skipped = false
 			sPhone.firstBoot = true
+			
+			sPhone.install("/.sPhone/apps/home.spk")
+			
 			while not skipped do
 				
 				term.setBackgroundColor(sPhone.theme["lock.background"])
