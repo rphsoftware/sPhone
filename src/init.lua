@@ -98,10 +98,10 @@ local function recovery()
 			fs.delete("/.sPhone/cache")
 			os.reboot()
 		elseif k == 5 then
-			_G.safemode = false
+			safemode = false
 			break
 		elseif k == 6 then
-			_G.safemode = true
+			safemode = true
 			break
 		end
 	end
@@ -134,17 +134,11 @@ end
 			break
 		end
 	end
-	
-_G.crash = crash
 
 if not fs.exists("/.sPhone/sPhone") then
 	crash("No OS found")
 end
 
-	local fscript = fs.open("/.sPhone/sPhone","r")
-	local script = fscript.readAll()
-	fscript.close()
-	
 	
 local runningOnStartup
 
@@ -190,11 +184,17 @@ end
 
 os.pullEvent = os.oldPullEvent
 
-local ok, err = pcall(function() setfenv(loadstring(script),getfenv())() end)
+local ok, err = pcall(function()
+	setfenv(loadfile("/.sPhone/sPhone"), setmetatable({
+		crash = crash,
+		safemode = safemode,
+		runningOnStartup = runningOnStartup,
+	}, {__index = getfenv()}))()
+end)
 	
 if not ok then
 	crash(err)
 end
 
-crash("Something went wrong...")
+crash("sPhone stopped running!")
 _G.term = nil -- The OS ends here - This string force to crash the pda to shutdown
