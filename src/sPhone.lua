@@ -1,6 +1,6 @@
 local function kernel(...)
 	_G.sPhone = {
-		version = "Alpha 3.13",
+		version = "Alpha Pi",
 		user = "Guest",
 		devMode = false,
 		mainTerm = term.current(),
@@ -13,7 +13,7 @@ local function kernel(...)
 	end
 	
 	sPhone.defaultApps = {
-		["home"] = "/.sPhone/apps/home",
+		["home"] = "sphone.home",
 	}
 	
 	sPhone.theme = { --Default colors
