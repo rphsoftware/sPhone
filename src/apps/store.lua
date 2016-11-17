@@ -1,9 +1,10 @@
-local host = "https://raw.github.com/Sertex-Team/sPhone-Store/master/"
+local host = "https://raw.github.com/BeaconNet/sPhone-Store/master/"
 local index = host.."index.lua"
 local apps = host.."apps/"
 local appsL = {}
 local w, h = term.getSize()
-local function redrawM()
+
+local function redraw()
 	term.setBackgroundColor(colors.white)
 	term.setTextColor(colors.black)
 	term.clear()
@@ -17,12 +18,12 @@ local function redrawM()
 	term.setCursorPos(1,3)
 end
 
-local function install(ap)
-	local data = http.get("https://raw.github.com/Sertex-Team/sPhone-Store/master/apps/"..ap.path).readAll()
-	local f = fs.open("/tmp/sPhoneStore/"..ap.id..".spk","w")
+local function install(path,name)
+	local data = http.get("https://raw.github.com/BeaconNet/sPhone-Store/master/apps/"..path).readAll()
+	local f = fs.open("/tmp/sPhoneStore/"..name..".spk","w")
 	f.write(data)
 	f.close()
-	local status = sPhone.install("/tmp/sPhoneStore/"..ap.id..".spk")
+	local status = sPhone.install("/tmp/sPhoneStore/"..name..".spk")
 	if status then
 		sPhone.winOk("Installed")
 	else
@@ -30,7 +31,7 @@ local function install(ap)
 	end
 end
 
-redrawM()
+redraw()
 
 term.setCursorPos(1,2)
 visum.align("center","  Loading",false,2)
@@ -40,21 +41,8 @@ local c = http.get(index).readAll()
 
 local appsIndex = textutils.unserialize(c)
 
-function redrawA()
-	for k,v in pairs(appsIndex) do
-		print(v)
-		table.insert(appsL, {
-			path = k,
-			id = v,
-		})
-	end
-end
+redraw()
 
-local function redraw()
-	redrawM()
-	redrawA()
-end
-redrawA()
 local mx,my = term.getCursorPos()
 term.setCursorPos(1,2)
 term.clearLine()
@@ -62,18 +50,27 @@ term.setCursorPos(mx,my)
 
 
 while true do
-	redraw()
-	local _, _, x, y = os.pullEvent("mouse_click")
-	if x == w and y == 1 then
-		break
+	local path,name = sPhone.list(nil,{
+		title = " Store",
+		pairs = true,
+		list = appsIndex,
+		bg1 = colors.white,
+		fg1 = colors.black,
+		bg2 = colors.green,
+		fg2 = colors.white,
+		bg3 = colors.green,
+		fg3 = colors.white,
+	})
+	
+	if not path then
+		return
 	end
 	
-	if appsL[y-2] then
-		local data = http.get("https://raw.github.com/Sertex-Team/sPhone-Store/master/apps/"..appsL[y-2].path).readAll()
+		local data = http.get("https://raw.github.com/BeaconNet/sPhone-Store/master/apps/"..path).readAll()
 		data = textutils.unserialise(data)
 		if data then
 			local _conf = textutils.unserialise(data.config)
-			redrawM()
+			redraw()
 			term.setCursorPos(2,3)
 			print(_conf.name)
 			term.setCursorPos(2,6)
@@ -118,7 +115,7 @@ while true do
 						end
 						config.write("/.sPhone/config/spklist",_conf.id,nil)
 					else
-						install(appsL[y-2])
+						install(path,name)
 					end
 					break
 				end
@@ -130,4 +127,3 @@ while true do
 		
 		
 	end
-end
