@@ -1185,6 +1185,7 @@ end
 			
 			temp.set("homePID",task.add(function() sPhone.launch(homeID) end))
 			task.run()
+			sleep(0)
 			
 		end
 		sPhone.inHome = false
