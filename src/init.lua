@@ -96,6 +96,8 @@ local function recovery()
 		elseif k == 4 then
 			fs.delete("/.sPhone/config")
 			fs.delete("/.sPhone/cache")
+			fs.delete("/.sPhone/apps/spk")
+			fs.delete("/.sPhone/autorun")
 			os.reboot()
 		elseif k == 5 then
 			safemode = false
@@ -129,14 +131,16 @@ end
 		if e == "key" and k == 56 then
 			recovery()
 			break
-		elseif e == "timer" then
-			_G.safemode = false
+		elseif e == "timer" and k == bootTimer then
+			safemode = false
 			break
 		end
 	end
 
 if not fs.exists("/.sPhone/sPhone") then
-	crash("No OS found")
+	printError("sPhone not installed")
+	shell.run("/.sPhone/init -u")
+	return
 end
 
 	
@@ -178,23 +182,16 @@ if argData["-u"] then
 	setfenv(loadstring(http.get("https://raw.githubusercontent.com/BeaconNet/sPhone/master/src/installer.lua").readAll()),getfenv())()
 end
 
-if argData["-s"] then
-	runningOnStartup = true
-end
-
 os.pullEvent = os.oldPullEvent
 
 local ok, err = pcall(function()
 	setfenv(loadfile("/.sPhone/sPhone"), setmetatable({
 		crash = crash,
 		safemode = safemode,
-		runningOnStartup = runningOnStartup,
 	}, {__index = getfenv()}))()
 end)
 	
 if not ok then
 	crash(err)
 end
-
-crash("sPhone stopped running!")
 _G.term = nil -- The OS ends here - This string force to crash the pda to shutdown
