@@ -1,6 +1,6 @@
 local function kernel(...)
 	_G.sPhone = {
-		version = "Alpha Pi",
+		version = "Beta 1",
 		user = "Guest",
 		devMode = false,
 		mainTerm = term.current(),
@@ -301,7 +301,12 @@ local function kernel(...)
 				local str = items[i]
 				if str then
 					term.setCursorPos(2, 1 + i - scroll)
-					local isDir = fs.isDir(fs.combine(path, str))
+					local isDir
+					if not pairs then
+						isDir = fs.isDir(fs.combine(path, str))
+					else
+						isDir = false
+					end
 					term.setTextColor(isDir and opt.fg1b or opt.fg1)
 					local _w = w - (isDir and 2 or 1)
 					if #str > _w then
@@ -342,8 +347,8 @@ local function kernel(...)
 				return nil
 			elseif ev[1] == "mouse_scroll" and ev[4] > 1 then
 				scroll = scroll + ev[2]
-			elseif ev[1] == "mouse_click" and ev[2] == 1 then
-				if ev[3] == w then
+			elseif ev[1] == "mouse_click" then
+				if ev[3] == w and ev[2] == 1 then
 					if ev[4] == 1 then
 						return nil
 					elseif ev[4] == 2 then
@@ -351,7 +356,7 @@ local function kernel(...)
 					elseif ev[4] == h then
 						scroll = scroll + 1
 					end
-				elseif ev[3] < w and ev[4] == 1 then
+				elseif ev[3] < w and ev[4] == 1 and ev[2] == 1 then
 					path = fs.getDir(path)
 					if path == ".." then
 						path = ""
@@ -367,9 +372,9 @@ local function kernel(...)
 						else
 							if opt.output then
 								if opt.pairs then
-									return cho[fullPath], fullPath
+									return cho[fullPath], fullPath, ev[2]
 								end
-								return fullPath
+								return fullPath, ev[2]
 							end
 						end
 					end
@@ -1264,7 +1269,9 @@ end
 			local skipped = false
 			sPhone.firstBoot = true
 			
-			sPhone.install("/.sPhone/apps/home.spk")
+			for k,v in ipairs(fs.list("/.sPhone/apps/system")) do
+				sPhone.install("/.sPhone/apps/system/"..v)
+			end
 			
 			while not skipped do
 				
