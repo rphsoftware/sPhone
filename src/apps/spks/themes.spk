@@ -1,0 +1,50 @@
+--
+-- sPhone Application Package
+-- Built with SPK builder 1.2
+--
+{
+  files = "{\
+  [ \"themes.lua\" ] = \"if not sPhone then\\r\\\
+	printError(\\\"sPhone must be installed and loaded before running this program\\\")\\r\\\
+	return\\r\\\
+end\\r\\\
+\\r\\\
+\\r\\\
+print(\\\"Downloading theme list\\\")\\r\\\
+local url = \\\"https://raw.github.com/Ale32bit/sPhone-Mods/master/themes.lua\\\"\\r\\\
+\\r\\\
+local ht = http.get(url)\\r\\\
+local themesRaw = ht.readAll()\\r\\\
+local themes = textutils.unserialize(themesRaw)\\r\\\
+ht.close()\\r\\\
+\\r\\\
+local li = {}\\r\\\
+for k,v in pairs(themes) do\\r\\\
+	table.insert(li,k)\\r\\\
+end\\r\\\
+while true do\\r\\\
+	local g, c = sPhone.menu(li,\\\"  Themes\\\",\\\"X\\\")\\r\\\
+	if c == 0 then\\r\\\
+		return\\r\\\
+	elseif c > #li then\\r\\\
+	\\r\\\
+	else\\r\\\
+		for k,v in pairs(themes[g]) do\\r\\\
+			sPhone.applyTheme(k,v)\\r\\\
+		end\\r\\\
+		sPhone.winOk(\\\"Theme applied\\\")\\r\\\
+		break\\r\\\
+	end\\r\\\
+end\\r\\\
+\",\
+}",
+  config = "{\
+  type = \"app\",\
+  name = \"Theme List\",\
+  version = 1,\
+  main = \"themes.lua\",\
+  id = \"sphone.themes\",\
+  author = \"BeaconNet\",\
+  hidden = true,\
+}",
+}

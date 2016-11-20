@@ -1,0 +1,93 @@
+--
+-- sPhone Application Package
+-- Built with SPK builder 1.2
+--
+{
+  files = "{\
+  [ \"appList.lua\" ] = \"local apps = {}\\r\\\
+local function update()\\r\\\
+	apps = config.list(\\\"/.sPhone/config/spklist\\\")\\r\\\
+	for k,v in pairs(apps) do\\r\\\
+		local h = config.read(\\\"/.sPhone/apps/spk/\\\"..k..\\\"/.spk\\\",\\\"hidden\\\")\\r\\\
+		if h then\\r\\\
+			apps[k] = nil\\r\\\
+		end\\r\\\
+	end\\r\\\
+end\\r\\\
+local function menu(id)\\r\\\
+	local data = config.list(\\\"/.sPhone/apps/spk/\\\"..id..\\\"/.spk\\\")\\r\\\
+	if data then\\r\\\
+		term.setBackgroundColor(sPhone.theme[\\\"backgroundColor\\\"])\\r\\\
+		term.setTextColor(sPhone.theme[\\\"text\\\"])\\r\\\
+		term.clear()\\r\\\
+		sPhone.header(\\\" Apps\\\",\\\"X\\\")\\r\\\
+		term.setCursorPos(2,3)\\r\\\
+		print(data.name)\\r\\\
+		term.setCursorPos(2,6)\\r\\\
+		term.setTextColor(colors.black)\\r\\\
+		print(\\\"Author:\\\")\\r\\\
+		term.setTextColor(colors.gray)\\r\\\
+		term.setCursorPos(2,7)\\r\\\
+		print(data.author)\\r\\\
+		term.setCursorPos(2,9)\\r\\\
+		term.setTextColor(colors.black)\\r\\\
+		print(\\\"Type:\\\")\\r\\\
+		term.setTextColor(colors.gray)\\r\\\
+		term.setCursorPos(2,10)\\r\\\
+		print((data.type or \\\"Normal\\\"))\\r\\\
+		term.setCursorPos(2,12)\\r\\\
+		term.setTextColor(colors.black)\\r\\\
+		print(\\\"Version:\\\")\\r\\\
+		term.setTextColor(colors.gray)\\r\\\
+		term.setCursorPos(2,13)\\r\\\
+		print(data.version)\\r\\\
+		paintutils.drawLine(19,4,25,4,colors.red)\\r\\\
+		term.setTextColor(colors.white)\\r\\\
+		term.setCursorPos(19,4)\\r\\\
+		write(\\\"Delete\\\")\\r\\\
+		local w,h = term.getSize()\\r\\\
+		while true do\\r\\\
+			local _,_,mx,my = os.pullEvent(\\\"mouse_click\\\")\\r\\\
+			if my == 1 and mx == w then\\r\\\
+				break\\r\\\
+			elseif (mx >= 19 and mx <= 25) and my == 4 then\\r\\\
+				if fs.exists(\\\"/.sPhone/apps/spk/\\\"..data.id) then\\r\\\
+					fs.delete(\\\"/.sPhone/apps/spk/\\\"..data.id)\\r\\\
+				end\\r\\\
+				config.write(\\\"/.sPhone/config/spklist\\\",data.id,nil)\\r\\\
+				break\\r\\\
+			end\\r\\\
+		end\\r\\\
+	end\\r\\\
+end\\r\\\
+\\r\\\
+update()\\r\\\
+\\r\\\
+while true do\\r\\\
+	local id, _, mouse = sPhone.list(nil,{\\r\\\
+		list = apps,\\r\\\
+		pairs = true,\\r\\\
+		title = \\\" Apps\\\"\\r\\\
+	})\\r\\\
+	if not id then\\r\\\
+		break\\r\\\
+	end\\r\\\
+	if mouse == 1 then\\r\\\
+		sPhone.launch(id)\\r\\\
+		break\\r\\\
+	elseif mouse == 2 then\\r\\\
+		menu(id)\\r\\\
+		update()\\r\\\
+	end\\r\\\
+end\",\
+}",
+  config = "{\
+  type = \"app\",\
+  name = \"Apps\",\
+  version = 1,\
+  main = \"appList.lua\",\
+  id = \"sphone.appList\",\
+  author = \"BeaconNet\",\
+  hidden = true,\
+}",
+}

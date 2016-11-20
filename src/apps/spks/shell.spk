@@ -1,0 +1,23 @@
+--
+-- sPhone Application Package
+-- Built with SPK builder 1.2
+--
+{
+  files = "{\
+  [ \"shell.lua\" ] = \"term.setBackgroundColor(colors.black)\\\
+term.setTextColor(colors.white)\\\
+term.clear()\\\
+term.setCursorPos(1,1)\\\
+shell.run(\\\"/rom/programs/shell\\\")\\\
+\",\
+}",
+  config = "{\
+  type = \"app\",\
+  name = \"Shell\",\
+  version = 1,\
+  main = \"shell.lua\",\
+  id = \"sphone.shell\",\
+  author = \"BeaconNet\",\
+  hidden = true,\
+}",
+}
