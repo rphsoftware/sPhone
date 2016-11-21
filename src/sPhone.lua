@@ -203,7 +203,7 @@ local function kernel(...)
 	end
 	
 	if not fs.exists("/.sPhone/config/defaultApps") then
-		sPhone.setDefaultApp("home","/.sPhone/apps/home")
+		sPhone.setDefaultApp("home","sphone.home")
 	end
 	
 	function string.getExtension(name)
