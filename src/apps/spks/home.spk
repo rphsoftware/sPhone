@@ -81,7 +81,7 @@
 						sPhone.inHome = true\\\
 					elseif x > 10 and x < 19 then\\\
 						sPhone.inHome = false\\\
-						shell.run(\\\"/.sPhone/apps/system/settings\\\")\\\
+						sPhone.launch(\\\"sphone.settings\\\")\\\
 						sPhone.inHome = true\\\
 						drawHome()\\\
 					end\\\
@@ -138,12 +138,12 @@
 \",\
 }",
   config = "{\
-  main = \"home.lua\",\
-  id = \"sphone.home\",\
-  name = \"sPhone Home\",\
-  hidden = true,\
-  author = \"BeaconNet\",\
-  version = 1,\
   type = \"home\",\
+  main = \"home.lua\",\
+  name = \"sPhone Home\",\
+  version = 1,\
+  id = \"sphone.home\",\
+  author = \"BeaconNet\",\
+  hidden = true,\
 }",
 }
