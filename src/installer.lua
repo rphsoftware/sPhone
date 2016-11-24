@@ -212,6 +212,20 @@ term.setCursorPos(1,12)
 term.clearLine()
 center("  "..filesDownloaded.."/"..fileCount, 12)
 
+local data = {}
+if fs.exists("/.sPhone/config/sPhone") then
+	local f = fs.open("/.sPhone/config/sPhone","r")
+	local con = f.readAll()
+	f.close()
+	con = textutils.unserialize(con)
+	data = con
+end
+
+data["updated"] = true
+local f = fs.open("/.sPhone/config/sPhone","w")
+f.write(textutils.serialize(data))
+f.close()
+
 if not fs.exists("/startup") then
 	fs.copy("/.sPhone/startup","/startup")
 end
