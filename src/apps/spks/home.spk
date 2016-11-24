@@ -4,9 +4,7 @@
 --
 {
   files = "{\
-  [ \"home.lua\" ] = \"\\\
-	\\\
-		local buttonsInHome = {\\\
+  [ \"home.lua\" ] = \"local buttonsInHome = {\\\
 			{\\\"sphone.header\\\",23,1,25,1,sPhone.theme[\\\"header\\\"],sPhone.theme[\\\"headerText\\\"],\\\"vvv\\\"},\\\
 			{\\\"sphone.appList\\\",12,20,14,20,sPhone.theme[\\\"backgroundColor\\\"],sPhone.theme[\\\"header\\\"],\\\"===\\\"},\\\
 			{\\\"sphone.shell\\\",2,3,8,5,colors.black,colors.yellow,\\\" Shell\\\",2},\\\
@@ -25,15 +23,7 @@
 	end\\\
 \\\
 		local function drawHome()\\\
-			local function box(x,y,text,bg,colorText,page)\\\
-				graphics.box(x,y,x+1+#text,y+2,bg)\\\
-				term.setCursorPos(x+1,y+1)\\\
-				term.setTextColor(colorText)\\\
-				write(text)\\\
-			end\\\
 			clear()\\\
-			\\\
-			\\\
 			visum.buttons(buttonsInHome,true)\\\
 			\\\
 			local w, h = term.getSize()\\\
@@ -46,7 +36,7 @@
 			function redraw()\\\
 				drawHome()\\\
 				local w, h = term.getSize()\\\
-				graphics.box(1,2,w,4,sPhone.theme[\\\"header\\\"])\\\
+				paintutils.drawFilledBox(1,2,w,4,sPhone.theme[\\\"header\\\"])\\\
 				term.setTextColor(sPhone.theme[\\\"headerText\\\"])\\\
 				term.setBackgroundColor(sPhone.theme[\\\"header\\\"])\\\
 				visum.align(\\\"right\\\",\\\"^^^ \\\",false,1)\\\

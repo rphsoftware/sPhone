@@ -11,14 +11,19 @@ local w,h = term.getSize()\\\
 local password\\\
 \\\
 local menu = {\\\
-	\\\"Update\\\",\\\
-	\\\"Edit Theme\\\",\\\
-	\\\"Change Username\\\",\\\
-	\\\"Change Password\\\",\\\
-	\\\"Set Label\\\",\\\
-	\\\"Clear Label\\\",\\\
-	\\\"Default Apps\\\",\\\
+	\\\"Update\\\", --1\\\
+	\\\"Edit Theme\\\", --2\\\
+	\\\"Change Username\\\", --3\\\
+	\\\"Change Password\\\", --4\\\
+	\\\"Set Label\\\", --5\\\
+	\\\"Clear Label\\\", --6\\\
+	\\\"Default Apps\\\", --7\\\
+	\\\"Hide Update\\\", --8\\\
 }\\\
+\\\
+if not config.read(\\\"/.sPhone/config/sPhone\\\",\\\"showUpdate\\\") then\\\
+	menu[8] = \\\"Show Update\\\"\\\
+end\\\
 \\\
 local function clear()\\\
 	term.setBackgroundColor(sPhone.theme[\\\"backgroundColor\\\"])\\\
@@ -397,8 +402,11 @@ local function defaultApps()\\\
 end\\\
 \\\
 while true do\\\
-	clear()\\\
-	sPhone.header(\\\"\\\",\\\"X\\\")\\\
+	if not config.read(\\\"/.sPhone/config/sPhone\\\",\\\"showUpdate\\\") then\\\
+		menu[8] = \\\"Show Update\\\"\\\
+	else\\\
+		menu[8] = \\\"Hide Update\\\"\\\
+	end\\\
 	local name, id = sPhone.menu(menu, \\\"Settings\\\",\\\"X\\\")\\\
 	if id == 0 then\\\
 		task.kill(temp.get(\\\"homePID\\\"))\\\
@@ -417,6 +425,8 @@ while true do\\\
 		clearLabel()\\\
 	elseif id == 7 then\\\
 		defaultApps()\\\
+	elseif id == 8 then\\\
+		config.write(\\\"/.sPhone/config/sPhone\\\",\\\"showUpdate\\\", not config.read(\\\"/.sPhone/config/sPhone\\\",\\\"showUpdate\\\"))\\\
 	end\\\
 end\\\
 \",\
