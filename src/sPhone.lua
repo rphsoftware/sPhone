@@ -46,33 +46,9 @@ local function kernel(...)
 		end
 	end
 	
-	if not config.write("/.sPhone/config/sPhone","newConfigFormat",true) then
-		os.pullEvent = os.pullEventRaw
-		term.setBackgroundColor(colors.black)
-		term.setTextColor(colors.white)
-		term.clear()
-		term.setCursorPos(1,1)
-		printError("WARNING")
-		print("")
-		print("sPhone cannot load config file: corrupted")
-		print("To continue using sPhone all config data (.sPhone/config) will be erased")
-		printError("This action is irreversible!")
-		print("Y/N")
-		while true do
-			local _,k = os.pullEvent("char")
-			if string.lower(k) == "y" then
-				fs.delete("/.sPhone/config")
-				print("Config deleted")
-				print("Rebooting...")
-				sleep(3)
-				os.reboot()
-			elseif string.lower(k) == "n" then
-				print("Cannot delete config without user authorization")
-				print("Delete aborted")
-				print("Shutting down...")
-				error("Config corrupted",0)
-			end
-		end
+	if not config.write("/.sPhone/config/sPhone","configVersion",1) then
+		config.convert("/.sPhone/config/sPhone")
+		config.write("/.sPhone/config/sPhone","configVersion",1)
 	end
 	
 	if not fs.exists("/.sPhone/system") then
@@ -1103,7 +1079,7 @@ end
 		end
 		
 		if not fs.exists("/.sPhone/apps/spk/"..spk.."/.spk") then
-			error("Invalid SPK, .spk not found",2)
+			return false, "Invalid SPK, .spk not found"
 		end
 		
 		local f = fs.open("/.sPhone/apps/spk/"..spk.."/.spk","r")
@@ -1111,7 +1087,7 @@ end
 		f.close()
 		_config = textutils.unserialize(script)
 		if not script then
-			error("config corrupted",2)
+			return false, "config corrupted"
 		end
 		local ok, err = pcall(function()
 			setfenv(loadfile(fs.combine("/.sPhone/apps/spk",_config.id.."/files/".._config.main)), setmetatable({
@@ -1161,10 +1137,14 @@ end
 	
 	local function home()
 		sPhone.inHome = true
+		local errorCount = 0
+		local ok, err
+		local homeID
+		local homeSPKs = {
+			"sphone.home",
+		}
 		while true do
-			local homeSPKs = {
-				"sphone.home",
-			}
+			
 			
 			if not config.read("/.sPhone/config/spklist","sphone.home") then
 				sPhone.install("/.sPhone/apps/home.spk")
@@ -1174,7 +1154,13 @@ end
 			term.setTextColor(colors.white)
 			term.clear()
 			term.setCursorPos(1,1)
-			local homeID = sPhone.getDefaultApp("home")
+			if errorCount >= 5 and errorCount < 10 then
+				homeID = "sphone.home"
+			elseif errorCount >= 10 then
+				error("Cannot load home: "..err,0)
+			else
+				homeID = sPhone.getDefaultApp("home")
+			end
 			if not sPhone.safeMode then
 				if not config.list("/.sPhone/config/spklist")[homeID] then
 					homeID = "sphone.home"
@@ -1182,9 +1168,13 @@ end
 			else
 				homeID = "sphone.home"
 			end
-			
-			temp.set("homePID",task.add(function() sPhone.launch(homeID) end))
+			temp.set("homePID",task.add(function()
+				ok,err = sPhone.launch(homeID)
+			end))
 			task.run()
+			if not ok then
+				errorCount = errorCount + 1
+			end
 			sleep(0)
 			
 		end
@@ -1358,6 +1348,7 @@ end
 			else
 				name = "Guest"
 			end
+			config.write("/.sPhone/config/sPhone","showUpdate",true)
 			term.setBackgroundColor(sPhone.theme["backgroundColor"])
 			term.clear()
 			sPhone.header("Setup")
@@ -1378,6 +1369,7 @@ end
 
 	sPhone.lock = login
 	sPhone.login = login
+	local showUpdate = config.read("/.sPhone/config/sPhone","showUpdate")
 
 	http.request("https://raw.githubusercontent.com/BeaconNet/sPhone/master/src/version")
 	local newVersion
@@ -1394,10 +1386,21 @@ end
 		end
 	end
 	
-	if newVersion ~= sPhone.version then
+	if newVersion ~= sPhone.version and showUpdate then
 		sPhone.newUpdate = true
 	else
 		sPhone.newUpdate = false
+	end
+	
+	if config.read("/.sPhone/config/sPhone","updated") then
+		for k,v in pairs(fs.list("/.sPhone/apps/system")) do
+			sPhone.install("/.sPhone/apps/system/"..v)
+		end
+		config.write("/.sPhone/config/sPhone","updated",false)
+	end
+	
+	if config.read("/.sPhone/config/sPhone","showUpdate") == nil then
+		config.write("/.sPhone/config/sPhone","showUpdate", true)
 	end
 	
 	login()
