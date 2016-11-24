@@ -56,3 +56,50 @@ function list(file)
 	end
 	return data
 end
+
+function convert(cfgfile)
+	local rtn
+	local ok, err = pcall(function()
+		local path
+		if not cfgfile then
+			path = "/.lmnet/sys.conf"
+		else
+			path = cfgfile
+		end
+		local file = fs.open(path, "r")
+		if not file then
+			return nil
+		end
+		local lines = {}
+		local line = ""
+		while line ~= nil do
+			line = file.readLine()
+			if line then
+				table.insert(lines, line)
+			end
+		end
+		file.close()
+		local config = {}
+		for _, v in pairs(lines) do
+			local tmp
+			local tmp2 = ""
+			for match in string.gmatch(v, "[^\=]+") do
+				if tmp then
+					tmp2 = tmp2..match
+				else
+					tmp = match
+				end
+			end
+			config[tmp] = textutils.unserialize(tostring(tmp2))
+		end
+		rtn = config
+	end)
+	if not ok then
+		return false, err
+	end
+	fs.delete(cfgfile)
+	for k,v in pairs(rtn) do
+		write(cfgfile,k,v)
+	end
+	return true
+end
