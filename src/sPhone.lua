@@ -1405,7 +1405,7 @@ end
 	
 	login()
 	if sPhone.newUpdate then
-		sPhone.winOk("New Update!")
+		sPhone.winOk("New Update:",newVersion)
 	end
 	home()
 
