@@ -7,7 +7,7 @@ Stable: `pastebin run HsJSnhKQ`
 Dev: `pastebin run qNz53cR9` (outdated)
 
 
-SPK Support: Yes
+![test](https://raw.githubusercontent.com/BeaconNet/beaconnet.github.io/master/badge.png "Logo Title Text 1")
 
 Dates:
 
