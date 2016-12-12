@@ -7,6 +7,8 @@ Stable: `pastebin run HsJSnhKQ`
 Dev: `pastebin run qNz53cR9` (outdated)
 
 
+SPK Support: Yes
+
 Dates:
 
 Started (Alpha 1): 31/July/2015
