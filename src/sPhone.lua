@@ -1,6 +1,6 @@
 local function kernel(...)
 	_G.sPhone = {
-		version = "Beta 1.1",
+		version = "Beta 1.2",
 		user = "Guest",
 		devMode = false,
 		mainTerm = term.current(),
@@ -278,11 +278,11 @@ local function kernel(...)
 				if str then
 					term.setCursorPos(2, 1 + i - scroll)
 					local isDir
-					if not pairs then
+					 if not opt.pairs then
 						isDir = fs.isDir(fs.combine(path, str))
-					else
-						isDir = false
-					end
+					 else
+						 isDir = false
+					 end
 					term.setTextColor(isDir and opt.fg1b or opt.fg1)
 					local _w = w - (isDir and 2 or 1)
 					if #str > _w then
