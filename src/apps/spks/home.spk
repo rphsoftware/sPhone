@@ -8,8 +8,8 @@
 			{\\\"sphone.header\\\",23,1,25,1,sPhone.theme[\\\"header\\\"],sPhone.theme[\\\"headerText\\\"],\\\"vvv\\\"},\\\
 			{\\\"sphone.appList\\\",12,20,14,20,sPhone.theme[\\\"backgroundColor\\\"],sPhone.theme[\\\"header\\\"],\\\"===\\\"},\\\
 			{\\\"sphone.shell\\\",2,3,8,5,colors.black,colors.yellow,\\\" Shell\\\",2},\\\
-			{\\\"sphone.lock\\\",19,3,24,5,colors.lightGray,colors.black,\\\" Lock\\\",2},\\\
-			{\\\"sphone.chat\\\",11,3,16,5,colors.black,colors.white,\\\" Chat\\\",2},\\\
+			{\\\"sphone.explorer\\\",11,3,17,5,colors.blue,colors.white,\\\" Files\\\",2},\\\
+			{\\\"sphone.lock\\\",20,3,25,5,colors.lightGray,colors.black,\\\" Lock\\\",2},\\\
 			{\\\"sphone.gps\\\",11,7,15,9,colors.red,colors.black,\\\" GPS\\\",2},\\\
 			{\\\"sphone.info\\\",18,7,23,9,colors.lightGray,colors.black,\\\" Info\\\",2},\\\
 			{\\\"sphone.store\\\",2,7,8,9,colors.green,colors.white,\\\" Store\\\",2},\\\
