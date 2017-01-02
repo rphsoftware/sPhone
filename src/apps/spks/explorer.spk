@@ -1,0 +1,109 @@
+--
+-- sPhone Application Package
+-- Built with SPK builder 1.2
+--
+{
+  files = "{\
+  [ \"explorer.lua\" ] = \"local dir = nil\\r\\\
+\\r\\\
+local function split(inputstr, sep)\\r\\\
+        if sep == nil then\\r\\\
+                sep = \\\"%s\\\"\\r\\\
+        end\\r\\\
+        local t={} ; i=1\\r\\\
+        for str in string.gmatch(inputstr, \\\"([^\\\"..sep..\\\"]+)\\\") do\\r\\\
+                t[i] = str\\r\\\
+                i = i + 1\\r\\\
+        end\\r\\\
+        return t\\r\\\
+end\\r\\\
+\\r\\\
+local function run(path, args)\\r\\\
+	return pcall(function()\\r\\\
+		os.run(setmetatable({\\r\\\
+			shell = shell,\\r\\\
+			multishell = multishell,\\r\\\
+		}, {__index = getfenv()}), path, args)\\r\\\
+	end)\\r\\\
+end\\r\\\
+while true do\\r\\\
+	local path, mouse = sPhone.list(dir,{\\r\\\
+		fg1b = colors.green,\\r\\\
+	})\\r\\\
+	if not path then\\r\\\
+		break\\r\\\
+	end\\r\\\
+	if mouse == 1 then\\r\\\
+		run(path)\\r\\\
+	elseif mouse == 2 then\\r\\\
+		while true do\\r\\\
+			local w,h = term.getSize()\\r\\\
+			term.setBackgroundColor(sPhone.theme[\\\"backgroundColor\\\"])\\r\\\
+			term.setTextColor(sPhone.theme[\\\"text\\\"])\\r\\\
+			term.clear()\\r\\\
+			sPhone.header(fs.getName(path),\\\"X\\\")\\r\\\
+			term.setCursorPos(2,3)\\r\\\
+			write(\\\"Size: \\\")\\r\\\
+			term.setTextColor(colors.gray)\\r\\\
+			local siz = fs.getSize(path)\\r\\\
+			local text\\r\\\
+			if siz == 1 then\\r\\\
+				text = siz..\\\" byte\\\"\\r\\\
+			else\\r\\\
+				text = siz..\\\" bytes\\\"\\r\\\
+			end\\r\\\
+			print(text)\\r\\\
+			term.setTextColor(sPhone.theme[\\\"text\\\"])\\r\\\
+			term.setCursorPos(2,5)\\r\\\
+			write(\\\"Type: \\\")\\r\\\
+			term.setTextColor(colors.gray)\\r\\\
+			print(string.getExtension(fs.getName(path)) or \\\"none\\\")\\r\\\
+			term.setTextColor(sPhone.theme[\\\"text\\\"])\\r\\\
+			term.setCursorPos(2,8)\\r\\\
+			print(\\\"Actions\\\")\\r\\\
+			term.setTextColor(colors.gray)\\r\\\
+			term.setCursorPos(2,10)\\r\\\
+			print(\\\"Run with arguments\\\")\\r\\\
+			term.setCursorPos(2,11)\\r\\\
+			print(\\\"Edit\\\")\\r\\\
+			term.setCursorPos(2,12)\\r\\\
+			print(\\\"Rename\\\")\\r\\\
+			term.setCursorPos(2,13)\\r\\\
+			print(\\\"Delete\\\")\\r\\\
+			term.setTextColor(sPhone.theme[\\\"text\\\"])\\r\\\
+			local _,_,x,y = os.pullEvent(\\\"mouse_click\\\")\\r\\\
+			if y == 1 and x == w then\\r\\\
+				break\\r\\\
+			elseif y == 10 then\\r\\\
+				term.setCursorPos(2,h-1)\\r\\\
+				write(\\\"Args: \\\")\\r\\\
+				term.setTextColor(colors.gray)\\r\\\
+				shell.run(path..\\\" \\\"..read())\\r\\\
+			elseif y == 11 then\\r\\\
+				shell.run(\\\"edit\\\",path)\\r\\\
+			elseif y == 12 then\\r\\\
+				term.setCursorPos(2,h-1)\\r\\\
+				write(\\\"Rename: \\\")\\r\\\
+				term.setTextColor(colors.gray)\\r\\\
+				local oldPath = path\\r\\\
+				path = fs.getDir(path)..\\\"/\\\"..read()\\r\\\
+				fs.move(oldPath,path)\\r\\\
+			elseif y == 13 then\\r\\\
+				fs.delete(path)\\r\\\
+				break\\r\\\
+			end\\r\\\
+		end\\r\\\
+	end\\r\\\
+	dir = fs.getDir(path)\\r\\\
+end\",\
+}",
+  config = "{\
+  type = \"app\",\
+  main = \"explorer.lua\",\
+  name = \"File Explorer\",\
+  version = 1,\
+  id = \"sphone.explorer\",\
+  author = \"BeaconNet\",\
+  hidden = true,\
+}",
+}
