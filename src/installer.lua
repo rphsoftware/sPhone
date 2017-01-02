@@ -49,6 +49,7 @@ local files = {
 	["src/apps/spks/shell.spk"] = "/.sPhone/apps/system/shell.spk",
 	["src/apps/spks/store.spk"] = "/.sPhone/apps/system/store.spk",
 	["src/apps/spks/themes.spk"] = "/.sPhone/apps/system/themes.spk",
+	["src/apps/spks/explorer.spk"] = "/.sPhone/apps/system/explorer.spk",
 	
 	["src/interfaces/login"] = "/.sPhone/interfaces/login",
 	["src/interfaces/bootImage"] = "/.sPhone/interfaces/bootImage",
