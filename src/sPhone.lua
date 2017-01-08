@@ -1371,7 +1371,7 @@ end
 	sPhone.login = login
 	local showUpdate = config.read("/.sPhone/config/sPhone","showUpdate")
 
-	http.request("https://raw.githubusercontent.com/BeaconNet/sPhone/master/src/version")
+	http.request("https://raw.githubusercontent.com/SertexTeam/sPhone/master/src/version")
 	local newVersion
 	local timeout = os.startTimer(2)
 	while true do
