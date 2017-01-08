@@ -10,10 +10,10 @@ os.pullEvent = os.pullEventRaw
 
 local license = [[
 The MIT License (MIT)
-Copyright (c) 2016 BeaconNet
+Copyright (c) 2017 Sertex
 
 Read full license here:
-https://raw.github.com/BeaconNet/sPhone/master/LICENSE]]
+https://raw.github.com/SertexTeam/sPhone/master/LICENSE]]
 
 local files = {
 	["src/init.lua"] = "/.sPhone/init",
@@ -58,7 +58,7 @@ local files = {
 	["src/startup"] = "/.sPhone/startup",
 }
 
-local githubUser    = "BeaconNet"
+local githubUser    = "SertexTeam"
 local githubRepo    = "sPhone"
 local githubBranch  = "master"
 
