@@ -4,7 +4,7 @@
 --
 {
   files = "{\
-  [ \"store.lua\" ] = \"local host = \\\"https://raw.github.com/BeaconNet/sPhone-Store/master/\\\"\\\
+  [ \"store.lua\" ] = \"local host = \\\"https://raw.github.com/SertexTeam/sPhone-Store/master/\\\"\\\
 local index = host..\\\"index.lua\\\"\\\
 local apps = host..\\\"apps/\\\"\\\
 local appsL = {}\\\
@@ -25,7 +25,7 @@ local function redraw()\\\
 end\\\
 \\\
 local function install(path,name)\\\
-	local data = http.get(\\\"https://raw.github.com/BeaconNet/sPhone-Store/master/apps/\\\"..path).readAll()\\\
+	local data = http.get(\\\"https://raw.github.com/SertexTeam/sPhone-Store/master/apps/\\\"..path).readAll()\\\
 	local f = fs.open(\\\"/tmp/sPhoneStore/\\\"..name..\\\".spk\\\",\\\"w\\\")\\\
 	f.write(data)\\\
 	f.close()\\\
@@ -72,7 +72,7 @@ while true do\\\
 		return\\\
 	end\\\
 	\\\
-		local data = http.get(\\\"https://raw.github.com/BeaconNet/sPhone-Store/master/apps/\\\"..path).readAll()\\\
+		local data = http.get(\\\"https://raw.github.com/SertexTeam/sPhone-Store/master/apps/\\\"..path).readAll()\\\
 		data = textutils.unserialise(data)\\\
 		if data then\\\
 			local _conf = textutils.unserialise(data.config)\\\
@@ -141,7 +141,7 @@ while true do\\\
   version = 1,\
   main = \"store.lua\",\
   id = \"sphone.store\",\
-  author = \"BeaconNet\",\
+  author = \"Sertex\",\
   hidden = true,\
 }",
 }
