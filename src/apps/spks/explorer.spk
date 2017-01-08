@@ -103,7 +103,7 @@ end\",\
   name = \"File Explorer\",\
   version = 1,\
   id = \"sphone.explorer\",\
-  author = \"BeaconNet\",\
+  author = \"Sertex\",\
   hidden = true,\
 }",
 }
