@@ -19,7 +19,7 @@ if os.getComputerLabel() then\\\
 end\\\
 print(\\\"Version: \\\"..sPhone.version)\\\
 print(\\\"\\\")\\\
-print(\\\"sPhone made by BeaconNet\\\")\\\
+print(\\\"sPhone made by Sertex\\\")\\\
 print(\\\"Krist by 3d6\\\")\\\
 print(\\\"SHA256 by GravityScore\\\")\\\
 print(\\\"Compress by Creator\\\")\\\
@@ -40,7 +40,7 @@ end\\\
   main = \"info.lua\",\
   version = 1,\
   id = \"sphone.info\",\
-  author = \"BeaconNet\",\
+  author = \"Sertex\",\
   hidden = true,\
 }",
 }
