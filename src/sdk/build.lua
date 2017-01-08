@@ -3,7 +3,7 @@ if not sPhone then
 	print("build requires sPhone")
 end
 if #args < 2 then
-	print("sPhone Application Package Builder")
+	print("Sertex Application Package Builder")
 	print("Usage: build <App Folder> <Output>")
 	return
 end
@@ -105,7 +105,7 @@ result["config"] = textutils.serialize(_config)
 
 
 local newResult = textutils.serialize(result)
-local info = "--\n-- sPhone Application Package\n-- Built with SPK builder "..builderVersion.."\n--"
+local info = "--\n-- Sertex Application Package\n-- Built with SPK builder "..builderVersion.."\n--"
 local f = fs.open("/tmp/build/spk/builds/".._config.id,"w")
 f.write(info.."\n"..newResult)
 f.close()
