@@ -8,13 +8,6 @@ end
 local old = os.pullEvent
 os.pullEvent = os.pullEventRaw
 
-local license = [[
-The MIT License (MIT)
-Copyright (c) 2017 Sertex
-
-Read full license here:
-https://raw.github.com/SertexTeam/sPhone/master/LICENSE]]
-
 local files = {
 	["src/init.lua"] = "/.sPhone/init",
 	["src/sPhone.lua"] = "/.sPhone/sPhone",
@@ -155,8 +148,7 @@ gui()
 term.setCursorPos(2,3)
 print("License\n")
 printError("You must accept the license to install sPhone\n")
-print(license)
-
+print("The MIT License (MIT)\nCopyright (c) 2017 Sertex\n\nRead full license here:\nhttps://raw.github.com/SertexTeam/sPhone/master/LICENSE")
 paintutils.drawFilledBox(2,17,9,19,colors.lime)
 term.setCursorPos(3,18)
 term.setTextColor(colors.white)
