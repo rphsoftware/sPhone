@@ -1,10 +1,5 @@
 
 
-if not pocket or not term.isColor() then
-  print("sPhone is only for Advanced Pocket Computers!")
-  return
-end
-
 local old = os.pullEvent
 os.pullEvent = os.pullEventRaw
 
