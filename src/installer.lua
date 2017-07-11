@@ -46,7 +46,7 @@ local files = {
 	["src/startup"] = "/.sPhone/startup",
 }
 
-local githubUser    = "SertexTeam"
+local githubUser    = "thekoksus"
 local githubRepo    = "sPhone"
 local githubBranch  = "master"
 
