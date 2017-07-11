@@ -1,6 +1,6 @@
 os.oldPullEvent = os.pullEvent
 os.pullEvent = os.pullEventRaw
-
+_G.pocket = {}
 local function crash(err)
 	if not sPhone then
 		sPhone = {
